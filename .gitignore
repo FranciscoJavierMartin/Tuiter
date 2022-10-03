@@ -13,6 +13,7 @@ lerna-debug.log*
 
 # Environment
 .env
+mongodb
 
 # OS
 .DS_Store

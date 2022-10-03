@@ -17,7 +17,4 @@ export class RegisterDto {
 
   @IsString()
   avatarColor: string;
-
-  @IsString()
-  avatarImage: string;
 }
