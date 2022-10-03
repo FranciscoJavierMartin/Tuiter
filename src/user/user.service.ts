@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ObjectId } from 'mongodb';
-import { AuthDocument } from '../auth/schemas/user.schema';
+import { AuthDocument } from '../auth/schemas/auth.schema';
 
 @Injectable()
 export class UserService {

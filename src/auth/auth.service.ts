@@ -5,7 +5,7 @@ import { ObjectId } from 'mongodb';
 import { Model } from 'mongoose';
 import { RegisterDto } from './dto/requests/register.dto';
 import { ResponseRegisterDto } from './dto/responses/register.dto';
-import { AuthUser, AuthDocument } from './schemas/user.schema';
+import { AuthUser, AuthDocument } from './schemas/auth.schema';
 import { generateRandomIntegers } from '../helpers/utils';
 import { UserService } from '../user/user.service';
 import { UserCacheService } from 'src/shared/redis/user.cache.service';
