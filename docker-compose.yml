@@ -11,6 +11,9 @@ services:
       - ./mongodb:/var/lib/postgresql/data
   mongoexpress:
     image: mongo-express
+    depends_on:
+      - mongo
+    restart: always
     ports:
       - '8082:8081'
     links:

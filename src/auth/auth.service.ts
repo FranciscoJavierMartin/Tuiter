@@ -1,30 +1,56 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { JwtService } from '@nestjs/jwt';
+import { ObjectId } from 'mongodb';
 import { Model } from 'mongoose';
 import { RegisterDto } from './dto/requests/register.dto';
 import { ResponseRegisterDto } from './dto/responses/register.dto';
-import { User, UserDocument } from './schemas/user.schema';
+import { AuthUser, AuthDocument } from './schemas/user.schema';
+import { generateRandomIntegers } from '../helpers/utils';
+import { UserService } from '../user/user.service';
+import { UserCacheService } from 'src/shared/redis/user.cache.service';
 
 @Injectable()
 export class AuthService {
   constructor(
-    @InjectModel(User.name) private userModel: Model<UserDocument>,
+    @InjectModel(AuthUser.name) private authModel: Model<AuthDocument>,
     private jwtService: JwtService,
+    private userService: UserService,
+    private userCacheService: UserCacheService,
   ) {}
 
-  async create(registerDto: RegisterDto): Promise<ResponseRegisterDto> {
-    const userCreated = new this.userModel(registerDto);
-    const user = await userCreated.save();
+  async create(registerDto: RegisterDto): Promise<ResponseRegisterDto | any> {
+    const uId = generateRandomIntegers(12).toString();
+    const userObjectId: ObjectId = new ObjectId();
 
-    return {
-      message: 'User created successfully',
-      user,
-      token: this.jwtService.sign({
-        email: user.email,
-        username: user.username,
-        avatarColor: user.avatarColor,
-      }),
-    };
+    const authUserCreated = new this.authModel({ ...registerDto, uId });
+    const authUser = await authUserCreated.save();
+
+    // TODO: Upload image
+
+    const userDataToCache = this.userService.getUserData(
+      authUser,
+      userObjectId,
+    );
+
+    // await this.userCacheService.saveUserToCache(
+    //   userObjectId.toString(),
+    //   uId,
+    //   userDataToCache,
+    // );
+
+    // return {
+    //   message: 'User created successfully',
+    //   user,
+    //   token: this.jwtService.sign({
+    //     email: user.email,
+    //     username: user.username,
+    //     avatarColor: user.avatarColor,
+    //   }),
+    // };
   }
+
+  // private async checkIfUserExists(username: string, email: string): Promise<boolean> {
+
+  // }
 }
