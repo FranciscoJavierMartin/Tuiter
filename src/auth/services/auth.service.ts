@@ -24,36 +24,26 @@ export class AuthService {
   ) {}
 
   async create(registerDto: RegisterDto): Promise<ResponseRegisterDto | any> {
-    console.log('Register');
-    const job = await this.authQueue.add('addAuthUserToDB', {
-      value: {
-        foo: 'bar',
-        mio: 'set',
-      },
-    });
+    const uId = generateRandomIntegers(12).toString();
+    const userObjectId: ObjectId = new ObjectId();
 
-    // const uId = generateRandomIntegers(12).toString();
-    // const userObjectId: ObjectId = new ObjectId();
+    const authUserCreated = new this.authModel({ ...registerDto, uId });
+    const authUser = await authUserCreated.save();
 
-    // const authUserCreated = new this.authModel({ ...registerDto, uId });
-    // const authUser = await authUserCreated.save();
+    // TODO: Upload image
 
-    // // TODO: Upload image
+    const userDataToCache: UserDocument = this.userService.getUserData(
+      authUser,
+      userObjectId,
+    );
 
-    // const userDataToCache: UserDocument = this.userService.getUserData(
-    //   authUser,
-    //   userObjectId,
-    // );
+    await this.userCacheService.saveUserToCache(
+      userObjectId.toString(),
+      uId,
+      userDataToCache,
+    );
 
-    // await this.userCacheService.saveUserToCache(
-    //   userObjectId.toString(),
-    //   uId,
-    //   userDataToCache,
-    // );
-
-    // const job = await this.authQueue.add('addAuthUserToDB', {
-    //   value: authUser,
-    // });
+    this.authQueue.add('addAuthUserToDB', authUser);
 
     // const job = await this.authQueue.add('addAuthUserToDB', {
     //   value: {
@@ -72,7 +62,7 @@ export class AuthService {
     // };
   }
 
-  // private async checkIfUserExists(username: string, email: string): Promise<boolean> {
-
-  // }
+  async createAuthUser(authUser: AuthDocument): Promise<void> {
+    await authUser.save();
+  }
 }

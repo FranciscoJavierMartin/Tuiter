@@ -5,19 +5,28 @@ import {
   Processor,
 } from '@nestjs/bull';
 import { Logger } from '@nestjs/common';
-import { Job } from 'bull';
+import { DoneCallback, Job } from 'bull';
+import { AuthDocument } from '../schemas/auth.schema';
+import { AuthService } from '../services/auth.service';
 
 @Processor('auth')
 export class AuthConsumer {
   private logger: Logger;
 
-  constructor() {
+  constructor(private authService: AuthService) {
     this.logger = new Logger('AuthConsumer');
   }
 
-  @Process('addAuthUserToDB')
-  async addAuthUserToDB(job: Job) {
-    console.log('Calling from consumer', job.data);
+  @Process({ name: 'addAuthUserToDB', concurrency: 5 })
+  async addAuthUserToDB(job: Job<AuthDocument>, done: DoneCallback) {
+    try {
+      this.authService.createAuthUser(job.data);
+      job.progress(100);
+      done(null, job.data);
+    } catch (error) {
+      this.logger.error(error);
+      done(error as Error);
+    }
   }
 
   @OnGlobalQueueCompleted()
