@@ -80,10 +80,6 @@ export class UserCacheService extends BaseCache {
     ];
 
     try {
-      if (!this.client.isOpen) {
-        await this.client.connect();
-      }
-
       await this.client.ZADD('user', {
         score: parseInt(userId, 10),
         value: key,
