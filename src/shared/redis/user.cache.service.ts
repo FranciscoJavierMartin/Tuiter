@@ -1,9 +1,15 @@
 import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { UserDocument } from '../../user/schemas/user.schema';
+import { BaseCache } from './base.cache';
 
 @Injectable()
-export class UserCacheService {
-  saveUserToCache(
+export class UserCacheService extends BaseCache {
+  constructor(configService: ConfigService) {
+    super('UserCache', configService);
+  }
+
+  async saveUserToCache(
     key: string,
     userId: string,
     createdUser: UserDocument,
@@ -72,5 +78,20 @@ export class UserCacheService {
       'bgImageId',
       `${bgImageId}`,
     ];
+
+    try {
+      if (!this.client.isOpen) {
+        await this.client.connect();
+      }
+
+      await this.client.ZADD('user', {
+        score: parseInt(userId, 10),
+        value: key,
+      });
+      await this.client.HSET(`users:${key}`, dataToSave);
+    } catch (error) {
+      this.logger.error(error);
+      throw new Error('Server error. Try again');
+    }
   }
 }
