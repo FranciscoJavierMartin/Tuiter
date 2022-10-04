@@ -4,6 +4,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { SharedModule } from './shared/shared.module';
+import { BullModule } from '@nestjs/bull';
 
 @Module({
   imports: [
@@ -12,6 +13,12 @@ import { SharedModule } from './shared/shared.module';
       isGlobal: true,
     }),
     MongooseModule.forRoot('mongodb://localhost/chatty'),
+    BullModule.forRoot({
+      redis: {
+        host: 'localhost',
+        port: 6379,
+      },
+    }),
     AuthModule,
     UserModule,
     SharedModule,
