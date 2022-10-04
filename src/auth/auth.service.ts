@@ -7,8 +7,8 @@ import { RegisterDto } from './dto/requests/register.dto';
 import { ResponseRegisterDto } from './dto/responses/register.dto';
 import { AuthUser, AuthDocument } from './schemas/auth.schema';
 import { generateRandomIntegers } from '../helpers/utils';
-import { UserService } from '../user/user.service';
-import { UserCacheService } from 'src/shared/redis/user.cache.service';
+import { UserService } from '../user/services/user.service';
+import { UserCacheService } from 'src/user/services/user.cache.service';
 import { UserDocument } from 'src/user/schemas/user.schema';
 
 @Injectable()

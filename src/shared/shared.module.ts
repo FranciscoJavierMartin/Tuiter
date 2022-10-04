@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { UserCacheService } from './redis/user.cache.service';
+import { UserCacheService } from '../user/services/user.cache.service';
 
 @Module({
   imports: [],

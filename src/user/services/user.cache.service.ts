@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { UserDocument } from '../../user/schemas/user.schema';
-import { BaseCache } from './base.cache';
+import { UserDocument } from '../schemas/user.schema';
+import { BaseCache } from '../../shared/redis/base.cache';
 
 @Injectable()
 export class UserCacheService extends BaseCache {
