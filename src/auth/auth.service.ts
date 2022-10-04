@@ -9,6 +9,7 @@ import { AuthUser, AuthDocument } from './schemas/auth.schema';
 import { generateRandomIntegers } from '../helpers/utils';
 import { UserService } from '../user/user.service';
 import { UserCacheService } from 'src/shared/redis/user.cache.service';
+import { UserDocument } from 'src/user/schemas/user.schema';
 
 @Injectable()
 export class AuthService {
@@ -28,16 +29,16 @@ export class AuthService {
 
     // TODO: Upload image
 
-    const userDataToCache = this.userService.getUserData(
+    const userDataToCache: UserDocument = this.userService.getUserData(
       authUser,
       userObjectId,
     );
 
-    // await this.userCacheService.saveUserToCache(
-    //   userObjectId.toString(),
-    //   uId,
-    //   userDataToCache,
-    // );
+    await this.userCacheService.saveUserToCache(
+      userObjectId.toString(),
+      uId,
+      userDataToCache,
+    );
 
     // return {
     //   message: 'User created successfully',

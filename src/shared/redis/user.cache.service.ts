@@ -1,12 +1,76 @@
 import { Injectable } from '@nestjs/common';
+import { UserDocument } from '../../user/schemas/user.schema';
 
 @Injectable()
 export class UserCacheService {
   saveUserToCache(
-    arg0: string,
-    uId: string,
-    userDataToCache: any,
+    key: string,
+    userId: string,
+    createdUser: UserDocument,
   ): Promise<void> {
-    throw new Error('Method not implemented.');
+    const createdAt = new Date();
+    const {
+      _id,
+      uId,
+      username,
+      email,
+      avatarColor,
+      blocked,
+      blockedBy,
+      postsCount,
+      profilePicture,
+      followersCount,
+      followingCount,
+      notifications,
+      work,
+      location,
+      school,
+      quote,
+      bgImageId,
+      bgImageVersion,
+      social,
+    } = createdUser;
+    const dataToSave: string[] = [
+      '_id',
+      `${_id}`,
+      'uId',
+      `${uId}`,
+      'username',
+      `${username}`,
+      'email',
+      `${email}`,
+      'avatarColor',
+      `${avatarColor}`,
+      'createdAt',
+      `${createdAt}`,
+      'postsCount',
+      `${postsCount}`,
+      'blocked',
+      JSON.stringify(blocked),
+      'blockedBy',
+      JSON.stringify(blockedBy),
+      'profilePicture',
+      `${profilePicture}`,
+      'followersCount',
+      `${followersCount}`,
+      'followingCount',
+      `${followingCount}`,
+      'notifications',
+      JSON.stringify(notifications),
+      'social',
+      JSON.stringify(social),
+      'work',
+      `${work}`,
+      'location',
+      `${location}`,
+      'school',
+      `${school}`,
+      'quote',
+      `${quote}`,
+      'bgImageVersion',
+      `${bgImageVersion}`,
+      'bgImageId',
+      `${bgImageId}`,
+    ];
   }
 }
