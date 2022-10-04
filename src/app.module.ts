@@ -9,6 +9,7 @@ import { SharedModule } from './shared/shared.module';
   imports: [
     ConfigModule.forRoot({
       envFilePath: '.env',
+      isGlobal: true,
     }),
     MongooseModule.forRoot('mongodb://localhost/chatty'),
     AuthModule,

@@ -12,7 +12,6 @@ import { SharedModule } from 'src/shared/shared.module';
 
 @Module({
   imports: [
-    ConfigModule,
     MongooseModule.forFeature([{ name: AuthUser.name, schema: AuthSchema }]),
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.registerAsync({

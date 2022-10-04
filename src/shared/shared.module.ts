@@ -1,9 +1,8 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
 import { UserCacheService } from './redis/user.cache.service';
 
 @Module({
-  imports: [ConfigModule],
+  imports: [],
   providers: [UserCacheService],
   exports: [UserCacheService],
 })
