@@ -20,23 +20,29 @@ export class AuthService {
     private jwtService: JwtService,
     private userService: UserService,
     private userCacheService: UserCacheService,
-    @InjectQueue('auth') private authQueue: Queue,
+    @InjectQueue('auth') private authQueue: Queue<AuthDocument>,
+    @InjectQueue('user') private userQueue: Queue<UserDocument>,
   ) {}
 
   async create(registerDto: RegisterDto): Promise<ResponseRegisterDto | any> {
     const uId = generateRandomIntegers(12).toString();
     const userObjectId: ObjectId = new ObjectId();
+    const authObjectId: ObjectId = new ObjectId();
 
-    const authUserCreated = new this.authModel({ ...registerDto, uId });
-    const authUser = await authUserCreated.save();
+    const authUser: AuthDocument = {
+      _id: authObjectId,
+      uId,
+      ...registerDto,
+    } as AuthDocument;
 
-    // TODO: Upload image
+    //TODO: Upload image
 
     const userDataToCache: UserDocument = this.userService.getUserData(
       authUser,
       userObjectId,
     );
-
+    //TODO: Assign url
+    userDataToCache.profilePicture = 'test';
     await this.userCacheService.saveUserToCache(
       userObjectId.toString(),
       uId,
@@ -44,6 +50,25 @@ export class AuthService {
     );
 
     this.authQueue.add('addAuthUserToDB', authUser);
+    // this.userQueue.add('addUserToDB', userDataToCache);
+
+    // const authUserCreated = new this.authModel({ ...registerDto, uId });
+    // const authUser = await authUserCreated.save();
+
+    // // TODO: Upload image
+
+    // const userDataToCache: UserDocument = this.userService.getUserData(
+    //   authUser,
+    //   userObjectId,
+    // );
+
+    // await this.userCacheService.saveUserToCache(
+    //   userObjectId.toString(),
+    //   uId,
+    //   userDataToCache,
+    // );
+
+    // this.authQueue.add('addAuthUserToDB', authUser);
 
     // const job = await this.authQueue.add('addAuthUserToDB', {
     //   value: {
@@ -64,5 +89,9 @@ export class AuthService {
 
   async createAuthUser(authUser: AuthDocument): Promise<void> {
     await authUser.save();
+  }
+
+  private getSignUpData(id: string, uId: string, registerData: RegisterDto) {
+    return {};
   }
 }

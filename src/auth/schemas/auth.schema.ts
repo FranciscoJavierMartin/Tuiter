@@ -45,7 +45,7 @@ export class AuthUser {
 export const AuthSchema = SchemaFactory.createForClass(AuthUser);
 
 AuthSchema.pre('save', function (this: AuthUser, next: () => void) {
-  const hashedPassword: string = hashSync(this.password, 10);
+  const hashedPassword: string = hashSync(this.password, SALT_ROUND);
   this.password = hashedPassword;
   this.email = this.email.toLowerCase();
   this.username = firstLetterUppercase(this.username);
