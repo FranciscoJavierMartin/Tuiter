@@ -12,11 +12,13 @@ import { UserCacheService } from 'src/user/services/user.cache.service';
 import { UserDocument } from 'src/user/schemas/user.schema';
 import { InjectQueue } from '@nestjs/bull';
 import { Queue } from 'bull';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectModel(AuthUser.name) private authModel: Model<AuthDocument>,
+    private configService: ConfigService,
     private jwtService: JwtService,
     private userService: UserService,
     private userCacheService: UserCacheService,
@@ -24,7 +26,7 @@ export class AuthService {
     @InjectQueue('user') private userQueue: Queue<UserDocument>,
   ) {}
 
-  async create(registerDto: RegisterDto): Promise<ResponseRegisterDto | any> {
+  async create(registerDto: RegisterDto): Promise<ResponseRegisterDto> {
     const uId = generateRandomIntegers(12).toString();
     const userObjectId: ObjectId = new ObjectId();
     const authObjectId: ObjectId = new ObjectId();
@@ -52,43 +54,30 @@ export class AuthService {
     this.authQueue.add('addAuthUserToDB', authUser);
     this.userQueue.add('addUserToDB', userDataToCache);
 
-    // const authUserCreated = new this.authModel({ ...registerDto, uId });
-    // const authUser = await authUserCreated.save();
+    const jwtToken: string = this.signToken(authUser, userObjectId);
 
-    // // TODO: Upload image
-
-    // const userDataToCache: UserDocument = this.userService.getUserData(
-    //   authUser,
-    //   userObjectId,
-    // );
-
-    // await this.userCacheService.saveUserToCache(
-    //   userObjectId.toString(),
-    //   uId,
-    //   userDataToCache,
-    // );
-
-    // this.authQueue.add('addAuthUserToDB', authUser);
-
-    // const job = await this.authQueue.add('addAuthUserToDB', {
-    //   value: {
-    //     foo: 'bar',
-    //     mio: 'set',
-    //   },
-    // });
-    // return {
-    //   message: 'User created successfully',
-    //   user,
-    //   token: this.jwtService.sign({
-    //     email: user.email,
-    //     username: user.username,
-    //     avatarColor: user.avatarColor,
-    //   }),
-    // };
+    return {
+      message: 'User created successfully',
+      user: userDataToCache,
+      token: jwtToken,
+    };
   }
 
   async createAuthUser(authUser: AuthDocument): Promise<void> {
     const authUserCreated = new this.authModel({ ...authUser });
     await authUserCreated.save();
+  }
+
+  private signToken(
+    { uId, email, username, avatarColor }: AuthDocument,
+    userObjectId: ObjectId,
+  ): string {
+    return this.jwtService.sign({
+      userId: userObjectId,
+      uId,
+      email,
+      username,
+      avatarColor,
+    });
   }
 }
