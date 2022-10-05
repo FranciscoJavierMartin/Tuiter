@@ -21,8 +21,8 @@ export class AuthService {
     private userService: UserService,
     private userCacheService: UserCacheService,
     @InjectQueue('auth') private authQueue: Queue<AuthDocument>,
+    @InjectQueue('user') private userQueue: Queue<UserDocument>,
   ) {}
-  // @InjectQueue('user') private userQueue: Queue<UserDocument>,
 
   async create(registerDto: RegisterDto): Promise<ResponseRegisterDto | any> {
     const uId = generateRandomIntegers(12).toString();
@@ -50,7 +50,7 @@ export class AuthService {
     );
 
     this.authQueue.add('addAuthUserToDB', authUser);
-    // this.userQueue.add('addUserToDB', userDataToCache);
+    this.userQueue.add('addUserToDB', userDataToCache);
 
     // const authUserCreated = new this.authModel({ ...registerDto, uId });
     // const authUser = await authUserCreated.save();
@@ -90,9 +90,5 @@ export class AuthService {
   async createAuthUser(authUser: AuthDocument): Promise<void> {
     const authUserCreated = new this.authModel({ ...authUser });
     await authUserCreated.save();
-  }
-
-  private getSignUpData(id: string, uId: string, registerData: RegisterDto) {
-    return {};
   }
 }

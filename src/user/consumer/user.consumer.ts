@@ -6,24 +6,21 @@ import {
 } from '@nestjs/bull';
 import { Logger } from '@nestjs/common';
 import { DoneCallback, Job } from 'bull';
-import { AuthDocument } from '../schemas/auth.schema';
-import { AuthService } from '../services/auth.service';
+import { UserDocument } from '../schemas/user.schema';
+import { UserService } from '../services/user.service';
 
-@Processor('auth')
-export class AuthConsumer {
+@Processor('user')
+export class UserConsumer {
   private logger: Logger;
 
-  constructor(private authService: AuthService) {
-    this.logger = new Logger('AuthConsumer');
+  constructor(private userService: UserService) {
+    this.logger = new Logger('UserConsumer');
   }
 
-  @Process({ name: 'addAuthUserToDB', concurrency: 5 })
-  async addAuthUserToDB(
-    job: Job<AuthDocument>,
-    done: DoneCallback,
-  ): Promise<void> {
+  @Process({ name: 'addUserToDB', concurrency: 5 })
+  async addUserToDB(job: Job<UserDocument>, done: DoneCallback): Promise<void> {
     try {
-      this.authService.createAuthUser(job.data);
+      await this.userService.addUserData(job.data);
       job.progress(100);
       done(null, job.data);
     } catch (error) {

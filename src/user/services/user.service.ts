@@ -1,10 +1,14 @@
 import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
 import { ObjectId } from 'mongodb';
+import { Model } from 'mongoose';
 import { AuthDocument } from '../../auth/schemas/auth.schema';
-import { UserDocument } from '../schemas/user.schema';
+import { User, UserDocument } from '../schemas/user.schema';
 
 @Injectable()
 export class UserService {
+  constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
+
   getUserData(data: AuthDocument, userObjectId: ObjectId): UserDocument {
     const { _id, username, email, uId, password, avatarColor } = data;
     return {
@@ -40,5 +44,10 @@ export class UserService {
         youtube: '',
       },
     } as unknown as UserDocument;
+  }
+
+  async addUserData(data: UserDocument): Promise<void> {
+    const userCreated = new this.userModel({ ...data });
+    await userCreated.save();
   }
 }

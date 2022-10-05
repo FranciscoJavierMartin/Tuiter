@@ -16,17 +16,30 @@ import { AuthConsumer } from './consumers/auth.consumer';
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: AuthUser.name, schema: AuthSchema }]),
-    BullModule.registerQueue({
-      name: 'auth',
-      defaultJobOptions: {
-        attempts: 3,
-        backoff: {
-          type: 'fixed',
-          delay: 5000,
+    BullModule.registerQueue(
+      {
+        name: 'auth',
+        defaultJobOptions: {
+          attempts: 3,
+          backoff: {
+            type: 'fixed',
+            delay: 5000,
+          },
+          removeOnComplete: true,
         },
-        removeOnComplete: true,
       },
-    }),
+      {
+        name: 'user',
+        defaultJobOptions: {
+          attempts: 3,
+          backoff: {
+            type: 'fixed',
+            delay: 5000,
+          },
+          removeOnComplete: true,
+        },
+      },
+    ),
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.registerAsync({
       imports: [ConfigModule],
