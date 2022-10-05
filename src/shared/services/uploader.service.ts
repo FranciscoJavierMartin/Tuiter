@@ -15,7 +15,7 @@ export class UploaderService {
   ): Promise<UploadApiResponse> {
     return new Promise((resolve, reject) => {
       cloudinary.uploader.upload(
-        `data:image/jpeg;base64,${file.buffer.toString('base64')}`,
+        `data:${file.mimetype};base64,${file.buffer.toString('base64')}`,
         {
           public_id,
           overwrite,
