@@ -12,12 +12,13 @@ import { UserCacheService } from 'src/user/services/user.cache.service';
 import { UserDocument } from 'src/user/schemas/user.schema';
 import { InjectQueue } from '@nestjs/bull';
 import { Queue } from 'bull';
+import { UploaderService } from 'src/shared/services/uploader.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectModel(AuthUser.name) private authModel: Model<AuthDocument>,
-
+    private uploader: UploaderService,
     private jwtService: JwtService,
     private userService: UserService,
     private userCacheService: UserCacheService,
@@ -28,41 +29,42 @@ export class AuthService {
   async create(
     registerDto: RegisterDto,
     avatarImage: Express.Multer.File,
-  ): Promise<ResponseRegisterDto> {
-    const uId = generateRandomIntegers(12).toString();
+  ): Promise<ResponseRegisterDto | any> {
     const userObjectId: ObjectId = new ObjectId();
-    const authObjectId: ObjectId = new ObjectId();
+    this.uploader.uploadImage(avatarImage, userObjectId.toString(), true, true);
+    // const uId = generateRandomIntegers(12).toString();
+    // const authObjectId: ObjectId = new ObjectId();
 
-    const authUser: AuthDocument = {
-      _id: authObjectId,
-      uId,
-      ...registerDto,
-    } as AuthDocument;
+    // const authUser: AuthDocument = {
+    //   _id: authObjectId,
+    //   uId,
+    //   ...registerDto,
+    // } as AuthDocument;
 
-    //TODO: Upload image
+    // //TODO: Upload image
 
-    const userDataToCache: UserDocument = this.userService.getUserData(
-      authUser,
-      userObjectId,
-    );
-    //TODO: Assign url
-    userDataToCache.profilePicture = 'test';
-    await this.userCacheService.saveUserToCache(
-      userObjectId.toString(),
-      uId,
-      userDataToCache,
-    );
+    // const userDataToCache: UserDocument = this.userService.getUserData(
+    //   authUser,
+    //   userObjectId,
+    // );
+    // //TODO: Assign url
+    // userDataToCache.profilePicture = 'test';
+    // await this.userCacheService.saveUserToCache(
+    //   userObjectId.toString(),
+    //   uId,
+    //   userDataToCache,
+    // );
 
-    this.authQueue.add('addAuthUserToDB', authUser);
-    this.userQueue.add('addUserToDB', userDataToCache);
+    // this.authQueue.add('addAuthUserToDB', authUser);
+    // this.userQueue.add('addUserToDB', userDataToCache);
 
-    const jwtToken: string = this.signToken(authUser, userObjectId);
+    // const jwtToken: string = this.signToken(authUser, userObjectId);
 
-    return {
-      message: 'User created successfully',
-      user: userDataToCache,
-      token: jwtToken,
-    };
+    // return {
+    //   message: 'User created successfully',
+    //   user: userDataToCache,
+    //   token: jwtToken,
+    // };
   }
 
   async createAuthUser(authUser: AuthDocument): Promise<void> {
