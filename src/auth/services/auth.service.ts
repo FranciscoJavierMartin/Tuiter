@@ -12,13 +12,12 @@ import { UserCacheService } from 'src/user/services/user.cache.service';
 import { UserDocument } from 'src/user/schemas/user.schema';
 import { InjectQueue } from '@nestjs/bull';
 import { Queue } from 'bull';
-import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectModel(AuthUser.name) private authModel: Model<AuthDocument>,
-    private configService: ConfigService,
+
     private jwtService: JwtService,
     private userService: UserService,
     private userCacheService: UserCacheService,
