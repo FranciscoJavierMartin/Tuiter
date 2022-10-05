@@ -25,7 +25,10 @@ export class AuthService {
     @InjectQueue('user') private userQueue: Queue<UserDocument>,
   ) {}
 
-  async create(registerDto: RegisterDto): Promise<ResponseRegisterDto> {
+  async create(
+    registerDto: RegisterDto,
+    avatarImage: Express.Multer.File,
+  ): Promise<ResponseRegisterDto> {
     const uId = generateRandomIntegers(12).toString();
     const userObjectId: ObjectId = new ObjectId();
     const authObjectId: ObjectId = new ObjectId();
