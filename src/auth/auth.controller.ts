@@ -5,8 +5,9 @@ import {
   UploadedFile,
   UseInterceptors,
   ParseFilePipe,
+  HttpStatus,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { AuthService } from '@/auth/services/auth.service';
 import { RegisterDto } from '@/auth/dto/requests/register.dto';
@@ -25,6 +26,12 @@ export class AuthController {
       },
     }),
   )
+  @ApiResponse({ status: HttpStatus.CREATED, description: 'User created' })
+  @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Bad request' })
+  @ApiResponse({
+    status: HttpStatus.BAD_GATEWAY,
+    description: 'Error on internal request',
+  })
   async register(
     @Body() registerDto: RegisterDto,
     @UploadedFile(new ParseFilePipe({})) avatarImage: Express.Multer.File,
