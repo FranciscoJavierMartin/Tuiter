@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import {
   UploadApiErrorResponse,
   UploadApiResponse,
@@ -7,6 +8,8 @@ import {
 
 @Injectable()
 export class UploaderService {
+  constructor(private configService: ConfigService) {}
+
   async uploadImage(
     file: Express.Multer.File,
     public_id?: string,
@@ -20,7 +23,7 @@ export class UploaderService {
           public_id,
           overwrite,
           invalidate,
-          folder: 'chatty-nest',
+          folder: this.configService.get('CLOUDINARY_FOLDER'),
         },
         (
           error: UploadApiErrorResponse | undefined,
@@ -34,5 +37,11 @@ export class UploaderService {
         },
       );
     });
+  }
+
+  getImageUrl(version: number, publicId: string): string {
+    return `https://res.cloudinary.com/${this.configService.get(
+      'CLOUDINARY_CLOUD_NAME',
+    )}/image/upload/v${version}/${publicId}`;
   }
 }

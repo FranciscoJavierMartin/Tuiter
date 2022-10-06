@@ -18,7 +18,7 @@ import { UploaderService } from 'src/shared/services/uploader.service';
 export class AuthService {
   constructor(
     @InjectModel(AuthUser.name) private authModel: Model<AuthDocument>,
-    private uploader: UploaderService,
+    private uploaderService: UploaderService,
     private jwtService: JwtService,
     private userService: UserService,
     private userCacheService: UserCacheService,
@@ -31,40 +31,48 @@ export class AuthService {
     avatarImage: Express.Multer.File,
   ): Promise<ResponseRegisterDto | any> {
     const userObjectId: ObjectId = new ObjectId();
-    this.uploader.uploadImage(avatarImage, userObjectId.toString(), true, true);
-    // const uId = generateRandomIntegers(12).toString();
-    // const authObjectId: ObjectId = new ObjectId();
 
-    // const authUser: AuthDocument = {
-    //   _id: authObjectId,
-    //   uId,
-    //   ...registerDto,
-    // } as AuthDocument;
+    const uId = generateRandomIntegers(12).toString();
+    const authObjectId: ObjectId = new ObjectId();
 
-    // //TODO: Upload image
+    const authUser: AuthDocument = {
+      _id: authObjectId,
+      uId,
+      ...registerDto,
+    } as AuthDocument;
 
-    // const userDataToCache: UserDocument = this.userService.getUserData(
-    //   authUser,
-    //   userObjectId,
-    // );
-    // //TODO: Assign url
-    // userDataToCache.profilePicture = 'test';
-    // await this.userCacheService.saveUserToCache(
-    //   userObjectId.toString(),
-    //   uId,
-    //   userDataToCache,
-    // );
+    const avatarUploaded = await this.uploaderService.uploadImage(
+      avatarImage,
+      userObjectId.toString(),
+      true,
+      true,
+    );
 
-    // this.authQueue.add('addAuthUserToDB', authUser);
-    // this.userQueue.add('addUserToDB', userDataToCache);
+    const userDataToCache: UserDocument = this.userService.getUserData(
+      authUser,
+      userObjectId,
+    );
 
-    // const jwtToken: string = this.signToken(authUser, userObjectId);
+    userDataToCache.profilePicture = this.uploaderService.getImageUrl(
+      avatarUploaded.version,
+      avatarUploaded.public_id,
+    );
+    await this.userCacheService.saveUserToCache(
+      userObjectId.toString(),
+      uId,
+      userDataToCache,
+    );
 
-    // return {
-    //   message: 'User created successfully',
-    //   user: userDataToCache,
-    //   token: jwtToken,
-    // };
+    this.authQueue.add('addAuthUserToDB', authUser);
+    this.userQueue.add('addUserToDB', userDataToCache);
+
+    const jwtToken: string = this.signToken(authUser, userObjectId);
+
+    return {
+      message: 'User created successfully',
+      user: userDataToCache,
+      token: jwtToken,
+    };
   }
 
   async createAuthUser(authUser: AuthDocument): Promise<void> {
