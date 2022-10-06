@@ -4,7 +4,6 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { BullModule } from '@nestjs/bull';
-import { SharedModule } from '@/shared/shared.module';
 import { UserModule } from '@/user/user.module';
 import { AuthService } from '@/auth/services/auth.service';
 import { AuthController } from '@/auth/auth.controller';
@@ -51,7 +50,6 @@ import { AuthConsumer } from '@/auth/consumers/auth.consumer';
       },
     }),
     UserModule,
-    SharedModule,
   ],
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy, AuthConsumer],
