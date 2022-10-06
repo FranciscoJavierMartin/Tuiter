@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { UserDocument } from '../models/user.model';
 import { BaseCache } from '../../shared/redis/base.cache';
@@ -87,7 +87,9 @@ export class UserCacheService extends BaseCache {
       await this.client.HSET(`users:${key}`, dataToSave);
     } catch (error) {
       this.logger.error(error);
-      throw new Error('Server error. Try again');
+      throw new InternalServerErrorException(
+        `Error adding user ${key} to Redis`,
+      );
     }
   }
 }

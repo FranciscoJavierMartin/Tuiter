@@ -1,8 +1,13 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadGatewayException,
+  BadRequestException,
+  Injectable,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { JwtService } from '@nestjs/jwt';
 import { ObjectId } from 'mongodb';
 import { Model } from 'mongoose';
+import { UploadApiResponse } from 'cloudinary';
 import { RegisterDto } from '../dto/requests/register.dto';
 import { ResponseRegisterDto } from '../dto/responses/register.dto';
 import { AuthUser, AuthDocument } from '../models/auth.model';
@@ -33,6 +38,8 @@ export class AuthService {
     registerDto: RegisterDto,
     avatarImage: Express.Multer.File,
   ): Promise<ResponseRegisterDto | any> {
+    let avatarUploaded: UploadApiResponse;
+
     if (await this.checkIfUserExists(registerDto.email, registerDto.username)) {
       throw new BadRequestException('User is already created');
     }
@@ -47,12 +54,16 @@ export class AuthService {
       ...registerDto,
     } as AuthDocument;
 
-    const avatarUploaded = await this.uploaderService.uploadImage(
-      avatarImage,
-      userObjectId.toString(),
-      true,
-      true,
-    );
+    try {
+      avatarUploaded = await this.uploaderService.uploadImage(
+        avatarImage,
+        userObjectId.toString(),
+        true,
+        true,
+      );
+    } catch (error) {
+      throw new BadGatewayException('External server error');
+    }
 
     const userDataToCache: UserDocument = this.userService.getUserData(
       authUser,
