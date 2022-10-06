@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { UserDocument } from '../schemas/user.schema';
+import { UserDocument } from '../models/user.model';
 import { BaseCache } from '../../shared/redis/base.cache';
 
 @Injectable()

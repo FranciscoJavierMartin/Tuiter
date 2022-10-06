@@ -1,7 +1,7 @@
 import { Process, Processor } from '@nestjs/bull';
 import { DoneCallback, Job } from 'bull';
 import { BaseConsumer } from 'src/shared/consumer/base.consumer';
-import { AuthDocument } from '../schemas/auth.schema';
+import { AuthDocument } from '../models/auth.model';
 import { AuthService } from '../services/auth.service';
 
 @Processor('auth')
