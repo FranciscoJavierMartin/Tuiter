@@ -1,5 +1,5 @@
-import { OnGlobalQueueCompleted, OnGlobalQueueStalled } from '@nestjs/bull';
 import { Logger } from '@nestjs/common';
+import { OnGlobalQueueCompleted, OnGlobalQueueStalled } from '@nestjs/bull';
 
 export abstract class BaseConsumer {
   protected logger: Logger;
