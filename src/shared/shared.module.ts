@@ -1,13 +1,11 @@
 import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { v2 } from 'cloudinary';
-import { UserCacheService } from '@/user/services/user.cache.service';
 import { UploaderService } from '@/shared/services/uploader.service';
 
 @Module({
   imports: [],
   providers: [
-    UserCacheService,
     {
       inject: [ConfigService],
       provide: 'Cloudinary',
@@ -21,6 +19,6 @@ import { UploaderService } from '@/shared/services/uploader.service';
     },
     UploaderService,
   ],
-  exports: [UserCacheService, UploaderService],
+  exports: [UploaderService],
 })
 export class SharedModule {}
