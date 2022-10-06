@@ -52,11 +52,21 @@ AuthSchema.pre('save', function (this: AuthUser, next: () => void) {
   next();
 });
 
+/**
+ * Compare plain password with encrypted password
+ * @param password plain password to be compared
+ * @returns True if they are the same password, False in other cases
+ */
 AuthSchema.methods.comparePassword = function (password: string): boolean {
   const hashedPassword: string = (this as unknown as AuthDocument).password;
   return compareSync(password, hashedPassword);
 };
 
+/**
+ * Encrypt password
+ * @param password Password to be encrypted
+ * @returns Password encrypted
+ */
 AuthSchema.methods.hashPassword = function (password: string): string {
   return hashSync(password, SALT_ROUND);
 };
