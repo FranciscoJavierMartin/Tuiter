@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { v2 } from 'cloudinary';
-import { UserCacheService } from '../user/services/user.cache.service';
-import { UploaderService } from './services/uploader.service';
+import { UserCacheService } from '@/user/services/user.cache.service';
+import { UploaderService } from '@/shared/services/uploader.service';
 
 @Module({
   imports: [],
