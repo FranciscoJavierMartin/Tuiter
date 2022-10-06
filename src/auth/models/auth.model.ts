@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 import { hashSync, compareSync } from 'bcryptjs';
-import { firstLetterUppercase } from '../../helpers/utils';
+import { firstLetterUppercase } from '@/helpers/utils';
 
 const SALT_ROUND = 10;
 

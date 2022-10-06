@@ -7,10 +7,10 @@ import {
   ParseFilePipe,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { AuthService } from './services/auth.service';
-import { RegisterDto } from './dto/requests/register.dto';
-import { ResponseRegisterDto } from './dto/responses/register.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { AuthService } from '@/auth/services/auth.service';
+import { RegisterDto } from '@/auth/dto/requests/register.dto';
+import { ResponseRegisterDto } from '@/auth/dto/responses/register.dto';
 
 @ApiTags('Auth')
 @Controller('auth')

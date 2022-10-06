@@ -5,22 +5,19 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { JwtService } from '@nestjs/jwt';
+import { InjectQueue } from '@nestjs/bull';
 import { ObjectId } from 'mongodb';
 import { Model } from 'mongoose';
-import { UploadApiResponse } from 'cloudinary';
-import { RegisterDto } from '../dto/requests/register.dto';
-import { ResponseRegisterDto } from '../dto/responses/register.dto';
-import { AuthUser, AuthDocument } from '../models/auth.model';
-import {
-  firstLetterUppercase,
-  generateRandomIntegers,
-} from '../../helpers/utils';
-import { UserService } from '../../user/services/user.service';
-import { UserCacheService } from 'src/user/services/user.cache.service';
-import { UserDocument } from 'src/user/models/user.model';
-import { InjectQueue } from '@nestjs/bull';
 import { Queue } from 'bull';
-import { UploaderService } from 'src/shared/services/uploader.service';
+import { UploadApiResponse } from 'cloudinary';
+import { firstLetterUppercase, generateRandomIntegers } from '@/helpers/utils';
+import { UploaderService } from '@/shared/services/uploader.service';
+import { UserService } from '@/user/services/user.service';
+import { UserCacheService } from '@/user/services/user.cache.service';
+import { UserDocument } from '@/user/models/user.model';
+import { RegisterDto } from '@/auth/dto/requests/register.dto';
+import { ResponseRegisterDto } from '@/auth/dto/responses/register.dto';
+import { AuthUser, AuthDocument } from '@/auth/models/auth.model';
 
 @Injectable()
 export class AuthService {

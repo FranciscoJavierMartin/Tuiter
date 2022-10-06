@@ -1,8 +1,8 @@
 import { Process, Processor } from '@nestjs/bull';
 import { DoneCallback, Job } from 'bull';
-import { BaseConsumer } from 'src/shared/consumer/base.consumer';
-import { AuthDocument } from '../models/auth.model';
-import { AuthService } from '../services/auth.service';
+import { BaseConsumer } from '@/shared/consumer/base.consumer';
+import { AuthDocument } from '@/auth/models/auth.model';
+import { AuthService } from '@/auth/services/auth.service';
 
 @Processor('auth')
 export class AuthConsumer extends BaseConsumer {

@@ -1,4 +1,4 @@
-import { UserDocument } from '../../../user/models/user.model';
+import { UserDocument } from '@/user/models/user.model';
 
 export class ResponseRegisterDto {
   message: string;

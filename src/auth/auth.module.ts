@@ -3,14 +3,14 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
-import { AuthService } from './services/auth.service';
-import { AuthController } from './auth.controller';
-import { AuthUser, AuthSchema } from './models/auth.model';
-import { JwtStrategy } from './strategies/jwt.strategy';
-import { UserModule } from '../user/user.module';
-import { SharedModule } from 'src/shared/shared.module';
 import { BullModule } from '@nestjs/bull';
-import { AuthConsumer } from './consumers/auth.consumer';
+import { SharedModule } from '@/shared/shared.module';
+import { UserModule } from '@/user/user.module';
+import { AuthService } from '@/auth/services/auth.service';
+import { AuthController } from '@/auth/auth.controller';
+import { AuthUser, AuthSchema } from '@/auth/models/auth.model';
+import { JwtStrategy } from '@/auth/strategies/jwt.strategy';
+import { AuthConsumer } from '@/auth/consumers/auth.consumer';
 
 @Module({
   imports: [
