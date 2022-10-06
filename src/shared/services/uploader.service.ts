@@ -27,10 +27,8 @@ export class UploaderService {
           result: UploadApiResponse | undefined,
         ) => {
           if (error) {
-            console.log('Error');
             reject(error);
           } else {
-            console.log('Resolve');
             resolve(result);
           }
         },
