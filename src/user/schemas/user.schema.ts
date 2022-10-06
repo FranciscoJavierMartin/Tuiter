@@ -2,8 +2,6 @@ import { Prop, raw, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { Document } from 'mongoose';
 import { ObjectId } from 'mongodb';
 
-// export type UserDocument = User & Document;
-
 export interface UserDocument extends Document {
   _id: string | ObjectId;
   authId: string | ObjectId;

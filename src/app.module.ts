@@ -12,7 +12,7 @@ import { BullModule } from '@nestjs/bull';
       envFilePath: '.env',
       isGlobal: true,
     }),
-    MongooseModule.forRoot('mongodb://localhost/chatty'),
+    MongooseModule.forRoot(process.env.DATABASE_URL),
     BullModule.forRoot({
       redis: {
         host: 'localhost',
