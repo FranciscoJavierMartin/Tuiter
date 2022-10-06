@@ -1,20 +1,13 @@
-import {
-  OnGlobalQueueCompleted,
-  OnGlobalQueueStalled,
-  Process,
-  Processor,
-} from '@nestjs/bull';
-import { Logger } from '@nestjs/common';
+import { Process, Processor } from '@nestjs/bull';
 import { DoneCallback, Job } from 'bull';
+import { BaseConsumer } from 'src/shared/consumer/base.consumer';
 import { AuthDocument } from '../schemas/auth.schema';
 import { AuthService } from '../services/auth.service';
 
 @Processor('auth')
-export class AuthConsumer {
-  private logger: Logger;
-
+export class AuthConsumer extends BaseConsumer {
   constructor(private authService: AuthService) {
-    this.logger = new Logger('AuthConsumer');
+    super('AuthConsumer');
   }
 
   @Process({ name: 'addAuthUserToDB', concurrency: 5 })
@@ -30,15 +23,5 @@ export class AuthConsumer {
       this.logger.error(error);
       done(error as Error);
     }
-  }
-
-  @OnGlobalQueueCompleted()
-  onGlobalQueueCompleted(jobId: string): void {
-    this.logger.log(`Job ${jobId} completed`);
-  }
-
-  @OnGlobalQueueStalled()
-  onGlobalQueueStalled(jobId: string): void {
-    this.logger.log(`Job ${jobId} is stalled`);
   }
 }

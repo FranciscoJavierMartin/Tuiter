@@ -9,7 +9,6 @@ import { AuthUser, AuthSchema } from './schemas/auth.schema';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { UserModule } from '../user/user.module';
 import { SharedModule } from 'src/shared/shared.module';
-import { AuthQueueService } from './services/auth.queue.service';
 import { BullModule } from '@nestjs/bull';
 import { AuthConsumer } from './consumers/auth.consumer';
 
@@ -55,6 +54,6 @@ import { AuthConsumer } from './consumers/auth.consumer';
     SharedModule,
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy, AuthQueueService, AuthConsumer],
+  providers: [AuthService, JwtStrategy, AuthConsumer],
 })
 export class AuthModule {}
