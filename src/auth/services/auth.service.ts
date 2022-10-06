@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { JwtService } from '@nestjs/jwt';
 import { ObjectId } from 'mongodb';
@@ -6,7 +6,10 @@ import { Model } from 'mongoose';
 import { RegisterDto } from '../dto/requests/register.dto';
 import { ResponseRegisterDto } from '../dto/responses/register.dto';
 import { AuthUser, AuthDocument } from '../schemas/auth.schema';
-import { generateRandomIntegers } from '../../helpers/utils';
+import {
+  firstLetterUppercase,
+  generateRandomIntegers,
+} from '../../helpers/utils';
 import { UserService } from '../../user/services/user.service';
 import { UserCacheService } from 'src/user/services/user.cache.service';
 import { UserDocument } from 'src/user/schemas/user.schema';
@@ -30,10 +33,13 @@ export class AuthService {
     registerDto: RegisterDto,
     avatarImage: Express.Multer.File,
   ): Promise<ResponseRegisterDto | any> {
-    const userObjectId: ObjectId = new ObjectId();
+    if (await this.checkIfUserExists(registerDto.email, registerDto.username)) {
+      throw new BadRequestException('User is already created');
+    }
 
-    const uId = generateRandomIntegers(12).toString();
+    const userObjectId: ObjectId = new ObjectId();
     const authObjectId: ObjectId = new ObjectId();
+    const uId = generateRandomIntegers(12).toString();
 
     const authUser: AuthDocument = {
       _id: authObjectId,
@@ -78,6 +84,17 @@ export class AuthService {
   async createAuthUser(authUser: AuthDocument): Promise<void> {
     const authUserCreated = new this.authModel({ ...authUser });
     await authUserCreated.save();
+  }
+
+  async checkIfUserExists(email: string, username: string): Promise<boolean> {
+    return !!(await this.authModel
+      .exists({
+        $or: [
+          { username: firstLetterUppercase(username) },
+          { email: email.toLowerCase() },
+        ],
+      })
+      .exec());
   }
 
   private signToken(
