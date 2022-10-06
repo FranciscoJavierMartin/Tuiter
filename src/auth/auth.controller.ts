@@ -26,7 +26,11 @@ export class AuthController {
       },
     }),
   )
-  @ApiResponse({ status: HttpStatus.CREATED, description: 'User created' })
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+    description: 'User created',
+    type: ResponseRegisterDto,
+  })
   @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Bad request' })
   @ApiResponse({
     status: HttpStatus.BAD_GATEWAY,
