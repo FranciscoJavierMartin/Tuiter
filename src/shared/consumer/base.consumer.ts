@@ -9,12 +9,12 @@ export abstract class BaseConsumer {
   }
 
   @OnGlobalQueueCompleted()
-  onGlobalQueueCompleted(jobId: string): void {
+  public onGlobalQueueCompleted(jobId: string): void {
     this.logger.log(`Job ${jobId} completed`);
   }
 
   @OnGlobalQueueStalled()
-  onGlobalQueueStalled(jobId: string): void {
+  public onGlobalQueueStalled(jobId: string): void {
     this.logger.log(`Job ${jobId} is stalled`);
   }
 }

@@ -10,7 +10,15 @@ import {
 export class UploaderService {
   constructor(private configService: ConfigService) {}
 
-  async uploadImage(
+  /**
+   * Upload image to Cloudinary
+   * @param file File to be uploaded
+   * @param public_id public id to upload the image
+   * @param overwrite overwrite the image
+   * @param invalidate invalidate previous image
+   * @returns Result of upload operation
+   */
+  public async uploadImage(
     file: Express.Multer.File,
     public_id?: string,
     overwrite?: boolean,
@@ -39,7 +47,13 @@ export class UploaderService {
     });
   }
 
-  getImageUrl(version: number, publicId: string): string {
+  /**
+   * Get image url
+   * @param version
+   * @param publicId
+   * @returns image url
+   */
+  public getImageUrl(version: number, publicId: string): string {
     return `https://res.cloudinary.com/${this.configService.get(
       'CLOUDINARY_CLOUD_NAME',
     )}/image/upload/v${version}/${publicId}`;

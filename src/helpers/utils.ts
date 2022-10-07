@@ -1,3 +1,8 @@
+/**
+ * Generate a ramdon number with determined length
+ * @param lenght Number lenght
+ * @returns Ramdon number
+ */
 export function generateRandomIntegers(lenght: number): number {
   const characters = '0123456789';
   let result = ' ';
@@ -9,6 +14,11 @@ export function generateRandomIntegers(lenght: number): number {
   return parseInt(result, 10);
 }
 
+/**
+ * Transform passed string with first letter in upper case and the rest in lower case
+ * @param str string to be transformed
+ * @returns String transformed
+ */
 export function firstLetterUppercase(str: string): string {
   const valueString = str.toLowerCase();
   return valueString
