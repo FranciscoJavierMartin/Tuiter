@@ -77,7 +77,7 @@ export class AuthService {
       avatarUploaded.version,
       avatarUploaded.public_id,
     );
-    await this.userCacheService.saveUserToCache(
+    await this.userCacheService.storeUserToCache(
       userObjectId.toString(),
       uId,
       userDataToCache,

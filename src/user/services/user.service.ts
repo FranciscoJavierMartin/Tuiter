@@ -9,7 +9,13 @@ import { User, UserDocument } from '@/user/models/user.model';
 export class UserService {
   constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
 
-  getUserData(data: AuthDocument, userObjectId: ObjectId): UserDocument {
+  /**
+   * Transform AuthDocument in UserDocument. Only for new users
+   * @param data Auth user data
+   * @param userObjectId user id to be created in DB
+   * @returns User from auth
+   */
+  public getUserData(data: AuthDocument, userObjectId: ObjectId): UserDocument {
     const { _id, username, email, uId, password, avatarColor } = data;
     return {
       _id: userObjectId,
@@ -46,7 +52,11 @@ export class UserService {
     } as unknown as UserDocument;
   }
 
-  async addUserData(data: UserDocument): Promise<void> {
+  /**
+   * Insert user in DB
+   * @param data User to be created
+   */
+  public async addUserDataToDB(data: UserDocument): Promise<void> {
     const userCreated = new this.userModel({ ...data });
     await userCreated.save();
   }

@@ -8,6 +8,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const logger = new Logger('bootstrap');
 
+  app.use(compression());
   app.setGlobalPrefix('api');
   app.useGlobalPipes(
     new ValidationPipe({
@@ -15,7 +16,6 @@ async function bootstrap() {
       forbidNonWhitelisted: true,
     }),
   );
-  app.use(compression());
 
   const config = new DocumentBuilder()
     .setTitle('Chatty')

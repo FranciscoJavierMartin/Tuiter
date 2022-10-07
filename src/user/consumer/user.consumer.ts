@@ -11,9 +11,12 @@ export class UserConsumer extends BaseConsumer {
   }
 
   @Process({ name: 'addUserToDB', concurrency: 5 })
-  async addUserToDB(job: Job<UserDocument>, done: DoneCallback): Promise<void> {
+  public async addUserToDB(
+    job: Job<UserDocument>,
+    done: DoneCallback,
+  ): Promise<void> {
     try {
-      await this.userService.addUserData(job.data);
+      await this.userService.addUserDataToDB(job.data);
       job.progress(100);
       done(null, job.data);
     } catch (error) {

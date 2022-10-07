@@ -9,7 +9,13 @@ export class UserCacheService extends BaseCache {
     super('UserCache', configService);
   }
 
-  async saveUserToCache(
+  /**
+   * Store user in cache
+   * @param key redis key
+   * @param userId user id related to stored user
+   * @param createdUser User to be stored
+   */
+  public async storeUserToCache(
     key: string,
     userId: string,
     createdUser: UserDocument,
