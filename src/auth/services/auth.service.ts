@@ -96,7 +96,12 @@ export class AuthService {
     };
   }
 
-  public async login(loginDto: LoginDto): Promise<any> {
+  /**
+   * Get user from DB and attach a JWT
+   * @param loginDto User data to login
+   * @returns User from DB and JWT
+   */
+  public async login(loginDto: LoginDto): Promise<ResponseRegisterDto> {
     const authUser: AuthDocument = await this.getAuthUserByUsername(
       loginDto.username,
     );
@@ -105,7 +110,33 @@ export class AuthService {
       throw new BadRequestException('Invalid credentials');
     }
 
-    return 'test';
+    const user: UserDocument = await this.userService.getUserByAuthId(
+      authUser.id,
+    );
+
+    const userJwt: string = this.jwtService.sign({
+      userId: user._id,
+      uId: authUser.uId,
+      email: authUser.email,
+      username: authUser.username,
+      avatarColor: authUser.avatarColor,
+    });
+
+    const userDocument: UserDocument = {
+      ...user,
+      authId: authUser._id,
+      username: authUser.username,
+      email: authUser.email,
+      avatarColor: authUser.avatarColor,
+      uId: authUser.uId,
+      createdAt: authUser.createdAt,
+    } as UserDocument;
+
+    return {
+      message: 'User login successfuly',
+      user: userDocument,
+      token: userJwt,
+    };
   }
 
   /**

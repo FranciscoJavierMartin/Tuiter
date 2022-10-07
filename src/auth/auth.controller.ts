@@ -47,6 +47,20 @@ export class AuthController {
   }
 
   @Get('login')
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'User logged',
+    type: ResponseRegisterDto,
+  })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: 'Invalid credentials',
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'User not found',
+  })
+  @ApiBody({ type: LoginDto })
   public async login(
     @Body() loginDto: LoginDto,
   ): Promise<ResponseRegisterDto | any> {
