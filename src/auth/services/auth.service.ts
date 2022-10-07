@@ -31,7 +31,13 @@ export class AuthService {
     @InjectQueue('user') private userQueue: Queue<UserDocument>,
   ) {}
 
-  async create(
+  /**
+   * Create user (auth and user) in db and cache
+   * @param registerDto User data
+   * @param avatarImage User avatar file
+   * @returns User created and JWT token
+   */
+  public async create(
     registerDto: RegisterDto,
     avatarImage: Express.Multer.File,
   ): Promise<ResponseRegisterDto | any> {
@@ -41,8 +47,8 @@ export class AuthService {
       throw new BadRequestException('User is already created');
     }
 
-    const userObjectId: ObjectId = new ObjectId();
     const authObjectId: ObjectId = new ObjectId();
+    const userObjectId: ObjectId = new ObjectId();
     const uId = generateRandomIntegers(12).toString();
 
     const authUser: AuthDocument = {
@@ -89,12 +95,25 @@ export class AuthService {
     };
   }
 
-  async createAuthUser(authUser: AuthDocument): Promise<void> {
+  /**
+   * Create auth user in DB
+   * @param authUser auth user to be created
+   */
+  public async createAuthUser(authUser: AuthDocument): Promise<void> {
     const authUserCreated = new this.authModel({ ...authUser });
     await authUserCreated.save();
   }
 
-  async checkIfUserExists(email: string, username: string): Promise<boolean> {
+  /**
+   * Check if users exists in db by email or username
+   * @param email
+   * @param username
+   * @returns True if user exists, False otherwise
+   */
+  public async checkIfUserExists(
+    email: string,
+    username: string,
+  ): Promise<boolean> {
     return !!(await this.authModel
       .exists({
         $or: [
@@ -105,6 +124,12 @@ export class AuthService {
       .exec());
   }
 
+  /**
+   * Create JWT token
+   * @param payload user data to be included in payload
+   * @param userObjectId user id in db
+   * @returns JWT Token
+   */
   private signToken(
     { uId, email, username, avatarColor }: AuthDocument,
     userObjectId: ObjectId,

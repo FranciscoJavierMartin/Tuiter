@@ -36,7 +36,7 @@ export class AuthController {
     status: HttpStatus.BAD_GATEWAY,
     description: 'Error on internal request',
   })
-  async register(
+  public async register(
     @Body() registerDto: RegisterDto,
     @UploadedFile(new ParseFilePipe({})) avatarImage: Express.Multer.File,
   ): Promise<ResponseRegisterDto> {

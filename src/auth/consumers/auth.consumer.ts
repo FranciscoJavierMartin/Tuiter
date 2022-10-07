@@ -11,7 +11,7 @@ export class AuthConsumer extends BaseConsumer {
   }
 
   @Process({ name: 'addAuthUserToDB', concurrency: 5 })
-  async addAuthUserToDB(
+  public async addAuthUserToDB(
     job: Job<AuthDocument>,
     done: DoneCallback,
   ): Promise<void> {
