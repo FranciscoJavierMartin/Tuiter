@@ -7,7 +7,7 @@ import {
   ParseFilePipe,
   HttpStatus,
 } from '@nestjs/common';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { AuthService } from '@/auth/services/auth.service';
 import { RegisterDto } from '@/auth/dto/requests/register.dto';
@@ -36,6 +36,7 @@ export class AuthController {
     status: HttpStatus.BAD_GATEWAY,
     description: 'Error on internal request',
   })
+  @ApiBody({ type: RegisterDto })
   public async register(
     @Body() registerDto: RegisterDto,
     @UploadedFile(new ParseFilePipe({})) avatarImage: Express.Multer.File,
