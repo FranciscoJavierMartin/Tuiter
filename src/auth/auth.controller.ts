@@ -6,12 +6,14 @@ import {
   UseInterceptors,
   ParseFilePipe,
   HttpStatus,
+  Get,
 } from '@nestjs/common';
 import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { AuthService } from '@/auth/services/auth.service';
 import { RegisterDto } from '@/auth/dto/requests/register.dto';
 import { ResponseRegisterDto } from '@/auth/dto/responses/register.dto';
+import { LoginDto } from '@/auth/dto/requests/login.dto';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -42,5 +44,12 @@ export class AuthController {
     @UploadedFile(new ParseFilePipe({})) avatarImage: Express.Multer.File,
   ): Promise<ResponseRegisterDto> {
     return this.authService.create(registerDto, avatarImage);
+  }
+
+  @Get('login')
+  public async login(
+    @Body() loginDto: LoginDto,
+  ): Promise<ResponseRegisterDto | any> {
+    return this.authService.login(loginDto);
   }
 }

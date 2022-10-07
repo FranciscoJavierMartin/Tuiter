@@ -18,6 +18,7 @@ import { UserDocument } from '@/user/models/user.model';
 import { RegisterDto } from '@/auth/dto/requests/register.dto';
 import { ResponseRegisterDto } from '@/auth/dto/responses/register.dto';
 import { AuthUser, AuthDocument } from '@/auth/models/auth.model';
+import { LoginDto } from '@/auth/dto/requests/login.dto';
 
 @Injectable()
 export class AuthService {
@@ -40,7 +41,7 @@ export class AuthService {
   public async create(
     registerDto: RegisterDto,
     avatarImage: Express.Multer.File,
-  ): Promise<ResponseRegisterDto | any> {
+  ): Promise<ResponseRegisterDto> {
     let avatarUploaded: UploadApiResponse;
 
     if (await this.checkIfUserExists(registerDto.email, registerDto.username)) {
@@ -95,6 +96,18 @@ export class AuthService {
     };
   }
 
+  public async login(loginDto: LoginDto): Promise<any> {
+    const authUser: AuthDocument = await this.getAuthUserByUsername(
+      loginDto.username,
+    );
+
+    if (!authUser || !authUser.comparePassword(loginDto.password)) {
+      throw new BadRequestException('Invalid credentials');
+    }
+
+    return 'test';
+  }
+
   /**
    * Create auth user in DB
    * @param authUser auth user to be created
@@ -124,6 +137,13 @@ export class AuthService {
       .exec());
   }
 
+  public async getAuthUserByUsername(username: string): Promise<AuthDocument> {
+    return await this.authModel
+      .findOne({
+        username: firstLetterUppercase(username),
+      })
+      .exec();
+  }
   /**
    * Create JWT token
    * @param payload user data to be included in payload

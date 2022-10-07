@@ -5,7 +5,11 @@ import { firstLetterUppercase } from '@/helpers/utils';
 
 const SALT_ROUND = 10;
 
-export type AuthDocument = AuthUser & Document;
+export type AuthDocument = AuthUser &
+  Document & {
+    comparePassword: (password: string) => boolean;
+    hashPassword: (password: string) => string;
+  };
 
 @Schema({
   collection: 'Auth',
