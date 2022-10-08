@@ -29,3 +29,15 @@ export function firstLetterUppercase(str: string): string {
     )
     .join(' ');
 }
+
+export function parseJson<T = any>(prop: string): T {
+  let res: T;
+
+  try {
+    res = JSON.parse(prop);
+  } catch (error) {
+    res = prop as T;
+  }
+
+  return res;
+}

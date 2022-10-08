@@ -77,9 +77,7 @@ export class AuthController {
     type: ResponseUserDto,
   })
   @UseGuards(AuthGuard())
-  public getCurrentUser(@GetUser() user: JwtPayload): ResponseUserDto {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { iat, exp, ...userData } = user;
-    return userData;
+  public getCurrentUser(@GetUser() user: JwtPayload): Promise<ResponseUserDto> {
+    return this.authService.getUser(user.userId);
   }
 }

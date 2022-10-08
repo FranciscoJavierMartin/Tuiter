@@ -2,6 +2,7 @@ import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { BaseCache } from '@/shared/redis/base.cache';
 import { UserDocument } from '@/user/models/user.model';
+import { parseJson } from '@/helpers/utils';
 
 @Injectable()
 export class UserCacheService extends BaseCache {
@@ -96,6 +97,28 @@ export class UserCacheService extends BaseCache {
       throw new InternalServerErrorException(
         `Error adding user ${key} to Redis`,
       );
+    }
+  }
+
+  public async getUserFromCache(key: string): Promise<UserDocument | null> {
+    try {
+      const response: UserDocument = (await this.client.HGETALL(
+        `users:${key}`,
+      )) as unknown as UserDocument;
+
+      response.createdAt = new Date(parseJson(`${response.createdAt}`));
+      response.postsCount = parseJson(`${response.postsCount}`);
+      response.blocked = parseJson(`${response.blocked}`);
+      response.blockedBy = parseJson(`${response.blockedBy}`);
+      response.notifications = parseJson(`${response.notifications}`);
+      response.social = parseJson(`${response.social}`);
+      response.followersCount = parseJson<number>(`${response.followersCount}`);
+      response.followingCount = parseJson<number>(`${response.followingCount}`);
+
+      return response;
+    } catch (error) {
+      this.logger.error(error);
+      throw new InternalServerErrorException('Server error. Try again');
     }
   }
 }

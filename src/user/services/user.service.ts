@@ -61,6 +61,28 @@ export class UserService {
     await userCreated.save();
   }
 
+  public async getUserById(userId: string): Promise<UserDocument> {
+    const users: UserDocument[] = await this.userModel.aggregate([
+      { $match: { _id: new mongoose.Types.ObjectId(userId) } },
+      {
+        $lookup: {
+          from: 'Auth',
+          localField: 'authId',
+          foreignField: '_id',
+          as: 'authId',
+        },
+      },
+      { $unwind: '$authId' },
+      { $project: this.aggregateProject() },
+    ]);
+
+    if (users.length === 0) {
+      throw new NotFoundException('User not found');
+    }
+
+    return users[0];
+  }
+
   /**
    * Get user from 'users' collection
    * @param authId Id from auth collection
