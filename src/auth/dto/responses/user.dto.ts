@@ -1,18 +1,16 @@
 import { ApiProperty } from '@nestjs/swagger';
-import mongoose from 'mongoose';
-import { ObjectId } from 'mongodb';
-import { NotificationSettings, SocialLinks } from '@/user/models/user.model';
+import {
+  NotificationSettings,
+  SocialLinks,
+  UserDocument,
+} from '@/user/models/user.model';
 
-export class ResponseUserDto {
+export class UserDto {
   @ApiProperty({
     description: 'User id from "Users" collection',
+    type: String,
   })
-  _id: string | ObjectId;
-
-  @ApiProperty({
-    description: 'User id from "Auth" collection',
-  })
-  authId: string | ObjectId;
+  _id: string;
 
   @ApiProperty({
     description: 'User name',
@@ -62,12 +60,12 @@ export class ResponseUserDto {
   @ApiProperty({
     description: 'Users blocked by me',
   })
-  blocked: mongoose.Types.ObjectId[];
+  blocked: string[];
 
   @ApiProperty({
     description: 'Users that have blocked me',
   })
-  blockedBy: mongoose.Types.ObjectId[];
+  blockedBy: string[];
 
   @ApiProperty({
     description: 'Users that follow me',
@@ -108,4 +106,27 @@ export class ResponseUserDto {
     description: 'User created date',
   })
   createdAt?: Date;
+
+  constructor(user: UserDocument) {
+    this._id = user._id.toString();
+    this.uId = user.uId;
+    this.username = user.username;
+    this.email = user.email;
+    this.avatarColor = user.avatarColor;
+    this.postsCount = user.postsCount;
+    this.work = user.work;
+    this.school = user.school;
+    this.quote = user.quote;
+    this.location = user.location;
+    this.blocked = user.blocked.map((id) => id.toString());
+    this.blockedBy = user.blockedBy.map((id) => id.toString());
+    this.followersCount = user.followersCount;
+    this.followingCount = user.followingCount;
+    this.notifications = user.notifications;
+    this.social = user.social;
+    this.bgImageId = user.bgImageId;
+    this.bgImageVersion = user.bgImageVersion;
+    this.profilePicture = user.profilePicture;
+    this.createdAt = user.createdAt;
+  }
 }

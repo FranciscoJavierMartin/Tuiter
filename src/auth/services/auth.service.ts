@@ -181,6 +181,11 @@ export class AuthService {
       .exec();
   }
 
+  /**
+   * Get user from cache or DB
+   * @param userId User id to find it
+   * @returns User from cache or DB
+   */
   public async getUser(userId: string): Promise<UserDocument> {
     const cachedUser: UserDocument =
       await this.userCacheService.getUserFromCache(userId);
@@ -190,6 +195,7 @@ export class AuthService {
 
     return existingUser;
   }
+
   /**
    * Create JWT token
    * @param payload user data to be included in payload

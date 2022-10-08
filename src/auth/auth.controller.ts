@@ -18,7 +18,7 @@ import { LoginDto } from '@/auth/dto/requests/login.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from './decorators/get-user.decorator';
 import { JwtPayload } from './interfaces/jwt.payload';
-import { ResponseUserDto } from './dto/responses/user.dto';
+import { UserDto } from './dto/responses/user.dto';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -74,10 +74,11 @@ export class AuthController {
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'User info',
-    type: ResponseUserDto,
+    type: UserDto,
   })
   @UseGuards(AuthGuard())
-  public getCurrentUser(@GetUser() user: JwtPayload): Promise<ResponseUserDto> {
-    return this.authService.getUser(user.userId);
+  public async getCurrentUser(@GetUser() user: JwtPayload): Promise<UserDto> {
+    const userFromServer = await this.authService.getUser(user.userId);
+    return new UserDto(userFromServer);
   }
 }
