@@ -8,6 +8,7 @@ import {
   HttpStatus,
   Get,
   UseGuards,
+  Request,
 } from '@nestjs/common';
 import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -16,6 +17,7 @@ import { RegisterDto } from '@/auth/dto/requests/register.dto';
 import { ResponseRegisterDto } from '@/auth/dto/responses/register.dto';
 import { LoginDto } from '@/auth/dto/requests/login.dto';
 import { AuthGuard } from '@nestjs/passport';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -63,9 +65,7 @@ export class AuthController {
     description: 'User not found',
   })
   @ApiBody({ type: LoginDto })
-  public async login(
-    @Body() loginDto: LoginDto,
-  ): Promise<ResponseRegisterDto | any> {
+  public async login(@Body() loginDto: LoginDto): Promise<ResponseRegisterDto> {
     return this.authService.login(loginDto);
   }
 

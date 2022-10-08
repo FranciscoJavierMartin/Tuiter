@@ -168,6 +168,11 @@ export class AuthService {
       .exec());
   }
 
+  /**
+   * Get auth user by username
+   * @param username User name
+   * @returns User from DB
+   */
   public async getAuthUserByUsername(username: string): Promise<AuthDocument> {
     return await this.authModel
       .findOne({
@@ -175,6 +180,7 @@ export class AuthService {
       })
       .exec();
   }
+
   /**
    * Create JWT token
    * @param payload user data to be included in payload
