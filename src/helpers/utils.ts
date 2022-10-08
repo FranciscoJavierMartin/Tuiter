@@ -30,6 +30,11 @@ export function firstLetterUppercase(str: string): string {
     .join(' ');
 }
 
+/**
+ * Parse string to value
+ * @param prop string to be parsed
+ * @returns Parsed value
+ */
 export function parseJson<T = any>(prop: string): T {
   let res: T;
 

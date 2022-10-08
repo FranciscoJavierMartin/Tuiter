@@ -16,9 +16,9 @@ import { RegisterDto } from '@/auth/dto/requests/register.dto';
 import { ResponseRegisterDto } from '@/auth/dto/responses/register.dto';
 import { LoginDto } from '@/auth/dto/requests/login.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { GetUser } from './decorators/get-user.decorator';
-import { JwtPayload } from './interfaces/jwt.payload';
-import { UserDto } from './dto/responses/user.dto';
+import { GetUser } from '@/auth/decorators/get-user.decorator';
+import { JwtPayload } from '@/auth/interfaces/jwt.payload';
+import { UserDto } from '@/auth/dto/responses/user.dto';
 
 @ApiTags('Auth')
 @Controller('auth')
