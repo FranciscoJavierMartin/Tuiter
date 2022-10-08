@@ -8,7 +8,6 @@ import {
   HttpStatus,
   Get,
   UseGuards,
-  Request,
 } from '@nestjs/common';
 import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -17,7 +16,9 @@ import { RegisterDto } from '@/auth/dto/requests/register.dto';
 import { ResponseRegisterDto } from '@/auth/dto/responses/register.dto';
 import { LoginDto } from '@/auth/dto/requests/login.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { GetUser } from './decorators/get-user.decorator';
+import { JwtPayload } from './interfaces/jwt.payload';
+import { ResponseUserDto } from './dto/responses/user.dto';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -70,8 +71,15 @@ export class AuthController {
   }
 
   @Get('current-user')
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'User info',
+    type: ResponseUserDto,
+  })
   @UseGuards(AuthGuard())
-  public async getCurrentUser() {
-    return 'test';
+  public getCurrentUser(@GetUser() user: JwtPayload): ResponseUserDto {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { iat, exp, ...userData } = user;
+    return userData;
   }
 }
