@@ -81,7 +81,7 @@ export class UserService {
       { $project: this.aggregateProject() },
     ]);
 
-    if (users.length > 0) {
+    if (users.length === 0) {
       throw new NotFoundException('User not found');
     }
 

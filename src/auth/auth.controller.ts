@@ -7,6 +7,7 @@ import {
   ParseFilePipe,
   HttpStatus,
   Get,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -14,6 +15,7 @@ import { AuthService } from '@/auth/services/auth.service';
 import { RegisterDto } from '@/auth/dto/requests/register.dto';
 import { ResponseRegisterDto } from '@/auth/dto/responses/register.dto';
 import { LoginDto } from '@/auth/dto/requests/login.dto';
+import { AuthGuard } from '@nestjs/passport';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -65,5 +67,11 @@ export class AuthController {
     @Body() loginDto: LoginDto,
   ): Promise<ResponseRegisterDto | any> {
     return this.authService.login(loginDto);
+  }
+
+  @Get('current-user')
+  @UseGuards(AuthGuard())
+  public async getCurrentUser() {
+    return 'test';
   }
 }
