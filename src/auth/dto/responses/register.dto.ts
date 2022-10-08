@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { UserDocument } from '@/user/models/user.model';
+import { UserDto } from '@/auth/dto/responses/user.dto';
 
 export class ResponseRegisterDto {
   @ApiProperty({
@@ -11,8 +11,9 @@ export class ResponseRegisterDto {
   @ApiProperty({
     description: 'User created',
     nullable: false,
+    type: UserDto,
   })
-  user: UserDocument;
+  user: UserDto;
 
   @ApiProperty({
     description: 'JWT Token. Ready for use',

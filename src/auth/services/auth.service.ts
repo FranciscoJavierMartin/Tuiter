@@ -19,6 +19,7 @@ import { RegisterDto } from '@/auth/dto/requests/register.dto';
 import { ResponseRegisterDto } from '@/auth/dto/responses/register.dto';
 import { AuthUser, AuthDocument } from '@/auth/models/auth.model';
 import { LoginDto } from '@/auth/dto/requests/login.dto';
+import { UserDto } from '@/auth/dto/responses/user.dto';
 
 @Injectable()
 export class AuthService {
@@ -91,7 +92,7 @@ export class AuthService {
 
     return {
       message: 'User created successfully',
-      user: userDataToCache,
+      user: new UserDto(userDataToCache),
       token: jwtToken,
     };
   }
@@ -134,7 +135,7 @@ export class AuthService {
 
     return {
       message: 'User login successfuly',
-      user: userDocument,
+      user: new UserDto(userDocument),
       token: userJwt,
     };
   }
