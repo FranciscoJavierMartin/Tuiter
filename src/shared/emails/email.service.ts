@@ -34,7 +34,7 @@ export class EmailService {
   ): string {
     return ejs.render(
       fs.readFileSync(
-        __dirname + '/templates/forgot-password/forgot-password-template.ejs',
+        __dirname + '/templates/forgot-password-template.ejs',
         'utf8',
       ),
       {
