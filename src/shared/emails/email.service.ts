@@ -1,5 +1,5 @@
 import { BadGatewayException, Injectable, Logger } from '@nestjs/common';
-import nodemailer from 'nodemailer';
+import * as nodemailer from 'nodemailer';
 import Mail from 'nodemailer/lib/mailer';
 import * as sendGridMail from '@sendgrid/mail';
 import * as fs from 'fs';
@@ -33,7 +33,10 @@ export class EmailService {
     resetLink: string,
   ): string {
     return ejs.render(
-      fs.readFileSync(__dirname + '/forgot-password-template.ejs', 'utf8'),
+      fs.readFileSync(
+        __dirname + '/templates/forgot-password/forgot-password-template.ejs',
+        'utf8',
+      ),
       {
         username,
         resetLink,
