@@ -20,6 +20,7 @@ import { ResponseRegisterDto } from '@/auth/dto/responses/register.dto';
 import { AuthUser, AuthDocument } from '@/auth/models/auth.model';
 import { LoginDto } from '@/auth/dto/requests/login.dto';
 import { UserDto } from '@/auth/dto/responses/user.dto';
+import { MailWorkerData } from '@/shared/emails/interfaces/email';
 
 @Injectable()
 export class AuthService {
@@ -31,7 +32,7 @@ export class AuthService {
     private userCacheService: UserCacheService,
     @InjectQueue('auth') private authQueue: Queue<AuthDocument>,
     @InjectQueue('user') private userQueue: Queue<UserDocument>,
-    @InjectQueue('email') private emailQueue: Queue<{ test: string }>,
+    @InjectQueue('email') private emailQueue: Queue<MailWorkerData>,
   ) {}
 
   /**
@@ -134,7 +135,11 @@ export class AuthService {
       createdAt: authUser.createdAt,
     } as UserDocument;
 
-    this.emailQueue.add('sendForgotPasswordEmail', { test: 'mio' });
+    this.emailQueue.add('sendForgotPasswordEmail', {
+      username: authUser.username,
+      receiverEmail: 'alia.crona@ethereal.email',
+      subject: 'Reset your password',
+    });
 
     return {
       message: 'User login successfuly',
