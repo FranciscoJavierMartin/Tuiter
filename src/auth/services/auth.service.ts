@@ -31,6 +31,7 @@ export class AuthService {
     private userCacheService: UserCacheService,
     @InjectQueue('auth') private authQueue: Queue<AuthDocument>,
     @InjectQueue('user') private userQueue: Queue<UserDocument>,
+    @InjectQueue('email') private emailQueue: Queue<{ test: string }>,
   ) {}
 
   /**
@@ -132,6 +133,8 @@ export class AuthService {
       uId: authUser.uId,
       createdAt: authUser.createdAt,
     } as UserDocument;
+
+    this.emailQueue.add('sendForgotPasswordEmail', { test: 'mio' });
 
     return {
       message: 'User login successfuly',

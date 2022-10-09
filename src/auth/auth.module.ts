@@ -37,6 +37,17 @@ import { AuthConsumer } from '@/auth/consumers/auth.consumer';
           removeOnComplete: true,
         },
       },
+      {
+        name: 'email',
+        defaultJobOptions: {
+          attempts: 3,
+          backoff: {
+            type: 'fixed',
+            delay: 5000,
+          },
+          removeOnComplete: true,
+        },
+      },
     ),
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.registerAsync({
