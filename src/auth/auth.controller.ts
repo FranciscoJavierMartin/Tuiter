@@ -11,16 +11,17 @@ import {
 } from '@nestjs/common';
 import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { AuthGuard } from '@nestjs/passport';
+import { EmailService } from '@/shared/emails/email.service';
 import { AuthService } from '@/auth/services/auth.service';
 import { RegisterDto } from '@/auth/dto/requests/register.dto';
 import { ResponseRegisterDto } from '@/auth/dto/responses/register.dto';
 import { LoginDto } from '@/auth/dto/requests/login.dto';
-import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from '@/auth/decorators/get-user.decorator';
 import { JwtPayload } from '@/auth/interfaces/jwt.payload';
 import { UserDto } from '@/auth/dto/responses/user.dto';
-import { ForgotPasswordDto } from './dto/requests/forgot-password.dto';
-import { EmailService } from '@/shared/emails/email.service';
+import { ForgotPasswordDto } from '@/auth/dto/requests/forgot-password.dto';
+import { InfoMessageDto } from '@/auth/dto/responses/info-message.dto';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -88,8 +89,12 @@ export class AuthController {
   }
 
   @Post('forgot-password')
-  public async forgotPassword(@Body() forgotPasswordDto: ForgotPasswordDto) {
-    await this.emailService.sendEmailTest();
-    // return this.authService.sendForgotPasswordEmail(forgotPasswordDto.email);
+  public async forgotPassword(
+    @Body() forgotPasswordDto: ForgotPasswordDto,
+  ): Promise<InfoMessageDto> {
+    await this.authService.sendForgotPasswordEmail(forgotPasswordDto.email);
+    return {
+      message: 'Password reset email sent',
+    };
   }
 }

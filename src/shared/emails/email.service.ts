@@ -8,6 +8,8 @@ import { ConfigService } from '@nestjs/config';
 import { MailerService } from '@nestjs-modules/mailer';
 import { MailOptions } from './interfaces/email';
 
+type Templates = 'forgot-password-template' | 'reset-password-template';
+
 // TODO: Use nestjs module for mailer
 @Injectable()
 export class EmailService {
@@ -21,41 +23,101 @@ export class EmailService {
     sendGridMail.setApiKey(this.configService.get('SENDGRID_API_KEY'));
   }
 
-  public async sendEmailTest() {
-    await this.mailerService.sendMail({
-      to: 'alia.crona@ethereal.email',
-      subject: 'Test email',
-      template: 'prueba',
-      context: {
-        username: 'Jane Doe',
-        resetLink: '#',
-        image_url:
-          'https://res.cloudinary.com/dyshqk0em/image/upload/v1665310488/chatty-nest/lock-icon-email.png',
-      },
-    });
-  }
+  // public async sendEmail(
+  //   receiverEmail: string,
+  //   subject: string,
+  //   body: string,
+  // ): Promise<void> {
+  //   if (process.env.NODE_ENV === 'production') {
+  //     await this.sendEmailProduction(receiverEmail, subject, body);
+  //   } else {
+  //     await this.sendEmailDevelopment(receiverEmail, subject, body);
+  //   }
+  // }
 
-  public async sendEmail(
+  // public getForgotPasswordTemplate(
+  //   username: string,
+  //   resetLink: string,
+  // ): string {
+  //   return ejs.render(
+  //     fs.readFileSync(
+  //       __dirname + '/templates/forgot-password-template.ejs',
+  //       'utf8',
+  //     ),
+  //     {
+  //       username,
+  //       resetLink,
+  //       image_url:
+  //         'https://res.cloudinary.com/dyshqk0em/image/upload/v1665310488/chatty-nest/lock-icon-email.png',
+  //     },
+  //   );
+  // }
+
+  // private async sendEmailProduction(
+  //   receiverEmail: string,
+  //   subject: string,
+  //   body: string,
+  // ): Promise<void> {
+  //   const mailOptions: MailOptions = {
+  //     from: `Chatty App <${this.configService.get('SENDER_EMAIL')}>`,
+  //     to: receiverEmail,
+  //     subject,
+  //     html: body,
+  //   };
+
+  //   try {
+  //     await sendGridMail.send(mailOptions);
+  //     this.logger.log('Production email sent successfully');
+  //   } catch (error) {
+  //     this.logger.error(`Error sending email ${error}`);
+  //     throw new BadGatewayException('Error sending email');
+  //   }
+  // }
+
+  // private async sendEmailDevelopment(
+  //   receiverEmail: string,
+  //   subject: string,
+  //   body: string,
+  // ): Promise<void> {
+  //   const transporter: Mail = nodemailer.createTransport({
+  //     host: 'smtp.ethereal.email',
+  //     port: 587,
+  //     secure: false,
+  //     auth: {
+  //       user: this.configService.get('SENDER_EMAIL'),
+  //       pass: this.configService.get('SENDER_EMAIL_PASSWORD'),
+  //     },
+  //   });
+
+  //   const mailOptions: MailOptions = {
+  //     from: `Chatty App <${this.configService.get('SENDER_EMAIL')}>`,
+  //     to: receiverEmail,
+  //     subject,
+  //     html: body,
+  //   };
+
+  //   try {
+  //     await transporter.sendMail(mailOptions);
+  //     this.logger.log('Development email sent successfully');
+  //   } catch (error) {
+  //     this.logger.error(`Error sending email ${error}`);
+  //     throw new BadGatewayException('Error sending email');
+  //   }
+  // }
+
+  public async sendForgotPasswordEmail(
     receiverEmail: string,
-    subject: string,
-    body: string,
-  ): Promise<void> {
-    if (process.env.NODE_ENV === 'production') {
-      await this.sendEmailProduction(receiverEmail, subject, body);
-    } else {
-      await this.sendEmailDevelopment(receiverEmail, subject, body);
-    }
-  }
-
-  public getForgotPasswordTemplate(
     username: string,
-    resetLink: string,
-  ): string {
-    return ejs.render(
-      fs.readFileSync(
-        __dirname + '/templates/forgot-password-template.ejs',
-        'utf8',
-      ),
+    token: string,
+  ): Promise<void> {
+    const resetLink = `${this.configService.get(
+      'CLIENT_URL',
+    )}/reset-password?token=${token}`;
+
+    await this.sendEmail(
+      receiverEmail,
+      'Reset your password',
+      'forgot-password-template',
       {
         username,
         resetLink,
@@ -65,55 +127,17 @@ export class EmailService {
     );
   }
 
-  private async sendEmailProduction(
+  private async sendEmail(
     receiverEmail: string,
     subject: string,
-    body: string,
-  ): Promise<void> {
-    const mailOptions: MailOptions = {
-      from: `Chatty App <${this.configService.get('SENDER_EMAIL')}>`,
+    template: Templates,
+    variables?: { [key: string]: string },
+  ) {
+    await this.mailerService.sendMail({
       to: receiverEmail,
       subject,
-      html: body,
-    };
-
-    try {
-      await sendGridMail.send(mailOptions);
-      this.logger.log('Production email sent successfully');
-    } catch (error) {
-      this.logger.error(`Error sending email ${error}`);
-      throw new BadGatewayException('Error sending email');
-    }
-  }
-
-  private async sendEmailDevelopment(
-    receiverEmail: string,
-    subject: string,
-    body: string,
-  ): Promise<void> {
-    const transporter: Mail = nodemailer.createTransport({
-      host: 'smtp.ethereal.email',
-      port: 587,
-      secure: false,
-      auth: {
-        user: this.configService.get('SENDER_EMAIL'),
-        pass: this.configService.get('SENDER_EMAIL_PASSWORD'),
-      },
+      template,
+      context: variables,
     });
-
-    const mailOptions: MailOptions = {
-      from: `Chatty App <${this.configService.get('SENDER_EMAIL')}>`,
-      to: receiverEmail,
-      subject,
-      html: body,
-    };
-
-    try {
-      await transporter.sendMail(mailOptions);
-      this.logger.log('Development email sent successfully');
-    } catch (error) {
-      this.logger.error(`Error sending email ${error}`);
-      throw new BadGatewayException('Error sending email');
-    }
   }
 }

@@ -7,6 +7,6 @@ export interface MailOptions {
 
 export interface MailWorkerData {
   receiverEmail: string;
-  subject: string;
+  token: string;
   username: string;
 }

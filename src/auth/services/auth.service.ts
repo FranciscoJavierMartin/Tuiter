@@ -138,12 +138,6 @@ export class AuthService {
       createdAt: authUser.createdAt,
     } as UserDocument;
 
-    this.emailQueue.add('sendForgotPasswordEmail', {
-      username: authUser.username,
-      receiverEmail: 'alia.crona@ethereal.email',
-      subject: 'Reset your password',
-    });
-
     return {
       message: 'User login successfuly',
       user: new UserDto(userDocument),
@@ -241,9 +235,11 @@ export class AuthService {
       },
     );
 
-    const resetLink = `${this.configService.get(
-      'CLIENT_URL',
-    )}/reset-password?token=${randomCharacters}`;
+    this.emailQueue.add('sendForgotPasswordEmail', {
+      receiverEmail: email,
+      username: authUser.username,
+      token: randomCharacters,
+    });
   }
 
   /**

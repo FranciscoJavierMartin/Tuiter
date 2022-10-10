@@ -16,14 +16,14 @@ export class EmailConsumer extends BaseConsumer {
     done: DoneCallback,
   ): Promise<void> {
     try {
-      const { receiverEmail, subject, username } = job.data;
-      // TODO: Create link
-      const resetLink = '';
-      const template = this.emailService.getForgotPasswordTemplate(
+      const { receiverEmail, token, username } = job.data;
+
+      await this.emailService.sendForgotPasswordEmail(
+        receiverEmail,
         username,
-        resetLink,
+        token,
       );
-      await this.emailService.sendEmail(receiverEmail, subject, template);
+
       job.progress(100);
       done(null, job.data);
     } catch (error) {
