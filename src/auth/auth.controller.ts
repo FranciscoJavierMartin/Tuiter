@@ -8,6 +8,7 @@ import {
   HttpStatus,
   Get,
   UseGuards,
+  Param,
 } from '@nestjs/common';
 import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -22,6 +23,7 @@ import { JwtPayload } from '@/auth/interfaces/jwt.payload';
 import { UserDto } from '@/auth/dto/responses/user.dto';
 import { ForgotPasswordDto } from '@/auth/dto/requests/forgot-password.dto';
 import { InfoMessageDto } from '@/auth/dto/responses/info-message.dto';
+import { ResetPasswordDto } from '@/auth/dto/requests/reset-password.dto';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -93,6 +95,18 @@ export class AuthController {
     @Body() forgotPasswordDto: ForgotPasswordDto,
   ): Promise<InfoMessageDto> {
     await this.authService.sendForgotPasswordEmail(forgotPasswordDto.email);
+    return {
+      message: 'Password reset email sent',
+    };
+  }
+
+  @Post('reset-password/:token')
+  public async resetPassword(
+    @Param('token') token: string,
+    @Body() resetPasswordDto: ResetPasswordDto,
+  ): Promise<InfoMessageDto> {
+    // await this.authService.sendResetPasswordEmail(forgotPasswordDto.email);
+    console.log(token, resetPasswordDto);
     return {
       message: 'Password reset email sent',
     };
