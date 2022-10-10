@@ -1,6 +1,6 @@
-import { IsEqualTo } from '@/shared/decorators/match.decorator';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, MaxLength, MinLength } from 'class-validator';
+import { IsEqualTo } from '@/shared/decorators/match.decorator';
 
 export class ResetPasswordDto {
   @ApiProperty({

@@ -6,7 +6,7 @@ import { AuthService } from '@/auth/services/auth.service';
 
 @Processor('auth')
 export class AuthConsumer extends BaseConsumer {
-  constructor(private authService: AuthService) {
+  constructor(private readonly authService: AuthService) {
     super('AuthConsumer');
   }
 

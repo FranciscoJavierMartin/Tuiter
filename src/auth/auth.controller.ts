@@ -5,16 +5,24 @@ import {
   UploadedFile,
   UseInterceptors,
   ParseFilePipe,
-  HttpStatus,
   Get,
   UseGuards,
   Param,
   Ip,
 } from '@nestjs/common';
-import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBadGatewayResponse,
+  ApiBadRequestResponse,
+  ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
+  ApiCreatedResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { AuthGuard } from '@nestjs/passport';
-import { EmailService } from '@/shared/emails/email.service';
 import { AuthService } from '@/auth/services/auth.service';
 import { RegisterDto } from '@/auth/dto/requests/register.dto';
 import { ResponseRegisterDto } from '@/auth/dto/responses/register.dto';
@@ -29,10 +37,7 @@ import { ResetPasswordDto } from '@/auth/dto/requests/reset-password.dto';
 @ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
-  constructor(
-    private readonly authService: AuthService,
-    private readonly emailService: EmailService,
-  ) {}
+  constructor(private readonly authService: AuthService) {}
 
   @Post('register')
   @UseInterceptors(
@@ -42,14 +47,15 @@ export class AuthController {
       },
     }),
   )
-  @ApiResponse({
-    status: HttpStatus.CREATED,
+  @ApiConsumes('multipart/form-data')
+  @ApiCreatedResponse({
     description: 'User created',
     type: ResponseRegisterDto,
   })
-  @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Bad request' })
-  @ApiResponse({
-    status: HttpStatus.BAD_GATEWAY,
+  @ApiBadRequestResponse({
+    description: 'Bad request',
+  })
+  @ApiBadGatewayResponse({
     description: 'Error on internal request',
   })
   @ApiBody({ type: RegisterDto })
@@ -61,17 +67,14 @@ export class AuthController {
   }
 
   @Get('login')
-  @ApiResponse({
-    status: HttpStatus.OK,
+  @ApiOkResponse({
     description: 'User logged',
     type: ResponseRegisterDto,
   })
-  @ApiResponse({
-    status: HttpStatus.BAD_REQUEST,
+  @ApiBadRequestResponse({
     description: 'Invalid credentials',
   })
-  @ApiResponse({
-    status: HttpStatus.NOT_FOUND,
+  @ApiNotFoundResponse({
     description: 'User not found',
   })
   @ApiBody({ type: LoginDto })
@@ -80,8 +83,8 @@ export class AuthController {
   }
 
   @Get('current-user')
-  @ApiResponse({
-    status: HttpStatus.OK,
+  @ApiBearerAuth()
+  @ApiOkResponse({
     description: 'User info',
     type: UserDto,
   })
@@ -92,6 +95,9 @@ export class AuthController {
   }
 
   @Post('forgot-password')
+  @ApiCreatedResponse({
+    description: 'Send email to reset user password',
+  })
   public async forgotPassword(
     @Body() forgotPasswordDto: ForgotPasswordDto,
   ): Promise<InfoMessageDto> {
@@ -102,10 +108,12 @@ export class AuthController {
   }
 
   @Post('reset-password/:token')
+  @ApiCreatedResponse({
+    description: 'Change user password and send an email to user',
+  })
   public async resetPassword(
     @Param('token') token: string,
     @Body() resetPasswordDto: ResetPasswordDto,
-    // FIXME: Get IP Address
     @Ip() ip: string,
   ): Promise<InfoMessageDto> {
     await this.authService.sendResetPasswordEmail(

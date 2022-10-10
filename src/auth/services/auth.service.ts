@@ -13,6 +13,10 @@ import { Queue } from 'bull';
 import { UploadApiResponse } from 'cloudinary';
 import * as moment from 'moment';
 import { firstLetterUppercase, generateRandomIntegers } from '@/helpers/utils';
+import {
+  MailForgotPasswordData,
+  MailResetPasswordData,
+} from '@/shared/emails/interfaces/email';
 import { UploaderService } from '@/shared/services/uploader.service';
 import { UserService } from '@/user/services/user.service';
 import { UserCacheService } from '@/user/services/user.cache.service';
@@ -22,25 +26,21 @@ import { ResponseRegisterDto } from '@/auth/dto/responses/register.dto';
 import { AuthUser, AuthDocument } from '@/auth/models/auth.model';
 import { LoginDto } from '@/auth/dto/requests/login.dto';
 import { UserDto } from '@/auth/dto/responses/user.dto';
-import {
-  MailForgotPasswordData,
-  MailResetPasswordData,
-} from '@/shared/emails/interfaces/email';
-import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectModel(AuthUser.name) private authModel: Model<AuthDocument>,
-    private uploaderService: UploaderService,
-    private jwtService: JwtService,
-    private userService: UserService,
-    private userCacheService: UserCacheService,
-    private readonly configService: ConfigService,
-    @InjectQueue('auth') private authQueue: Queue<AuthDocument>,
-    @InjectQueue('user') private userQueue: Queue<UserDocument>,
+    private readonly uploaderService: UploaderService,
+    private readonly jwtService: JwtService,
+    private readonly userService: UserService,
+    private readonly userCacheService: UserCacheService,
+    @InjectQueue('auth') private readonly authQueue: Queue<AuthDocument>,
+    @InjectQueue('user') private readonly userQueue: Queue<UserDocument>,
     @InjectQueue('email')
-    private emailQueue: Queue<MailForgotPasswordData | MailResetPasswordData>,
+    private readonly emailQueue: Queue<
+      MailForgotPasswordData | MailResetPasswordData
+    >,
   ) {}
 
   /**
@@ -220,6 +220,10 @@ export class AuthService {
     return existingUser;
   }
 
+  /**
+   * Send email to user with a link to reset its password
+   * @param email email to be sent
+   */
   public async sendForgotPasswordEmail(email: string): Promise<void> {
     const authUser: AuthDocument = await this.getAuthUserByEmail(email);
 
@@ -247,6 +251,12 @@ export class AuthService {
     });
   }
 
+  /**
+   * Send email to user informing about that its password has been change
+   * @param newPassword User new password
+   * @param token Token to reset password
+   * @param ip User ip
+   */
   public async sendResetPasswordEmail(
     newPassword: string,
     token: string,
@@ -290,6 +300,11 @@ export class AuthService {
     });
   }
 
+  /**
+   * Get auth user by password reset token
+   * @param token Token to search user
+   * @returns Auth user
+   */
   private async getAuthUserByPasswordToken(
     token: string,
   ): Promise<AuthDocument> {
