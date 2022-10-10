@@ -7,7 +7,9 @@ import { User, UserDocument } from '@/user/models/user.model';
 
 @Injectable()
 export class UserService {
-  constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
+  constructor(
+    @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
+  ) {}
 
   /**
    * Transform AuthDocument in UserDocument. Only for new users

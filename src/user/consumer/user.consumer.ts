@@ -6,7 +6,7 @@ import { UserService } from '@/user/services/user.service';
 
 @Processor('user')
 export class UserConsumer extends BaseConsumer {
-  constructor(private userService: UserService) {
+  constructor(private readonly userService: UserService) {
     super('UserConsumer');
   }
 

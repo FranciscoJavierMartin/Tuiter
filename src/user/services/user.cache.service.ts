@@ -100,6 +100,11 @@ export class UserCacheService extends BaseCache {
     }
   }
 
+  /**
+   * Retrieve user from cache
+   * @param key User key to search
+   * @returns
+   */
   public async getUserFromCache(key: string): Promise<UserDocument | null> {
     try {
       const response: UserDocument = (await this.client.HGETALL(
