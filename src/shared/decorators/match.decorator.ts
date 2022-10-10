@@ -16,12 +16,12 @@ export function IsEqualTo<T>(
       constraints: [property],
       options: validationOptions,
       validator: {
-        validate(value: any, args: ValidationArguments) {
+        validate(value: any, args: ValidationArguments): boolean {
           const [relatedPropertyName] = args.constraints;
           const relatedValue = (args.object as any)[relatedPropertyName];
           return value === relatedValue;
         },
-        defaultMessage(args: ValidationArguments) {
+        defaultMessage(args: ValidationArguments): string {
           const [relatedPropertyName] = args.constraints;
           return `${propertyName} must be equals to ${relatedPropertyName}`;
         },
