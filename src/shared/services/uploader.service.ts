@@ -8,7 +8,7 @@ import {
 
 @Injectable()
 export class UploaderService {
-  constructor(private configService: ConfigService) {}
+  constructor(private readonly configService: ConfigService) {}
 
   /**
    * Upload image to Cloudinary

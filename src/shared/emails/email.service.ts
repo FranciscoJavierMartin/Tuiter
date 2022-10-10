@@ -1,7 +1,7 @@
 import { BadGatewayException, Injectable, Logger } from '@nestjs/common';
-import * as sendGridMail from '@sendgrid/mail';
 import { ConfigService } from '@nestjs/config';
 import { MailerService } from '@nestjs-modules/mailer';
+import * as sendGridMail from '@sendgrid/mail';
 
 type Templates = 'forgot-password-template' | 'reset-password-template';
 
@@ -10,13 +10,19 @@ export class EmailService {
   private logger: Logger;
 
   constructor(
-    private configService: ConfigService,
+    private readonly configService: ConfigService,
     private readonly mailerService: MailerService,
   ) {
     this.logger = new Logger('Email');
     sendGridMail.setApiKey(this.configService.get('SENDGRID_API_KEY'));
   }
 
+  /**
+   * Send email to change user password throught token
+   * @param receiverEmail User email
+   * @param username User name
+   * @param token Token to be sent
+   */
   public async sendForgotPasswordEmail(
     receiverEmail: string,
     username: string,
@@ -39,6 +45,13 @@ export class EmailService {
     );
   }
 
+  /**
+   * Send email to user informing about password change
+   * @param receiverEmail Email address to send
+   * @param username User name
+   * @param ipaddress User ip address
+   * @param date Date (now)
+   */
   public async sendResetPasswordEmail(
     receiverEmail: string,
     username: string,
@@ -60,6 +73,13 @@ export class EmailService {
     );
   }
 
+  /**
+   * Send email
+   * @param receiverEmail Destination email
+   * @param subject Email subject
+   * @param template Text to be included in email
+   * @param variables Variables to be interpolated in email template
+   */
   private async sendEmail(
     receiverEmail: string,
     subject: string,
