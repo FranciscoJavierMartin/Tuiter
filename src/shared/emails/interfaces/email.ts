@@ -1,12 +1,12 @@
-export interface MailOptions {
-  from: string;
-  to: string;
-  subject: string;
-  html: string;
-}
-
-export interface MailWorkerData {
+export interface MailForgotPasswordData {
   receiverEmail: string;
   token: string;
   username: string;
+}
+
+export interface MailResetPasswordData {
+  receiverEmail: string;
+  username: string;
+  ipaddress: string;
+  date: string;
 }

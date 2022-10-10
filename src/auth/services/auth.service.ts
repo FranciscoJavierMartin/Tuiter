@@ -6,11 +6,12 @@ import {
 import { InjectModel } from '@nestjs/mongoose';
 import { JwtService } from '@nestjs/jwt';
 import { InjectQueue } from '@nestjs/bull';
-import crypto from 'crypto';
+import * as crypto from 'crypto';
 import { ObjectId } from 'mongodb';
 import { Model } from 'mongoose';
 import { Queue } from 'bull';
 import { UploadApiResponse } from 'cloudinary';
+import * as moment from 'moment';
 import { firstLetterUppercase, generateRandomIntegers } from '@/helpers/utils';
 import { UploaderService } from '@/shared/services/uploader.service';
 import { UserService } from '@/user/services/user.service';
@@ -21,7 +22,10 @@ import { ResponseRegisterDto } from '@/auth/dto/responses/register.dto';
 import { AuthUser, AuthDocument } from '@/auth/models/auth.model';
 import { LoginDto } from '@/auth/dto/requests/login.dto';
 import { UserDto } from '@/auth/dto/responses/user.dto';
-import { MailWorkerData } from '@/shared/emails/interfaces/email';
+import {
+  MailForgotPasswordData,
+  MailResetPasswordData,
+} from '@/shared/emails/interfaces/email';
 import { ConfigService } from '@nestjs/config';
 
 @Injectable()
@@ -35,7 +39,8 @@ export class AuthService {
     private readonly configService: ConfigService,
     @InjectQueue('auth') private authQueue: Queue<AuthDocument>,
     @InjectQueue('user') private userQueue: Queue<UserDocument>,
-    @InjectQueue('email') private emailQueue: Queue<MailWorkerData>,
+    @InjectQueue('email')
+    private emailQueue: Queue<MailForgotPasswordData | MailResetPasswordData>,
   ) {}
 
   /**
@@ -242,6 +247,30 @@ export class AuthService {
     });
   }
 
+  public async sendResetPasswordEmail(
+    newPassword: string,
+    token: string,
+    ip: string,
+  ): Promise<void> {
+    const authUser: AuthDocument = await this.getAuthUserByPasswordToken(token);
+
+    if (!authUser) {
+      throw new BadRequestException('Token has expired');
+    }
+
+    authUser.password = newPassword;
+    authUser.passwordResetExpires = undefined;
+    authUser.passwordResetToken = undefined;
+    await authUser.save();
+
+    this.emailQueue.add('sendResetPasswordEmail', {
+      username: authUser.username,
+      receiverEmail: authUser.email,
+      ipaddress: ip,
+      date: moment().format('DD/MM/YYYY HH:mm'),
+    });
+  }
+
   /**
    * Create JWT token
    * @param payload user data to be included in payload
@@ -259,5 +288,16 @@ export class AuthService {
       username,
       avatarColor,
     });
+  }
+
+  private async getAuthUserByPasswordToken(
+    token: string,
+  ): Promise<AuthDocument> {
+    return await this.authModel
+      .findOne({
+        passwordResetToken: token,
+        passwordResetExpires: { $gt: Date.now() },
+      })
+      .exec();
   }
 }

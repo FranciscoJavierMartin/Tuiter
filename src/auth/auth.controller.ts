@@ -9,6 +9,7 @@ import {
   Get,
   UseGuards,
   Param,
+  Ip,
 } from '@nestjs/common';
 import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -104,9 +105,14 @@ export class AuthController {
   public async resetPassword(
     @Param('token') token: string,
     @Body() resetPasswordDto: ResetPasswordDto,
+    // FIXME: Get IP Address
+    @Ip() ip: string,
   ): Promise<InfoMessageDto> {
-    // await this.authService.sendResetPasswordEmail(forgotPasswordDto.email);
-    console.log(token, resetPasswordDto);
+    await this.authService.sendResetPasswordEmail(
+      resetPasswordDto.password,
+      token,
+      ip,
+    );
     return {
       message: 'Password reset email sent',
     };

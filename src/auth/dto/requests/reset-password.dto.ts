@@ -9,7 +9,6 @@ export class ResetPasswordDto {
     minLength: 4,
     maxLength: 8,
     nullable: false,
-    uniqueItems: true,
   })
   @IsString()
   @MinLength(4)
@@ -22,7 +21,6 @@ export class ResetPasswordDto {
     minLength: 4,
     maxLength: 8,
     nullable: false,
-    uniqueItems: true,
   })
   @IsString()
   @MinLength(4)

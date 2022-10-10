@@ -2,7 +2,10 @@ import { Process, Processor } from '@nestjs/bull';
 import { DoneCallback, Job } from 'bull';
 import { BaseConsumer } from '@/shared/consumer/base.consumer';
 import { EmailService } from '@/shared/emails/email.service';
-import { MailWorkerData } from '@/shared/emails/interfaces/email';
+import {
+  MailForgotPasswordData,
+  MailResetPasswordData,
+} from '@/shared/emails/interfaces/email';
 
 @Processor('email')
 export class EmailConsumer extends BaseConsumer {
@@ -12,7 +15,7 @@ export class EmailConsumer extends BaseConsumer {
 
   @Process({ name: 'sendForgotPasswordEmail', concurrency: 5 })
   public async sendForgotPasswordEmail(
-    job: Job<MailWorkerData>,
+    job: Job<MailForgotPasswordData>,
     done: DoneCallback,
   ): Promise<void> {
     try {
@@ -22,6 +25,29 @@ export class EmailConsumer extends BaseConsumer {
         receiverEmail,
         username,
         token,
+      );
+
+      job.progress(100);
+      done(null, job.data);
+    } catch (error) {
+      this.logger.error(error);
+      done(error as Error);
+    }
+  }
+
+  @Process({ name: 'sendResetPasswordEmail', concurrency: 5 })
+  public async sendResetPasswordEmail(
+    job: Job<MailResetPasswordData>,
+    done: DoneCallback,
+  ): Promise<void> {
+    try {
+      const { receiverEmail, date, username, ipaddress } = job.data;
+
+      await this.emailService.sendResetPasswordEmail(
+        receiverEmail,
+        username,
+        ipaddress,
+        date,
       );
 
       job.progress(100);
