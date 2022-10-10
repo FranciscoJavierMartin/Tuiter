@@ -5,6 +5,7 @@ import * as sendGridMail from '@sendgrid/mail';
 import * as fs from 'fs';
 import * as ejs from 'ejs';
 import { ConfigService } from '@nestjs/config';
+import { MailerService } from '@nestjs-modules/mailer';
 import { MailOptions } from './interfaces/email';
 
 // TODO: Use nestjs module for mailer
@@ -12,9 +13,20 @@ import { MailOptions } from './interfaces/email';
 export class EmailService {
   private logger: Logger;
 
-  constructor(private configService: ConfigService) {
+  constructor(
+    private configService: ConfigService,
+    private readonly mailerService: MailerService,
+  ) {
     this.logger = new Logger('Email');
     sendGridMail.setApiKey(this.configService.get('SENDGRID_API_KEY'));
+  }
+
+  public async sendEmailTest() {
+    await this.mailerService.sendMail({
+      to: 'alia.crona@ethereal.email',
+      subject: 'Test email',
+      template: 'prueba',
+    });
   }
 
   public async sendEmail(

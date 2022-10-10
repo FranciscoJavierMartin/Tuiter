@@ -20,11 +20,15 @@ import { GetUser } from '@/auth/decorators/get-user.decorator';
 import { JwtPayload } from '@/auth/interfaces/jwt.payload';
 import { UserDto } from '@/auth/dto/responses/user.dto';
 import { ForgotPasswordDto } from './dto/requests/forgot-password.dto';
+import { EmailService } from '@/shared/emails/email.service';
 
 @ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly emailService: EmailService,
+  ) {}
 
   @Post('register')
   @UseInterceptors(
@@ -85,6 +89,7 @@ export class AuthController {
 
   @Post('forgot-password')
   public async forgotPassword(@Body() forgotPasswordDto: ForgotPasswordDto) {
-    return this.authService.sendForgotPasswordEmail(forgotPasswordDto.email);
+    await this.emailService.sendEmailTest();
+    // return this.authService.sendForgotPasswordEmail(forgotPasswordDto.email);
   }
 }

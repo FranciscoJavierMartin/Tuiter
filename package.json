@@ -21,6 +21,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
+    "@nestjs-modules/mailer": "^1.8.1",
     "@nestjs/bull": "^0.6.1",
     "@nestjs/common": "^9.0.0",
     "@nestjs/config": "^2.2.0",
@@ -38,6 +39,7 @@
     "cloudinary": "^1.32.0",
     "compression": "^1.7.4",
     "ejs": "^3.1.8",
+    "handlebars": "^4.7.7",
     "mongoose": "^6.6.3",
     "nodemailer": "^6.8.0",
     "passport": "^0.6.0",
