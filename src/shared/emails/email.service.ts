@@ -26,6 +26,12 @@ export class EmailService {
       to: 'alia.crona@ethereal.email',
       subject: 'Test email',
       template: 'prueba',
+      context: {
+        username: 'Jane Doe',
+        resetLink: '#',
+        image_url:
+          'https://res.cloudinary.com/dyshqk0em/image/upload/v1665310488/chatty-nest/lock-icon-email.png',
+      },
     });
   }
 
