@@ -123,12 +123,6 @@ export class User {
   })
   followingCount: number;
 
-  @Prop({ type: String, default: '' })
-  passwordResetToken: string;
-
-  @Prop({ type: Number })
-  passwordResetExpires: number;
-
   @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }] })
   blocked: string[];
 

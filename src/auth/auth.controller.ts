@@ -19,6 +19,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from '@/auth/decorators/get-user.decorator';
 import { JwtPayload } from '@/auth/interfaces/jwt.payload';
 import { UserDto } from '@/auth/dto/responses/user.dto';
+import { ForgotPasswordDto } from './dto/requests/forgot-password.dto';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -80,5 +81,10 @@ export class AuthController {
   public async getCurrentUser(@GetUser() user: JwtPayload): Promise<UserDto> {
     const userFromServer = await this.authService.getUser(user.userId);
     return new UserDto(userFromServer);
+  }
+
+  @Post('forgot-password')
+  public async forgotPassword(@Body() forgotPasswordDto: ForgotPasswordDto) {
+    return this.authService.sendForgotPasswordEmail(forgotPasswordDto.email);
   }
 }

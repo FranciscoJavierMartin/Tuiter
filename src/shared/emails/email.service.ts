@@ -7,6 +7,7 @@ import * as ejs from 'ejs';
 import { ConfigService } from '@nestjs/config';
 import { MailOptions } from './interfaces/email';
 
+// TODO: Use nestjs module for mailer
 @Injectable()
 export class EmailService {
   private logger: Logger;

@@ -6,6 +6,7 @@ import {
 import { InjectModel } from '@nestjs/mongoose';
 import { JwtService } from '@nestjs/jwt';
 import { InjectQueue } from '@nestjs/bull';
+import crypto from 'crypto';
 import { ObjectId } from 'mongodb';
 import { Model } from 'mongoose';
 import { Queue } from 'bull';
@@ -21,6 +22,7 @@ import { AuthUser, AuthDocument } from '@/auth/models/auth.model';
 import { LoginDto } from '@/auth/dto/requests/login.dto';
 import { UserDto } from '@/auth/dto/responses/user.dto';
 import { MailWorkerData } from '@/shared/emails/interfaces/email';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
@@ -30,6 +32,7 @@ export class AuthService {
     private jwtService: JwtService,
     private userService: UserService,
     private userCacheService: UserCacheService,
+    private readonly configService: ConfigService,
     @InjectQueue('auth') private authQueue: Queue<AuthDocument>,
     @InjectQueue('user') private userQueue: Queue<UserDocument>,
     @InjectQueue('email') private emailQueue: Queue<MailWorkerData>,
@@ -191,6 +194,19 @@ export class AuthService {
   }
 
   /**
+   * Get auth user by email
+   * @param email User email
+   * @returns User from DB
+   */
+  public async getAuthUserByEmail(email: string): Promise<AuthDocument> {
+    return await this.authModel
+      .findOne({
+        email: email.toLowerCase(),
+      })
+      .exec();
+  }
+
+  /**
    * Get user from cache or DB
    * @param userId User id to find it
    * @returns User from cache or DB
@@ -203,6 +219,31 @@ export class AuthService {
       cachedUser ?? (await this.userService.getUserById(userId));
 
     return existingUser;
+  }
+
+  public async sendForgotPasswordEmail(email: string): Promise<void> {
+    const authUser: AuthDocument = await this.getAuthUserByEmail(email);
+
+    if (!authUser) {
+      throw new BadRequestException('Invalid credentials');
+    }
+
+    const randomBytes: Buffer = await Promise.resolve(crypto.randomBytes(20));
+    const randomCharacters: string = randomBytes.toString('hex');
+
+    await this.authModel.updateOne(
+      {
+        _id: authUser._id,
+      },
+      {
+        passwordResetToken: randomCharacters,
+        passwordResetExpires: Date.now() * 60 * 60 * 1000,
+      },
+    );
+
+    const resetLink = `${this.configService.get(
+      'CLIENT_URL',
+    )}/reset-password?token=${randomCharacters}`;
   }
 
   /**
