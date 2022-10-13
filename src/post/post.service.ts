@@ -1,12 +1,17 @@
 import { Injectable } from '@nestjs/common';
+import { WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { ObjectId } from 'mongodb';
+import { Server, Socket } from 'socket.io';
 import { CreatePostDto } from '@/post/dto/requests/create-post.dto';
 import { UpdatePostDto } from '@/post/dto/requests/update-post.dto';
 import { Post } from '@/post/models/post.schema';
 import { CurrentUser } from '@/auth/interfaces/current-user.interface';
 
 @Injectable()
+@WebSocketGateway({ cors: true })
 export class PostService {
+  @WebSocketServer() wss: Server;
+
   create(
     createPostDto: CreatePostDto,
     user: CurrentUser,
@@ -35,7 +40,7 @@ export class PostService {
       },
     } as Post;
 
-    // TODO: Add socket
+    this.wss.emit('add-post', post);
 
     return {
       message: 'Post created successfully',

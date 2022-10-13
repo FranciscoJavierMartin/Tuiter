@@ -10,14 +10,16 @@ import {
   ParseFilePipe,
   UseInterceptors,
   MaxFileSizeValidator,
+  UseGuards,
 } from '@nestjs/common';
 import { CreatePostDto } from '@/post/dto/requests/create-post.dto';
 import { PostService } from '@/post/post.service';
 import { UpdatePostDto } from './dto/requests/update-post.dto';
-import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { CurrentUser } from '@/auth/interfaces/current-user.interface';
 import { GetUser } from '@/auth/decorators/get-user.decorator';
+import { AuthGuard } from '@nestjs/passport';
 
 @ApiTags('Post')
 @Controller('post')
@@ -28,6 +30,8 @@ export class PostController {
   @UseInterceptors(FileInterceptor('image'))
   @ApiConsumes('multipart/form-data')
   @ApiBody({ type: CreatePostDto })
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard())
   create(
     @Body() createPostDto: CreatePostDto,
     @GetUser() user: CurrentUser,
