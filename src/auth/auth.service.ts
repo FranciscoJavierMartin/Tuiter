@@ -20,7 +20,7 @@ import {
 import { UploaderService } from '@/shared/services/uploader.service';
 import { UserService } from '@/user/services/user.service';
 import { UserCacheService } from '@/user/services/user.cache.service';
-import { UserDocument } from '@/user/models/user.model';
+import { UserDocument } from '@/user/interfaces/user.interface';
 import { RegisterDto } from '@/auth/dto/requests/register.dto';
 import { ResponseRegisterDto } from '@/auth/dto/responses/register.dto';
 import { AuthUser, AuthDocument } from '@/auth/models/auth.model';
