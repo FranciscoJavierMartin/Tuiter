@@ -1,5 +1,16 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsOptional, IsString, IsUrl, ValidateIf } from 'class-validator';
+import {
+  IsEnum,
+  IsOptional,
+  IsString,
+  IsUrl,
+  ValidateIf,
+} from 'class-validator';
+
+export enum Privacy {
+  Public = 'Public',
+  Private = 'Private',
+}
 
 export class CreatePostDto {
   @ApiProperty({
@@ -23,12 +34,14 @@ export class CreatePostDto {
 
   @ApiProperty({
     description: 'Post privacy',
-    default: '',
+    default: Privacy.Public,
     nullable: true,
+    enum: Privacy,
   })
   @IsString()
   @IsOptional()
-  privacy: string;
+  @IsEnum(Privacy)
+  privacy: Privacy;
 
   @ApiProperty({
     description: 'Post reactions',
