@@ -10,12 +10,16 @@ import {
 import { CreatePostDto } from '@/post/dto/requests/create-post.dto';
 import { PostService } from '@/post/post.service';
 import { UpdatePostDto } from './dto/requests/update-post.dto';
+import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Post')
 @Controller('post')
 export class PostController {
   constructor(private readonly postService: PostService) {}
 
   @Post()
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({ type: CreatePostDto })
   create(@Body() createPostDto: CreatePostDto) {
     return this.postService.create(createPostDto);
   }
