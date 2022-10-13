@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsOptional, IsString, IsUrl } from 'class-validator';
+import { IsOptional, IsString, IsUrl, ValidateIf } from 'class-validator';
 
 export class CreatePostDto {
   @ApiProperty({
@@ -44,9 +44,10 @@ export class CreatePostDto {
     default: '',
     nullable: true,
   })
-  @IsOptional()
+  @ValidateIf((o) => !!o.gifUrl)
   @IsString()
   @IsUrl()
+  @IsOptional()
   gifUrl?: string;
 
   @ApiProperty({
@@ -54,6 +55,7 @@ export class CreatePostDto {
     default: '',
     nullable: true,
   })
+  @ValidateIf((o) => !!o.profilePicture)
   @IsOptional()
   @IsString()
   @IsUrl()
