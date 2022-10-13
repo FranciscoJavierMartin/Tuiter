@@ -12,6 +12,15 @@ export enum Privacy {
   Private = 'Private',
 }
 
+export enum Feelings {
+  angry = 'angry',
+  happy = 'happy',
+  like = 'like',
+  love = 'love',
+  sad = 'sad',
+  wow = 'wow',
+}
+
 export class CreatePostDto {
   @ApiProperty({
     description: 'Post text',
@@ -45,12 +54,14 @@ export class CreatePostDto {
 
   @ApiProperty({
     description: 'Post reactions',
-    default: '',
+    default: Feelings.happy,
     nullable: true,
+    enum: Feelings,
   })
   @IsString()
   @IsOptional()
-  feelings: string;
+  @IsEnum(Feelings)
+  feelings: Feelings;
 
   @ApiProperty({
     description: 'Gif Url',
