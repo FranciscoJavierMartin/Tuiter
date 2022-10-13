@@ -16,6 +16,8 @@ import { PostService } from '@/post/post.service';
 import { UpdatePostDto } from './dto/requests/update-post.dto';
 import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { CurrentUser } from '@/auth/interfaces/current-user.interface';
+import { GetUser } from '@/auth/decorators/get-user.decorator';
 
 @ApiTags('Post')
 @Controller('post')
@@ -28,6 +30,7 @@ export class PostController {
   @ApiBody({ type: CreatePostDto })
   create(
     @Body() createPostDto: CreatePostDto,
+    @GetUser() user: CurrentUser,
     @UploadedFile(
       new ParseFilePipe({
         fileIsRequired: false,
@@ -36,7 +39,7 @@ export class PostController {
     )
     image?: Express.Multer.File,
   ) {
-    return this.postService.create(createPostDto, image);
+    return this.postService.create(createPostDto, user, image);
   }
 
   @Get()
