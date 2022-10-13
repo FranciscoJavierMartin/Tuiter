@@ -14,8 +14,32 @@ export class PostService {
   ) {
     const postId = new ObjectId();
 
-    // const post: Post = {};
-    return 'This action adds a new post';
+    const post: Post = {
+      _id: postId,
+      userId: user.userId,
+      username: user.username,
+      email: user.email,
+      avatarColor: user.avatarColor,
+      ...createPostDto,
+      commentsCount: 0,
+      imgId: '',
+      imgVersion: '',
+      created: new Date(),
+      reactions: {
+        angry: 0,
+        happy: 0,
+        like: 0,
+        love: 0,
+        sad: 0,
+        wow: 0,
+      },
+    } as Post;
+
+    // TODO: Add socket
+
+    return {
+      message: 'Post created successfully',
+    };
   }
 
   findAll() {

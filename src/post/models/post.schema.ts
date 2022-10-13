@@ -1,10 +1,13 @@
 import { Prop, raw, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
+import { ObjectId } from 'mongodb';
 
 @Schema({
   collection: 'Post',
 })
 export class Post {
+  _id: ObjectId;
+
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
