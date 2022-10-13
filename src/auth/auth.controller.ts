@@ -23,7 +23,7 @@ import {
 } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { AuthGuard } from '@nestjs/passport';
-import { AuthService } from '@/auth/services/auth.service';
+import { AuthService } from '@/auth/auth.service';
 import { RegisterDto } from '@/auth/dto/requests/register.dto';
 import { ResponseRegisterDto } from '@/auth/dto/responses/register.dto';
 import { LoginDto } from '@/auth/dto/requests/login.dto';
