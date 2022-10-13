@@ -27,6 +27,7 @@ export class CreatePostDto {
     example: 'Hello there',
     default: '',
     nullable: true,
+    required: false,
   })
   @IsString()
   @IsOptional()
@@ -36,6 +37,7 @@ export class CreatePostDto {
     description: 'Background color',
     nullable: true,
     default: '',
+    required: false,
   })
   @IsString()
   @IsOptional()
@@ -46,6 +48,7 @@ export class CreatePostDto {
     default: Privacy.Public,
     nullable: true,
     enum: Privacy,
+    required: false,
   })
   @IsString()
   @IsOptional()
@@ -57,6 +60,7 @@ export class CreatePostDto {
     default: Feelings.happy,
     nullable: true,
     enum: Feelings,
+    required: false,
   })
   @IsString()
   @IsOptional()
@@ -67,6 +71,7 @@ export class CreatePostDto {
     description: 'Gif Url',
     default: '',
     nullable: true,
+    required: false,
   })
   @ValidateIf((o) => !!o.gifUrl)
   @IsString()
@@ -78,28 +83,11 @@ export class CreatePostDto {
     description: 'Author profile picture',
     default: '',
     nullable: true,
+    required: false,
   })
   @ValidateIf((o) => !!o.profilePicture)
   @IsOptional()
   @IsString()
   @IsUrl()
   profilePicture: string;
-
-  @ApiProperty({
-    description: 'Image version (Cloudinary)',
-    default: '',
-    nullable: true,
-  })
-  @IsString()
-  @IsOptional()
-  imgVersion: string;
-
-  @ApiProperty({
-    description: 'Image Id (Cloudinary)',
-    default: '',
-    nullable: true,
-  })
-  @IsString()
-  @IsOptional()
-  imgId: string;
 }
