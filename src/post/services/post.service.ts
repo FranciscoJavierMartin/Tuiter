@@ -7,13 +7,21 @@ import { UpdatePostDto } from '@/post/dto/requests/update-post.dto';
 import { Post } from '@/post/models/post.schema';
 import { CurrentUser } from '@/auth/interfaces/current-user.interface';
 import { PostCacheService } from '@/post/services/post.cache.service';
+import { Queue } from 'bull';
+import { InjectQueue } from '@nestjs/bull';
+import { Model } from 'mongoose';
+import { InjectModel } from '@nestjs/mongoose';
 
 @Injectable()
 @WebSocketGateway({ cors: true })
 export class PostService {
   @WebSocketServer() socket: Server;
 
-  constructor(private readonly postCacheService: PostCacheService) {}
+  constructor(
+    private readonly postCacheService: PostCacheService,
+    @InjectModel(Post.name) private postModel: Model<Post>,
+    @InjectQueue('post') private readonly postQueue: Queue<Post>,
+  ) {}
 
   public async create(
     createPostDto: CreatePostDto,
@@ -41,7 +49,7 @@ export class PostService {
         sad: 0,
         wow: 0,
       },
-    } as Post;
+    };
 
     this.socket.emit('add-post', post);
 
@@ -51,6 +59,8 @@ export class PostService {
       user.uId,
       post,
     );
+
+    this.postQueue.add('addPostToDB', post);
 
     return {
       message: 'Post created successfully',
@@ -71,5 +81,10 @@ export class PostService {
 
   remove(id: number) {
     return `This action removes a #${id} post`;
+  }
+
+  public async savePostToDb(post: Post): Promise<void> {
+    const postCreated = new this.postModel(post);
+    await postCreated.save();
   }
 }
