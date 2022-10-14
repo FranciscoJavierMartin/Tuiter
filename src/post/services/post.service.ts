@@ -1,16 +1,18 @@
-import { Injectable } from '@nestjs/common';
+import { BadGatewayException, Injectable } from '@nestjs/common';
 import { WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
+import { InjectQueue } from '@nestjs/bull';
+import { InjectModel } from '@nestjs/mongoose';
 import { ObjectId } from 'mongodb';
+import { Model } from 'mongoose';
 import { Server } from 'socket.io';
+import { Queue } from 'bull';
 import { CreatePostDto } from '@/post/dto/requests/create-post.dto';
 import { UpdatePostDto } from '@/post/dto/requests/update-post.dto';
 import { Post } from '@/post/models/post.schema';
 import { CurrentUser } from '@/auth/interfaces/current-user.interface';
 import { PostCacheService } from '@/post/services/post.cache.service';
-import { Queue } from 'bull';
-import { InjectQueue } from '@nestjs/bull';
-import { Model } from 'mongoose';
-import { InjectModel } from '@nestjs/mongoose';
+import { UploaderService } from '@/shared/services/uploader.service';
+import { UploadApiResponse } from 'cloudinary';
 
 @Injectable()
 @WebSocketGateway({ cors: true })
@@ -19,6 +21,7 @@ export class PostService {
 
   constructor(
     private readonly postCacheService: PostCacheService,
+    private readonly uploaderService: UploaderService,
     @InjectModel(Post.name) private postModel: Model<Post>,
     @InjectQueue('post') private readonly postQueue: Queue<Post>,
   ) {}
@@ -50,6 +53,17 @@ export class PostService {
         wow: 0,
       },
     };
+
+    if (image) {
+      try {
+        const imageUploaded: UploadApiResponse =
+          await this.uploaderService.uploadImage(image);
+        post.imgVersion = imageUploaded.version.toString();
+        post.imgId = imageUploaded.public_id;
+      } catch (error) {
+        throw new BadGatewayException('External server error');
+      }
+    }
 
     this.socket.emit('add-post', post);
 
