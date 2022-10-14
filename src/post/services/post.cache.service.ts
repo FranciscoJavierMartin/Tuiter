@@ -9,6 +9,13 @@ export class PostCacheService extends BaseCache {
     super('PostCache', configService);
   }
 
+  /**
+   * Store post in cache
+   * @param key redis key
+   * @param currentUserId Author id
+   * @param uId user id
+   * @param post Post to be created
+   */
   public async storePostToCache(
     key: string,
     currentUserId: string,

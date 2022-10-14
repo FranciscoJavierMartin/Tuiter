@@ -7,7 +7,6 @@ import { Model } from 'mongoose';
 import { Server } from 'socket.io';
 import { Queue } from 'bull';
 import { CreatePostDto } from '@/post/dto/requests/create-post.dto';
-import { UpdatePostDto } from '@/post/dto/requests/update-post.dto';
 import { Post } from '@/post/models/post.schema';
 import { CurrentUser } from '@/auth/interfaces/current-user.interface';
 import { PostCacheService } from '@/post/services/post.cache.service';
@@ -26,6 +25,13 @@ export class PostService {
     @InjectQueue('post') private readonly postQueue: Queue<Post>,
   ) {}
 
+  /**
+   * Create a post
+   * @param createPostDto Post data
+   * @param user post author
+   * @param image Post image (Optional)
+   * @returns Message confirming post creation
+   */
   public async create(
     createPostDto: CreatePostDto,
     user: CurrentUser,
@@ -81,22 +87,10 @@ export class PostService {
     };
   }
 
-  findAll() {
-    return `This action returns all post`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} post`;
-  }
-
-  update(id: number, updatePostDto: UpdatePostDto) {
-    return `This action updates a #${id} post`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} post`;
-  }
-
+  /**
+   * Save post to DB
+   * @param post Post to be saved
+   */
   public async savePostToDb(post: Post): Promise<void> {
     const postCreated = new this.postModel(post);
     await postCreated.save();

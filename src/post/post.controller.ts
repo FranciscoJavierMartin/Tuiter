@@ -1,11 +1,7 @@
 import {
   Controller,
-  Get,
   Post,
   Body,
-  Patch,
-  Param,
-  Delete,
   UploadedFile,
   ParseFilePipe,
   UseInterceptors,
@@ -13,13 +9,20 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBadGatewayResponse,
+  ApiBadRequestResponse,
+  ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
+  ApiCreatedResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { CreatePostDto } from '@/post/dto/requests/create-post.dto';
-import { PostService } from '@/post/services/post.service';
-import { UpdatePostDto } from '@/post/dto/requests/update-post.dto';
 import { CurrentUser } from '@/auth/interfaces/current-user.interface';
 import { GetUser } from '@/auth/decorators/get-user.decorator';
+import { CreatePostDto } from '@/post/dto/requests/create-post.dto';
+import { PostService } from '@/post/services/post.service';
 
 @ApiTags('Post')
 @Controller('post')
@@ -31,6 +34,15 @@ export class PostController {
   @ApiConsumes('multipart/form-data')
   @ApiBody({ type: CreatePostDto })
   @ApiBearerAuth()
+  @ApiCreatedResponse({
+    description: 'Post created',
+  })
+  @ApiBadRequestResponse({
+    description: 'Bad request',
+  })
+  @ApiBadGatewayResponse({
+    description: 'Error on internal request',
+  })
   @UseGuards(AuthGuard())
   create(
     @Body() createPostDto: CreatePostDto,
@@ -44,25 +56,5 @@ export class PostController {
     image?: Express.Multer.File,
   ) {
     return this.postService.create(createPostDto, user, image);
-  }
-
-  @Get()
-  findAll() {
-    return this.postService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.postService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {
-    return this.postService.update(+id, updatePostDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.postService.remove(+id);
   }
 }
