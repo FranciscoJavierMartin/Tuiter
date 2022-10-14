@@ -31,7 +31,7 @@ export class CreatePostDto {
   })
   @IsString()
   @IsOptional()
-  post: string;
+  text: string = '';
 
   @ApiProperty({
     description: 'Background color',
@@ -41,7 +41,7 @@ export class CreatePostDto {
   })
   @IsString()
   @IsOptional()
-  bgColor: string;
+  bgColor: string = '';
 
   @ApiProperty({
     description: 'Post privacy',
@@ -77,7 +77,7 @@ export class CreatePostDto {
   @IsString()
   @IsUrl()
   @IsOptional()
-  gifUrl?: string;
+  gifUrl: string = '';
 
   @ApiProperty({
     description: 'Author profile picture',
@@ -89,5 +89,5 @@ export class CreatePostDto {
   @IsOptional()
   @IsString()
   @IsUrl()
-  profilePicture: string;
+  profilePicture: string = '';
 }

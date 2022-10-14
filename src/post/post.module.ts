@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
-import { PostService } from '@/post/post.service';
-import { PostController } from '@/post/post.controller';
-import { Post, PostSchema } from '@/post/models/post.schema';
 import { MongooseModule } from '@nestjs/mongoose';
 import { PassportModule } from '@nestjs/passport';
+import { PostService } from '@/post/services/post.service';
+import { PostController } from '@/post/post.controller';
+import { Post, PostSchema } from '@/post/models/post.schema';
+import { PostCacheService } from '@/post/services/post.cache.service';
 
 @Module({
   imports: [
@@ -11,6 +12,6 @@ import { PassportModule } from '@nestjs/passport';
     PassportModule.register({ defaultStrategy: 'jwt' }),
   ],
   controllers: [PostController],
-  providers: [PostService],
+  providers: [PostService, PostCacheService],
 })
 export class PostModule {}

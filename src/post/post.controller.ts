@@ -12,14 +12,14 @@ import {
   MaxFileSizeValidator,
   UseGuards,
 } from '@nestjs/common';
-import { CreatePostDto } from '@/post/dto/requests/create-post.dto';
-import { PostService } from '@/post/post.service';
-import { UpdatePostDto } from './dto/requests/update-post.dto';
+import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { CreatePostDto } from '@/post/dto/requests/create-post.dto';
+import { PostService } from '@/post/services/post.service';
+import { UpdatePostDto } from '@/post/dto/requests/update-post.dto';
 import { CurrentUser } from '@/auth/interfaces/current-user.interface';
 import { GetUser } from '@/auth/decorators/get-user.decorator';
-import { AuthGuard } from '@nestjs/passport';
 
 @ApiTags('Post')
 @Controller('post')

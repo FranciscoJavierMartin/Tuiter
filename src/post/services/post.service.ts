@@ -1,18 +1,21 @@
 import { Injectable } from '@nestjs/common';
 import { WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { ObjectId } from 'mongodb';
-import { Server, Socket } from 'socket.io';
+import { Server } from 'socket.io';
 import { CreatePostDto } from '@/post/dto/requests/create-post.dto';
 import { UpdatePostDto } from '@/post/dto/requests/update-post.dto';
 import { Post } from '@/post/models/post.schema';
 import { CurrentUser } from '@/auth/interfaces/current-user.interface';
+import { PostCacheService } from '@/post/services/post.cache.service';
 
 @Injectable()
 @WebSocketGateway({ cors: true })
 export class PostService {
-  @WebSocketServer() wss: Server;
+  @WebSocketServer() socket: Server;
 
-  create(
+  constructor(private readonly postCacheService: PostCacheService) {}
+
+  public async create(
     createPostDto: CreatePostDto,
     user: CurrentUser,
     image?: Express.Multer.File,
@@ -29,7 +32,7 @@ export class PostService {
       commentsCount: 0,
       imgId: '',
       imgVersion: '',
-      created: new Date(),
+      createdAt: new Date(),
       reactions: {
         angry: 0,
         happy: 0,
@@ -40,7 +43,14 @@ export class PostService {
       },
     } as Post;
 
-    this.wss.emit('add-post', post);
+    this.socket.emit('add-post', post);
+
+    await this.postCacheService.storePostToCache(
+      postId.toString(),
+      user.userId,
+      user.uId,
+      post,
+    );
 
     return {
       message: 'Post created successfully',

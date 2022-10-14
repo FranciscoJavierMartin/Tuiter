@@ -28,7 +28,7 @@ export class Post {
   profilePicture: string;
 
   @Prop({ type: String, default: '' })
-  post: string;
+  text: string;
 
   @Prop({ type: String, default: '' })
   bgColor: string;
@@ -52,7 +52,7 @@ export class Post {
   commentsCount: number;
 
   @Prop({ type: Date, default: Date.now })
-  created: Date;
+  createdAt: Date;
 
   @Prop(
     raw({
