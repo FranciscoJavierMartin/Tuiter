@@ -19,13 +19,15 @@ import {
   ApiBody,
   ApiConsumes,
   ApiCreatedResponse,
+  ApiOkResponse,
   ApiTags,
 } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { CurrentUser } from '@/auth/interfaces/current-user.interface';
 import { GetUser } from '@/auth/decorators/get-user.decorator';
-import { CreatePostDto } from '@/post/dto/requests/create-post.dto';
 import { PostService } from '@/post/services/post.service';
+import { CreatePostDto } from '@/post/dto/requests/create-post.dto';
+import { PostsDto } from '@/post/dto/responses/posts.dto';
 
 @ApiTags('Post')
 @Controller('post')
@@ -62,7 +64,11 @@ export class PostController {
   }
 
   @Get(':page')
-  findAll(@Param('page', ParseIntPipe) page: number) {
+  @ApiOkResponse({
+    description: 'Get all posts',
+    type: PostsDto,
+  })
+  findAll(@Param('page', ParseIntPipe) page: number): Promise<PostsDto> {
     return this.postService.getAllPosts(page);
   }
 }

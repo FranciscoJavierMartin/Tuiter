@@ -113,7 +113,7 @@ export class PostService {
 
     if (cachedPosts.length) {
       posts = cachedPosts;
-      // postsCount = await this.postCacheService.getPostsCountInCache();
+      postsCount = await this.postCacheService.getPostsCountInCache();
     }
 
     return {

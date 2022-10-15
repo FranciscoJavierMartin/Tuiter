@@ -123,4 +123,13 @@ export class PostCacheService extends BaseCache {
       throw new InternalServerErrorException('Server error. Try again');
     }
   }
+
+  public async getPostsCountInCache(): Promise<number> {
+    try {
+      return await this.client.ZCARD('post');
+    } catch (error) {
+      this.logger.error(error);
+      throw new InternalServerErrorException('Server error. Try again');
+    }
+  }
 }
