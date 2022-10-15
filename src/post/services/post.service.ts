@@ -3,7 +3,7 @@ import { WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { InjectQueue } from '@nestjs/bull';
 import { InjectModel } from '@nestjs/mongoose';
 import { ObjectId } from 'mongodb';
-import { Model } from 'mongoose';
+import { FilterQuery, Model } from 'mongoose';
 import { Server } from 'socket.io';
 import { Queue } from 'bull';
 import { CreatePostDto } from '@/post/dto/requests/create-post.dto';
@@ -12,7 +12,8 @@ import { CurrentUser } from '@/auth/interfaces/current-user.interface';
 import { PostCacheService } from '@/post/services/post.cache.service';
 import { UploaderService } from '@/shared/services/uploader.service';
 import { UploadApiResponse } from 'cloudinary';
-import { PostsDto } from '../dto/responses/posts.dto';
+import { PostsDto } from '@/post/dto/responses/posts.dto';
+import { GetPostsQuery } from '@/post/interfaces/post.interface';
 
 const PAGE_SIZE = 10;
 
@@ -114,11 +115,40 @@ export class PostService {
     if (cachedPosts.length) {
       posts = cachedPosts;
       postsCount = await this.postCacheService.getPostsCountInCache();
+    } else {
+      posts = await this.getPosts({}, skip, limit, { createdAt: -1 });
+      postsCount = await this.postsCount();
     }
 
     return {
       posts,
       postsCount,
     };
+  }
+
+  public async getPosts(
+    query: GetPostsQuery,
+    skip = 0,
+    limit = 0,
+    sort: Record<string, 1 | -1>,
+  ): Promise<Post[]> {
+    let postQuery: FilterQuery<any> = {};
+
+    if (query.imgId && query.gifUrl) {
+      postQuery = { $or: [{ imgId: { $ne: '' } }, { gifUrl: { $ne: '' } }] };
+    } else {
+      postQuery = query;
+    }
+
+    return await this.postModel.aggregate([
+      { $match: postQuery },
+      { $sort: sort },
+      { $skip: skip },
+      { $limit: limit },
+    ]);
+  }
+
+  public async postsCount(): Promise<number> {
+    return await this.postModel.find({}).countDocuments();
   }
 }
