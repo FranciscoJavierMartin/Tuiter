@@ -12,6 +12,9 @@ import { CurrentUser } from '@/auth/interfaces/current-user.interface';
 import { PostCacheService } from '@/post/services/post.cache.service';
 import { UploaderService } from '@/shared/services/uploader.service';
 import { UploadApiResponse } from 'cloudinary';
+import { PostsDto } from '../dto/responses/posts.dto';
+
+const PAGE_SIZE = 10;
 
 @Injectable()
 @WebSocketGateway({ cors: true })
@@ -94,5 +97,28 @@ export class PostService {
   public async savePostToDb(post: Post): Promise<void> {
     const postCreated = new this.postModel(post);
     await postCreated.save();
+  }
+
+  public async getAllPosts(page: number): Promise<PostsDto> {
+    const skip: number = (page - 1) * PAGE_SIZE;
+    const limit: number = PAGE_SIZE * page;
+    const newSkip: number = skip ? skip + 1 : skip;
+    let postsCount: number = 0;
+    let posts: Post[] = [];
+
+    const cachedPosts: Post[] = await this.postCacheService.getPostsFromCache(
+      newSkip,
+      limit,
+    );
+
+    if (cachedPosts.length) {
+      posts = cachedPosts;
+      // postsCount = await this.postCacheService.getPostsCountInCache();
+    }
+
+    return {
+      posts,
+      postsCount,
+    };
   }
 }

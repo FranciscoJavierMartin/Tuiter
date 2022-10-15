@@ -7,6 +7,9 @@ import {
   UseInterceptors,
   MaxFileSizeValidator,
   UseGuards,
+  Get,
+  Param,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import {
@@ -56,5 +59,10 @@ export class PostController {
     image?: Express.Multer.File,
   ) {
     return this.postService.create(createPostDto, user, image);
+  }
+
+  @Get(':page')
+  findAll(@Param('page', ParseIntPipe) page: number) {
+    return this.postService.getAllPosts(page);
   }
 }

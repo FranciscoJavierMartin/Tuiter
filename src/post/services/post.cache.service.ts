@@ -1,7 +1,8 @@
 import { BaseCache } from '@/shared/redis/base.cache';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { Post } from '../models/post.schema';
+import { Post } from '@/post/models/post.schema';
+import { parseJson } from '@/helpers/utils';
 
 @Injectable()
 export class PostCacheService extends BaseCache {
@@ -95,6 +96,31 @@ export class PostCacheService extends BaseCache {
       throw new InternalServerErrorException(
         `Error adding post ${key} to Redis`,
       );
+    }
+  }
+
+  public async getPostsFromCache(start: number, end: number): Promise<Post[]> {
+    try {
+      const reply: string[] = await this.client.ZRANGE('post', start, end, {
+        REV: true,
+      });
+
+      const multi: ReturnType<typeof this.client.multi> = this.client.multi();
+
+      for (const value of reply) {
+        multi.HGETALL(`posts:${value}`);
+      }
+
+      const replies: Post[] = (await multi.exec()) as unknown[] as Post[];
+      return replies.map<Post>((post) => ({
+        ...post,
+        commentsCount: parseJson(post.commentsCount.toString()),
+        reactions: parseJson(post.reactions.toString()),
+        createdAt: new Date(parseJson(post.createdAt.toString())),
+      }));
+    } catch (error) {
+      this.logger.error(error);
+      throw new InternalServerErrorException('Server error. Try again');
     }
   }
 }
