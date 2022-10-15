@@ -151,4 +151,8 @@ export class PostService {
   public async postsCount(): Promise<number> {
     return await this.postModel.find({}).countDocuments();
   }
+
+  public async remove(postId: string): Promise<void> {
+    // this.socket.emit('delete post', postId);
+  }
 }

@@ -10,6 +10,7 @@ import {
   Get,
   Param,
   ParseIntPipe,
+  Delete,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import {
@@ -28,6 +29,7 @@ import { GetUser } from '@/auth/decorators/get-user.decorator';
 import { PostService } from '@/post/services/post.service';
 import { CreatePostDto } from '@/post/dto/requests/create-post.dto';
 import { PostsDto } from '@/post/dto/responses/posts.dto';
+import { ValidateIdPipe } from '@/shared/pipes/validate-id.pipe';
 
 @ApiTags('Post')
 @Controller('post')
@@ -70,5 +72,13 @@ export class PostController {
   })
   findAll(@Param('page', ParseIntPipe) page: number): Promise<PostsDto> {
     return this.postService.getAllPosts(page);
+  }
+
+  @Delete(':postId')
+  @ApiOkResponse({
+    description: 'Remove post. Only for author',
+  })
+  remove(@Param('postId', ValidateIdPipe) postId: string): Promise<void> {
+    return this.postService.remove(postId);
   }
 }
