@@ -13,7 +13,10 @@ import { PostCacheService } from '@/post/services/post.cache.service';
 import { UploaderService } from '@/shared/services/uploader.service';
 import { UploadApiResponse } from 'cloudinary';
 import { PostsDto } from '@/post/dto/responses/posts.dto';
-import { GetPostsQuery } from '@/post/interfaces/post.interface';
+import {
+  DeletePostParams,
+  GetPostsQuery,
+} from '@/post/interfaces/post.interface';
 
 const PAGE_SIZE = 10;
 
@@ -26,7 +29,8 @@ export class PostService {
     private readonly postCacheService: PostCacheService,
     private readonly uploaderService: UploaderService,
     @InjectModel(Post.name) private postModel: Model<Post>,
-    @InjectQueue('post') private readonly postQueue: Queue<Post>,
+    @InjectQueue('post')
+    private readonly postQueue: Queue<Post | DeletePostParams>,
   ) {}
 
   /**
@@ -164,7 +168,9 @@ export class PostService {
       }
     }
 
-    this.postCacheService.deletePostFromCache(postId, authorId);
+    await this.postCacheService.deletePostFromCache(postId, authorId);
+
+    this.postQueue.add('deletePostFromDB', { postId, authorId });
   }
 
   public async getPostAuthorId(postId: string): Promise<string> {

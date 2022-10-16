@@ -20,3 +20,8 @@ export interface GetPostsQuery {
   imgId?: string;
   gifUrl?: string;
 }
+
+export interface DeletePostParams {
+  postId: string;
+  authorId: string;
+}

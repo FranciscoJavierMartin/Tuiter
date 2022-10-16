@@ -120,7 +120,7 @@ export class PostCacheService extends BaseCache {
       }));
     } catch (error) {
       this.logger.error(error);
-      throw new InternalServerErrorException('Server error. Try again');
+      throw new InternalServerErrorException('Error getting posts from Redis');
     }
   }
 
@@ -129,7 +129,32 @@ export class PostCacheService extends BaseCache {
       return await this.client.ZCARD('post');
     } catch (error) {
       this.logger.error(error);
-      throw new InternalServerErrorException('Server error. Try again');
+      throw new InternalServerErrorException('Error counting posts from Redis');
+    }
+  }
+
+  public async deletePostFromCache(
+    postId: string,
+    authorId: string,
+  ): Promise<void> {
+    try {
+      const postCount: string[] = await this.client.HMGET(
+        `users:${authorId}`,
+        'postsCount',
+      );
+      const multi: ReturnType<typeof this.client.multi> = this.client.multi();
+      multi.ZREM('post', postId);
+      multi.DEL(`posts:${postId}`);
+      multi.DEL(`comments:${postId}`);
+      multi.DEL(`reactions:${postId}`);
+      const count: number = parseInt(postCount[0], 10) - 1;
+      multi.HSET(`users:${authorId}`, ['postsCount', count]);
+      await multi.exec();
+    } catch (error) {
+      this.logger.error(error);
+      throw new InternalServerErrorException(
+        `Error deleting post ${postId} from Redis`,
+      );
     }
   }
 }
