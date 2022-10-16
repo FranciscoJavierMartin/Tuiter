@@ -155,9 +155,16 @@ export class PostService {
   public async remove(postId: string, authorId: string): Promise<void> {
     this.socket.emit('delete post', postId);
 
-    // TODO: Remove image from Cloudinary
+    const imgId = (await this.postModel.findById(postId)).imgId;
+    if (imgId) {
+      try {
+        await this.uploaderService.removeImage(imgId);
+      } catch (error) {
+        throw new BadGatewayException('External server error');
+      }
+    }
 
-    // this.postCacheService.deletePostFromCache(postId, '');
+    this.postCacheService.deletePostFromCache(postId, authorId);
   }
 
   public async getPostAuthorId(postId: string): Promise<string> {
