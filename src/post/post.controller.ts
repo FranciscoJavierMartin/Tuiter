@@ -80,7 +80,10 @@ export class PostController {
     description: 'Remove post. Only for author',
   })
   @UseGuards(AuthGuard(), IsAuthorGuard)
-  remove(@Param('postId', ValidateIdPipe) postId: string): Promise<void> {
-    return this.postService.remove(postId);
+  remove(
+    @Param('postId', ValidateIdPipe) postId: string,
+    @GetUser('userId') [userId]: string,
+  ) {
+    return this.postService.remove(postId, userId);
   }
 }

@@ -152,9 +152,12 @@ export class PostService {
     return await this.postModel.find({}).countDocuments();
   }
 
-  public async remove(postId: string): Promise<void> {
+  public async remove(postId: string, authorId: string): Promise<void> {
+    this.socket.emit('delete post', postId);
+
     // TODO: Remove image from Cloudinary
-    // this.socket.emit('delete post', postId);
+
+    // this.postCacheService.deletePostFromCache(postId, '');
   }
 
   public async getPostAuthorId(postId: string): Promise<string> {
