@@ -157,4 +157,59 @@ export class PostCacheService extends BaseCache {
       );
     }
   }
+
+  public async updatePostInCache(postId: string, post: Post): Promise<Post> {
+    const {
+      text,
+      bgColor,
+      feelings,
+      privacy,
+      gifUrl,
+      imgVersion,
+      imgId,
+      profilePicture,
+    } = post;
+    const dataToSave: string[] = [
+      'text',
+      `${text}`,
+      'bgColor',
+      `${bgColor}`,
+      'feelings',
+      `${feelings}`,
+      'privacy',
+      `${privacy}`,
+      'gifUrl',
+      `${gifUrl}`,
+      'profilePicture',
+      `${profilePicture}`,
+      'imgVersion',
+      `${imgVersion}`,
+      'imgId',
+      `${imgId}`,
+    ];
+
+    try {
+      await this.client.HSET(`posts:${postId}`, dataToSave);
+      const multi: ReturnType<typeof this.client.multi> = this.client.multi();
+      multi.HGETALL(`posts:${postId}`);
+      const reply = await multi.exec();
+      const postReply = reply as unknown as Post[];
+      const updatedPost: Post = postReply[0];
+
+      updatedPost.commentsCount = parseJson(
+        updatedPost.commentsCount.toString(),
+      );
+      updatedPost.reactions = parseJson(updatedPost.reactions.toString());
+      updatedPost.createdAt = new Date(
+        parseJson(updatedPost.createdAt.toString()),
+      );
+
+      return post;
+    } catch (error) {
+      this.logger.error(error);
+      throw new InternalServerErrorException(
+        `Error deleting post ${postId} from Redis`,
+      );
+    }
+  }
 }

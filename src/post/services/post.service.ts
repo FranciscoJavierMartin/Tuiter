@@ -25,6 +25,7 @@ import {
 } from '@/post/interfaces/post.interface';
 import { UserDocument } from '@/user/interfaces/user.interface';
 import { User } from '@/user/models/user.model';
+import { UpdatePostDto } from '@/post/dto/requests/update-post.dto';
 
 const PAGE_SIZE = 10;
 
@@ -187,6 +188,7 @@ export class PostService {
     this.postQueue.add('deletePostFromDB', { postId, authorId });
   }
 
+  //TODO: Check if exists, otherwise throw a 404 error
   public async getPostAuthorId(postId: string): Promise<string> {
     return (await this.postModel.findById(postId))?.userId?.toString();
   }
@@ -200,7 +202,22 @@ export class PostService {
     await Promise.all([deletePost, decrementPostCount]);
   }
 
-  public async update(postId: string, authorId: string): Promise<void> {
-    console.log('Update');
+  public async update(
+    postId: string,
+    updatePostDto: UpdatePostDto,
+    image?: Express.Multer.File,
+  ): Promise<void> {
+    const originalPost: Post = await this.postModel.findById(postId);
+
+    const mergedPost: Post = {
+      ...originalPost,
+      ...updatePostDto,
+    };
+
+    // TODO: Update image before store in cache
+    const updatedPost: Post = await this.postCacheService.updatePostInCache(
+      postId,
+      mergedPost,
+    );
   }
 }

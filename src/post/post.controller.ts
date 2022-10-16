@@ -98,7 +98,6 @@ export class PostController {
   @UseGuards(AuthGuard(), IsAuthorGuard)
   update(
     @Param('postId', ValidateIdPipe) postId: string,
-    @GetUser('userId') [userId]: string,
     @Body() updatePostDto: UpdatePostDto,
     @UploadedFile(
       new ParseFilePipe({
@@ -108,6 +107,6 @@ export class PostController {
     )
     image?: Express.Multer.File,
   ) {
-    return this.postService.update(postId, userId);
+    return this.postService.update(postId, updatePostDto, image);
   }
 }
