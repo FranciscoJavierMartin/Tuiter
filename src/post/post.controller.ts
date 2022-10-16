@@ -11,6 +11,7 @@ import {
   Param,
   ParseIntPipe,
   Delete,
+  Put,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import {
@@ -31,6 +32,7 @@ import { CreatePostDto } from '@/post/dto/requests/create-post.dto';
 import { PostsDto } from '@/post/dto/responses/posts.dto';
 import { ValidateIdPipe } from '@/shared/pipes/validate-id.pipe';
 import { IsAuthorGuard } from './decorators/is-author.guard';
+import { UpdatePostDto } from './dto/requests/update-post.dto';
 
 @ApiTags('Post')
 @Controller('post')
@@ -85,5 +87,18 @@ export class PostController {
     @GetUser('userId') [userId]: string,
   ) {
     return this.postService.remove(postId, userId);
+  }
+
+  @Put(':postId')
+  @ApiOkResponse({
+    description: 'Update post. Only for author',
+  })
+  @UseGuards(AuthGuard(), IsAuthorGuard)
+  update(
+    @Param('postId', ValidateIdPipe) postId: string,
+    @GetUser('userId') [userId]: string,
+    @Body() updatePostDto: UpdatePostDto,
+  ) {
+    return this.postService.update(postId, userId);
   }
 }

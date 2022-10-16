@@ -188,7 +188,7 @@ export class PostService {
   }
 
   public async getPostAuthorId(postId: string): Promise<string> {
-    return (await this.postModel.findById(postId)).userId.toString();
+    return (await this.postModel.findById(postId))?.userId?.toString();
   }
 
   public async removePost(postId: string, authorId: string): Promise<void> {
@@ -198,5 +198,9 @@ export class PostService {
       this.userModel.updateOne({ _id: authorId }, { $inc: { postsCount: -1 } });
 
     await Promise.all([deletePost, decrementPostCount]);
+  }
+
+  public async update(postId: string, authorId: string): Promise<void> {
+    console.log('Update');
   }
 }
