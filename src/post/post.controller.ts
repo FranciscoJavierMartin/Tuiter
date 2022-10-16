@@ -30,6 +30,7 @@ import { PostService } from '@/post/services/post.service';
 import { CreatePostDto } from '@/post/dto/requests/create-post.dto';
 import { PostsDto } from '@/post/dto/responses/posts.dto';
 import { ValidateIdPipe } from '@/shared/pipes/validate-id.pipe';
+import { IsAuthorGuard } from './decorators/is-author.guard';
 
 @ApiTags('Post')
 @Controller('post')
@@ -78,6 +79,7 @@ export class PostController {
   @ApiOkResponse({
     description: 'Remove post. Only for author',
   })
+  @UseGuards(AuthGuard(), IsAuthorGuard)
   remove(@Param('postId', ValidateIdPipe) postId: string): Promise<void> {
     return this.postService.remove(postId);
   }

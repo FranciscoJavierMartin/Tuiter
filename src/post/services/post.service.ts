@@ -153,6 +153,11 @@ export class PostService {
   }
 
   public async remove(postId: string): Promise<void> {
+    // TODO: Remove image from Cloudinary
     // this.socket.emit('delete post', postId);
+  }
+
+  public async getPostAuthorId(postId: string): Promise<string> {
+    return (await this.postModel.findById(postId)).userId.toString();
   }
 }
