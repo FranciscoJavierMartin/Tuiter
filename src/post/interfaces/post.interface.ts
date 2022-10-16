@@ -25,3 +25,12 @@ export interface DeletePostParams {
   postId: string;
   authorId: string;
 }
+
+export interface QueryComplete {
+  ok?: number;
+  n?: number;
+}
+
+export interface QueryDeleted {
+  deletedCount?: number;
+}

@@ -3,20 +3,24 @@ import { WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { InjectQueue } from '@nestjs/bull';
 import { InjectModel } from '@nestjs/mongoose';
 import { ObjectId } from 'mongodb';
-import { FilterQuery, Model } from 'mongoose';
+import { FilterQuery, Model, Query, UpdateQuery } from 'mongoose';
 import { Server } from 'socket.io';
 import { Queue } from 'bull';
+import { UploadApiResponse } from 'cloudinary';
+import { CurrentUser } from '@/auth/interfaces/current-user.interface';
 import { CreatePostDto } from '@/post/dto/requests/create-post.dto';
 import { Post } from '@/post/models/post.schema';
-import { CurrentUser } from '@/auth/interfaces/current-user.interface';
 import { PostCacheService } from '@/post/services/post.cache.service';
 import { UploaderService } from '@/shared/services/uploader.service';
-import { UploadApiResponse } from 'cloudinary';
 import { PostsDto } from '@/post/dto/responses/posts.dto';
 import {
   DeletePostParams,
   GetPostsQuery,
+  QueryComplete,
+  QueryDeleted,
 } from '@/post/interfaces/post.interface';
+import { UserDocument } from '@/user/interfaces/user.interface';
+import { User } from '@/user/models/user.model';
 
 const PAGE_SIZE = 10;
 
@@ -29,6 +33,7 @@ export class PostService {
     private readonly postCacheService: PostCacheService,
     private readonly uploaderService: UploaderService,
     @InjectModel(Post.name) private postModel: Model<Post>,
+    @InjectModel(User.name) private userModel: Model<UserDocument>,
     @InjectQueue('post')
     private readonly postQueue: Queue<Post | DeletePostParams>,
   ) {}
@@ -175,5 +180,14 @@ export class PostService {
 
   public async getPostAuthorId(postId: string): Promise<string> {
     return (await this.postModel.findById(postId)).userId.toString();
+  }
+
+  public async removePost(postId: string, authorId: string): Promise<void> {
+    const deletePost: Query<QueryComplete & QueryDeleted, Post> =
+      this.postModel.deleteOne({ _id: postId });
+    const decrementPostCount: UpdateQuery<UserDocument> =
+      this.userModel.updateOne({ _id: authorId }, { $inc: { postsCount: -1 } });
+
+    await Promise.all([deletePost, decrementPostCount]);
   }
 }

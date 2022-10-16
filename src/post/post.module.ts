@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { PassportModule } from '@nestjs/passport';
 import { BullModule } from '@nestjs/bull';
+import { User, UserSchema } from '@/user/models/user.model';
 import { PostService } from '@/post/services/post.service';
 import { PostController } from '@/post/post.controller';
 import { Post, PostSchema } from '@/post/models/post.schema';
@@ -10,7 +11,10 @@ import { PostConsumer } from '@/post/consumer/post.consumer';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([{ name: Post.name, schema: PostSchema }]),
+    MongooseModule.forFeature([
+      { name: Post.name, schema: PostSchema },
+      { name: User.name, schema: UserSchema },
+    ]),
     PassportModule.register({ defaultStrategy: 'jwt' }),
     BullModule.registerQueue({
       name: 'post',
