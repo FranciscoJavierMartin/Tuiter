@@ -1,4 +1,8 @@
-import { BadGatewayException, Injectable } from '@nestjs/common';
+import {
+  BadGatewayException,
+  BadRequestException,
+  Injectable,
+} from '@nestjs/common';
 import { WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { InjectQueue } from '@nestjs/bull';
 import { InjectModel } from '@nestjs/mongoose';
@@ -164,10 +168,15 @@ export class PostService {
   public async remove(postId: string, authorId: string): Promise<void> {
     this.socket.emit('delete post', postId);
 
-    const imgId = (await this.postModel.findById(postId)).imgId;
-    if (imgId) {
+    const post = await this.postModel.findById(postId);
+
+    if (!post) {
+      throw new BadRequestException(`Post with ${postId} not found`);
+    }
+
+    if (post.imgId) {
       try {
-        await this.uploaderService.removeImage(imgId);
+        await this.uploaderService.removeImage(post.imgId);
       } catch (error) {
         throw new BadGatewayException('External server error');
       }
