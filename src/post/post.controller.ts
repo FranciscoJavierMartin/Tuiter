@@ -90,6 +90,8 @@ export class PostController {
   }
 
   @Put(':postId')
+  @UseInterceptors(FileInterceptor('image'))
+  @ApiConsumes('multipart/form-data')
   @ApiOkResponse({
     description: 'Update post. Only for author',
   })
@@ -98,6 +100,13 @@ export class PostController {
     @Param('postId', ValidateIdPipe) postId: string,
     @GetUser('userId') [userId]: string,
     @Body() updatePostDto: UpdatePostDto,
+    @UploadedFile(
+      new ParseFilePipe({
+        fileIsRequired: false,
+        validators: [new MaxFileSizeValidator({ maxSize: 50 * 1000 * 1000 })],
+      }),
+    )
+    image?: Express.Multer.File,
   ) {
     return this.postService.update(postId, userId);
   }
