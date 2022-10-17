@@ -22,6 +22,7 @@ import {
   GetPostsQuery,
   QueryComplete,
   QueryDeleted,
+  UpdatePostParams,
 } from '@/post/interfaces/post.interface';
 import { UserDocument } from '@/user/interfaces/user.interface';
 import { User } from '@/user/models/user.model';
@@ -40,7 +41,9 @@ export class PostService {
     @InjectModel(Post.name) private postModel: Model<Post>,
     @InjectModel(User.name) private userModel: Model<UserDocument>,
     @InjectQueue('post')
-    private readonly postQueue: Queue<Post | DeletePostParams>,
+    private readonly postQueue: Queue<
+      Post | DeletePostParams | UpdatePostParams
+    >,
   ) {}
 
   /**
@@ -239,7 +242,10 @@ export class PostService {
 
     this.socket.emit('update post', updatedPost, 'posts');
 
-    // TODO: Update post in DB throught queues
-    this.postQueue.add('updatePostInDB', { postId, updatedPost });
+    this.postQueue.add('updatePostInDB', { postId, post: updatedPost });
+  }
+
+  public async editPost(postId: string, post: Post): Promise<void> {
+    await this.postModel.updateOne({ _id: postId }, { $set: post });
   }
 }

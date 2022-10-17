@@ -1,4 +1,5 @@
 import { ObjectId } from 'mongodb';
+import { Post } from '@/post/models/post.schema';
 
 export enum Privacy {
   Public = 'Public',
@@ -24,6 +25,11 @@ export interface GetPostsQuery {
 export interface DeletePostParams {
   postId: string;
   authorId: string;
+}
+
+export interface UpdatePostParams {
+  postId: string;
+  post: Post;
 }
 
 export interface QueryComplete {

@@ -3,7 +3,10 @@ import { DoneCallback, Job } from 'bull';
 import { BaseConsumer } from '@/shared/consumer/base.consumer';
 import { Post } from '@/post/models/post.schema';
 import { PostService } from '@/post/services/post.service';
-import { DeletePostParams } from '@/post/interfaces/post.interface';
+import {
+  DeletePostParams,
+  UpdatePostParams,
+} from '@/post/interfaces/post.interface';
 
 @Processor('post')
 export class PostConsumer extends BaseConsumer {
@@ -30,6 +33,21 @@ export class PostConsumer extends BaseConsumer {
   ): Promise<void> {
     try {
       this.postService.removePost(job.data.postId, job.data.authorId);
+      job.progress(100);
+      done(null, job.data);
+    } catch (error) {
+      this.logger.error(error);
+      done(error as Error);
+    }
+  }
+
+  @Process({ name: 'updatePostInDB', concurrency: 5 })
+  public async updatePostInDB(
+    job: Job<UpdatePostParams>,
+    done: DoneCallback,
+  ): Promise<void> {
+    try {
+      this.postService.editPost(job.data.postId, job.data.post);
       job.progress(100);
       done(null, job.data);
     } catch (error) {
