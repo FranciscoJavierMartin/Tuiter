@@ -40,7 +40,7 @@ export class CreatePostDto {
   @IsString()
   @IsOptional()
   @IsEnum(Privacy)
-  privacy: Privacy;
+  privacy: Privacy = Privacy.Public;
 
   @ApiProperty({
     description: 'Post reactions',

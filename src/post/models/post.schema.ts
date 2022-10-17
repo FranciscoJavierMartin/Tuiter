@@ -22,13 +22,13 @@ export class Post {
   email: string;
 
   @Prop({ type: String, required: true })
-  avatarColor: string;
+  avatarColor: string = '';
 
   @Prop({ type: String })
-  profilePicture: string;
+  profilePicture: string = '';
 
   @Prop({ type: String, default: '' })
-  text: string;
+  text: string = '';
 
   @Prop({ type: String, default: '' })
   bgColor: string;
@@ -40,19 +40,19 @@ export class Post {
   imgId: string = '';
 
   @Prop({ type: String, default: '' })
-  feelings: string;
+  feelings: string = '';
 
   @Prop({ type: String, default: '' })
-  gifUrl: string;
+  gifUrl: string = '';
 
   @Prop({ type: String, default: '' })
-  privacy: string;
+  privacy: string = 'Public';
 
   @Prop({ type: Number, default: 0 })
-  commentsCount: number;
+  commentsCount: number = 0;
 
   @Prop({ type: Date, default: Date.now })
-  createdAt: Date;
+  createdAt: Date = new Date();
 
   @Prop(
     raw({

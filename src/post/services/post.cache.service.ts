@@ -114,9 +114,9 @@ export class PostCacheService extends BaseCache {
       const replies: Post[] = (await multi.exec()) as unknown[] as Post[];
       return replies.map<Post>((post) => ({
         ...post,
-        commentsCount: parseJson(post.commentsCount.toString()),
-        reactions: parseJson(post.reactions.toString()),
-        createdAt: new Date(parseJson(post.createdAt.toString())),
+        commentsCount: parseJson(post.commentsCount?.toString()),
+        reactions: parseJson(post.reactions?.toString()),
+        createdAt: new Date(parseJson(post.createdAt?.toString())),
       }));
     } catch (error) {
       this.logger.error(error);
@@ -171,21 +171,21 @@ export class PostCacheService extends BaseCache {
     } = post;
     const dataToSave: string[] = [
       'text',
-      `${text}`,
+      `${text ?? ''}`,
       'bgColor',
-      `${bgColor}`,
+      `${bgColor ?? ''}`,
       'feelings',
-      `${feelings}`,
+      `${feelings ?? ''}`,
       'privacy',
-      `${privacy}`,
+      `${privacy ?? ''}`,
       'gifUrl',
-      `${gifUrl}`,
+      `${gifUrl ?? ''}`,
       'profilePicture',
-      `${profilePicture}`,
+      `${profilePicture ?? ''}`,
       'imgVersion',
-      `${imgVersion}`,
+      `${imgVersion ?? ''}`,
       'imgId',
-      `${imgId}`,
+      `${imgId ?? ''}`,
     ];
 
     try {

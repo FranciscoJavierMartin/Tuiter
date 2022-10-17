@@ -207,10 +207,39 @@ export class PostService {
     updatePostDto: UpdatePostDto,
     image?: Express.Multer.File,
   ): Promise<void> {
-    // TODO: Update image before store in cache
+    let result: UploadApiResponse;
+
+    if (image) {
+      const originalPost: Post = await this.postModel.findById(postId);
+
+      try {
+        if (originalPost.imgId && originalPost.imgVersion) {
+          result = await this.uploaderService.uploadImage(
+            image,
+            originalPost.imgId,
+            true,
+            true,
+          );
+        } else {
+          result = await this.uploaderService.uploadImage(image);
+        }
+      } catch (error) {
+        throw new BadGatewayException('External server error');
+      }
+    }
+
     const updatedPost: Post = await this.postCacheService.updatePostInCache(
       postId,
-      updatePostDto as any,
+      {
+        ...updatePostDto,
+        imgId: image ? result.public_id : '',
+        imgVersion: image ? result.version.toString() : '',
+      } as Post,
     );
+
+    this.socket.emit('update post', updatedPost, 'posts');
+
+    // TODO: Update post in DB throught queues
+    this.postQueue.add('updatePostInDB', { postId, updatedPost });
   }
 }
