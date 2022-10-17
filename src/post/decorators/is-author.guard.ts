@@ -1,15 +1,15 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
-import { PostService } from '@/post/services/post.service';
+import { PostRepository } from '@/post/repositories/post.repository';
 
 @Injectable()
 export class IsAuthorGuard implements CanActivate {
-  constructor(private readonly postService: PostService) {}
+  constructor(private readonly postRespository: PostRepository) {}
 
   public async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     const postId = request.params.postId;
 
-    const authorId = await this.postService.getPostAuthorId(postId);
+    const authorId = await this.postRespository.getPostAuthorId(postId);
     const userId = request.user.userId;
 
     return authorId === userId;

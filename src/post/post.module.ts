@@ -8,6 +8,7 @@ import { PostController } from '@/post/post.controller';
 import { Post, PostSchema } from '@/post/models/post.schema';
 import { PostCacheService } from '@/post/services/post.cache.service';
 import { PostConsumer } from '@/post/consumer/post.consumer';
+import { PostRepository } from './repositories/post.repository';
 
 @Module({
   imports: [
@@ -29,6 +30,6 @@ import { PostConsumer } from '@/post/consumer/post.consumer';
     }),
   ],
   controllers: [PostController],
-  providers: [PostService, PostCacheService, PostConsumer],
+  providers: [PostService, PostCacheService, PostConsumer, PostRepository],
 })
 export class PostModule {}

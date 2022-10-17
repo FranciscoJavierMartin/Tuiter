@@ -5,28 +5,22 @@ import {
 } from '@nestjs/common';
 import { WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { InjectQueue } from '@nestjs/bull';
-import { InjectModel } from '@nestjs/mongoose';
 import { ObjectId } from 'mongodb';
-import { FilterQuery, Model, Query, UpdateQuery } from 'mongoose';
 import { Server } from 'socket.io';
 import { Queue } from 'bull';
 import { UploadApiResponse } from 'cloudinary';
+import { UploaderService } from '@/shared/services/uploader.service';
 import { CurrentUser } from '@/auth/interfaces/current-user.interface';
 import { CreatePostDto } from '@/post/dto/requests/create-post.dto';
 import { Post } from '@/post/models/post.schema';
 import { PostCacheService } from '@/post/services/post.cache.service';
-import { UploaderService } from '@/shared/services/uploader.service';
 import { PostsDto } from '@/post/dto/responses/posts.dto';
 import {
   DeletePostParams,
-  GetPostsQuery,
-  QueryComplete,
-  QueryDeleted,
   UpdatePostParams,
 } from '@/post/interfaces/post.interface';
-import { UserDocument } from '@/user/interfaces/user.interface';
-import { User } from '@/user/models/user.model';
 import { UpdatePostDto } from '@/post/dto/requests/update-post.dto';
+import { PostRepository } from '@/post/repositories/post.repository';
 
 const PAGE_SIZE = 10;
 
@@ -38,8 +32,7 @@ export class PostService {
   constructor(
     private readonly postCacheService: PostCacheService,
     private readonly uploaderService: UploaderService,
-    @InjectModel(Post.name) private postModel: Model<Post>,
-    @InjectModel(User.name) private userModel: Model<UserDocument>,
+    private readonly postRespository: PostRepository,
     @InjectQueue('post')
     private readonly postQueue: Queue<
       Post | DeletePostParams | UpdatePostParams
@@ -108,15 +101,6 @@ export class PostService {
     };
   }
 
-  /**
-   * Save post to DB
-   * @param post Post to be saved
-   */
-  public async savePostToDb(post: Post): Promise<void> {
-    const postCreated = new this.postModel(post);
-    await postCreated.save();
-  }
-
   public async getAllPosts(page: number): Promise<PostsDto> {
     const skip: number = (page - 1) * PAGE_SIZE;
     const limit: number = PAGE_SIZE * page;
@@ -133,8 +117,10 @@ export class PostService {
       posts = cachedPosts;
       postsCount = await this.postCacheService.getPostsCountInCache();
     } else {
-      posts = await this.getPosts({}, skip, limit, { createdAt: -1 });
-      postsCount = await this.postsCount();
+      posts = await this.postRespository.getPosts({}, skip, limit, {
+        createdAt: -1,
+      });
+      postsCount = await this.postRespository.postsCount();
     }
 
     return {
@@ -143,36 +129,10 @@ export class PostService {
     };
   }
 
-  public async getPosts(
-    query: GetPostsQuery,
-    skip = 0,
-    limit = 0,
-    sort: Record<string, 1 | -1>,
-  ): Promise<Post[]> {
-    let postQuery: FilterQuery<any> = {};
-
-    if (query.imgId && query.gifUrl) {
-      postQuery = { $or: [{ imgId: { $ne: '' } }, { gifUrl: { $ne: '' } }] };
-    } else {
-      postQuery = query;
-    }
-
-    return await this.postModel.aggregate([
-      { $match: postQuery },
-      { $sort: sort },
-      { $skip: skip },
-      { $limit: limit },
-    ]);
-  }
-
-  public async postsCount(): Promise<number> {
-    return await this.postModel.find({}).countDocuments();
-  }
-
   public async remove(postId: string, authorId: string): Promise<void> {
     this.socket.emit('delete post', postId);
 
-    const post = await this.postModel.findById(postId);
+    const post = await this.postRespository.getPostById(postId);
 
     if (!post) {
       throw new BadRequestException(`Post with ${postId} not found`);
@@ -191,20 +151,6 @@ export class PostService {
     this.postQueue.add('deletePostFromDB', { postId, authorId });
   }
 
-  //TODO: Check if exists, otherwise throw a 404 error
-  public async getPostAuthorId(postId: string): Promise<string> {
-    return (await this.postModel.findById(postId))?.userId?.toString();
-  }
-
-  public async removePost(postId: string, authorId: string): Promise<void> {
-    const deletePost: Query<QueryComplete & QueryDeleted, Post> =
-      this.postModel.deleteOne({ _id: postId });
-    const decrementPostCount: UpdateQuery<UserDocument> =
-      this.userModel.updateOne({ _id: authorId }, { $inc: { postsCount: -1 } });
-
-    await Promise.all([deletePost, decrementPostCount]);
-  }
-
   public async update(
     postId: string,
     updatePostDto: UpdatePostDto,
@@ -213,7 +159,7 @@ export class PostService {
     let result: UploadApiResponse;
 
     if (image) {
-      const originalPost: Post = await this.postModel.findById(postId);
+      const originalPost: Post = await this.postRespository.getPostById(postId);
 
       try {
         if (originalPost.imgId && originalPost.imgVersion) {
@@ -243,9 +189,5 @@ export class PostService {
     this.socket.emit('update post', updatedPost, 'posts');
 
     this.postQueue.add('updatePostInDB', { postId, post: updatedPost });
-  }
-
-  public async editPost(postId: string, post: Post): Promise<void> {
-    await this.postModel.updateOne({ _id: postId }, { $set: post });
   }
 }

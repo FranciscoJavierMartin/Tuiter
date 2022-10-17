@@ -2,22 +2,22 @@ import { Process, Processor } from '@nestjs/bull';
 import { DoneCallback, Job } from 'bull';
 import { BaseConsumer } from '@/shared/consumer/base.consumer';
 import { Post } from '@/post/models/post.schema';
-import { PostService } from '@/post/services/post.service';
 import {
   DeletePostParams,
   UpdatePostParams,
 } from '@/post/interfaces/post.interface';
+import { PostRepository } from '@/post/repositories/post.repository';
 
 @Processor('post')
 export class PostConsumer extends BaseConsumer {
-  constructor(private readonly postService: PostService) {
+  constructor(private readonly postRespository: PostRepository) {
     super('PostConsumer');
   }
 
   @Process({ name: 'addPostToDB', concurrency: 5 })
   public async addPostToDB(job: Job<Post>, done: DoneCallback): Promise<void> {
     try {
-      this.postService.savePostToDb(job.data);
+      this.postRespository.savePostToDb(job.data);
       job.progress(100);
       done(null, job.data);
     } catch (error) {
@@ -32,7 +32,7 @@ export class PostConsumer extends BaseConsumer {
     done: DoneCallback,
   ): Promise<void> {
     try {
-      this.postService.removePost(job.data.postId, job.data.authorId);
+      this.postRespository.removePost(job.data.postId, job.data.authorId);
       job.progress(100);
       done(null, job.data);
     } catch (error) {
@@ -47,7 +47,7 @@ export class PostConsumer extends BaseConsumer {
     done: DoneCallback,
   ): Promise<void> {
     try {
-      this.postService.editPost(job.data.postId, job.data.post);
+      this.postRespository.updatePost(job.data.postId, job.data.post);
       job.progress(100);
       done(null, job.data);
     } catch (error) {
