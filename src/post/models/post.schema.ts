@@ -34,10 +34,10 @@ export class Post {
   bgColor: string;
 
   @Prop({ type: String, default: '' })
-  imgVersion: string;
+  imgVersion: string = '';
 
   @Prop({ type: String, default: '' })
-  imgId: string;
+  imgId: string = '';
 
   @Prop({ type: String, default: '' })
   feelings: string;

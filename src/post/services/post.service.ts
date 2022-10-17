@@ -207,17 +207,10 @@ export class PostService {
     updatePostDto: UpdatePostDto,
     image?: Express.Multer.File,
   ): Promise<void> {
-    const originalPost: Post = await this.postModel.findById(postId);
-
-    const mergedPost: Post = {
-      ...originalPost,
-      ...updatePostDto,
-    };
-
     // TODO: Update image before store in cache
     const updatedPost: Post = await this.postCacheService.updatePostInCache(
       postId,
-      mergedPost,
+      updatePostDto as any,
     );
   }
 }
