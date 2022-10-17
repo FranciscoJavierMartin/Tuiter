@@ -3,7 +3,7 @@ import {
   NotificationSettings,
   SocialLinks,
   UserDocument,
-} from '@/user/models/user.model';
+} from '@/user/interfaces/user.interface';
 
 export class UserDto {
   @ApiProperty({

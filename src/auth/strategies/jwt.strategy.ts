@@ -1,6 +1,7 @@
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { JwtPayload } from '@/auth/interfaces/jwt.payload';
+import { CurrentUser } from '@/auth/interfaces/current-user.interface';
 
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor() {
@@ -16,7 +17,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
    * @param {JwtPayload} payload - Jwt from client
    * @returns Something
    */
-  public validate(payload: JwtPayload): JwtPayload {
+  public validate(payload: JwtPayload): CurrentUser {
     return payload;
   }
 }

@@ -23,16 +23,16 @@ import {
 } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { AuthGuard } from '@nestjs/passport';
-import { AuthService } from '@/auth/services/auth.service';
+import { AuthService } from '@/auth/auth.service';
 import { RegisterDto } from '@/auth/dto/requests/register.dto';
 import { ResponseRegisterDto } from '@/auth/dto/responses/register.dto';
 import { LoginDto } from '@/auth/dto/requests/login.dto';
 import { GetUser } from '@/auth/decorators/get-user.decorator';
-import { JwtPayload } from '@/auth/interfaces/jwt.payload';
 import { UserDto } from '@/auth/dto/responses/user.dto';
 import { ForgotPasswordDto } from '@/auth/dto/requests/forgot-password.dto';
 import { InfoMessageDto } from '@/auth/dto/responses/info-message.dto';
 import { ResetPasswordDto } from '@/auth/dto/requests/reset-password.dto';
+import { CurrentUser } from './interfaces/current-user.interface';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -89,7 +89,7 @@ export class AuthController {
     type: UserDto,
   })
   @UseGuards(AuthGuard())
-  public async getCurrentUser(@GetUser() user: JwtPayload): Promise<UserDto> {
+  public async getCurrentUser(@GetUser() user: CurrentUser): Promise<UserDto> {
     const userFromServer = await this.authService.getUser(user.userId);
     return new UserDto(userFromServer);
   }

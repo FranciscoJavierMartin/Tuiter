@@ -58,4 +58,8 @@ export class UploaderService {
       'CLOUDINARY_CLOUD_NAME',
     )}/image/upload/v${version}/${publicId}`;
   }
+
+  public async removeImage(imgId: string) {
+    return cloudinary.uploader.destroy(imgId, {});
+  }
 }

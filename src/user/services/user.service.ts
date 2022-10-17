@@ -3,7 +3,8 @@ import { InjectModel } from '@nestjs/mongoose';
 import { ObjectId } from 'mongodb';
 import mongoose, { Model } from 'mongoose';
 import { AuthDocument } from '@/auth/models/auth.model';
-import { User, UserDocument } from '@/user/models/user.model';
+import { User } from '@/user/models/user.model';
+import { UserDocument } from '@/user/interfaces/user.interface';
 
 @Injectable()
 export class UserService {
