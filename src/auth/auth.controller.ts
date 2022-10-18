@@ -32,7 +32,7 @@ import { UserDto } from '@/auth/dto/responses/user.dto';
 import { ForgotPasswordDto } from '@/auth/dto/requests/forgot-password.dto';
 import { InfoMessageDto } from '@/auth/dto/responses/info-message.dto';
 import { ResetPasswordDto } from '@/auth/dto/requests/reset-password.dto';
-import { CurrentUser } from './interfaces/current-user.interface';
+import { CurrentUser } from '@/auth/interfaces/current-user.interface';
 
 @ApiTags('Auth')
 @Controller('auth')

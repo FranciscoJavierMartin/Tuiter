@@ -25,14 +25,14 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { ValidateIdPipe } from '@/shared/pipes/validate-id.pipe';
 import { CurrentUser } from '@/auth/interfaces/current-user.interface';
 import { GetUser } from '@/auth/decorators/get-user.decorator';
 import { PostService } from '@/post/services/post.service';
 import { CreatePostDto } from '@/post/dto/requests/create-post.dto';
 import { PostsDto } from '@/post/dto/responses/posts.dto';
-import { ValidateIdPipe } from '@/shared/pipes/validate-id.pipe';
-import { IsAuthorGuard } from './decorators/is-author.guard';
-import { UpdatePostDto } from './dto/requests/update-post.dto';
+import { IsAuthorGuard } from '@/post/decorators/is-author.guard';
+import { UpdatePostDto } from '@/post/dto/requests/update-post.dto';
 
 @ApiTags('Post')
 @Controller('post')

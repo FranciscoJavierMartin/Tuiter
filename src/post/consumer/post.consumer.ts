@@ -1,13 +1,13 @@
 import { Process, Processor } from '@nestjs/bull';
 import { DoneCallback, Job } from 'bull';
 import { BaseConsumer } from '@/shared/consumer/base.consumer';
+import { UserRepository } from '@/user/repositories/user.repository';
 import { Post } from '@/post/models/post.schema';
 import {
   DeletePostParams,
   UpdatePostParams,
 } from '@/post/interfaces/post.interface';
 import { PostRepository } from '@/post/repositories/post.repository';
-import { UserRepository } from '@/user/repositories/user.repository';
 
 @Processor('post')
 export class PostConsumer extends BaseConsumer {

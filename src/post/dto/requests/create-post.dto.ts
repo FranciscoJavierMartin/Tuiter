@@ -1,4 +1,3 @@
-import { Feelings, Privacy } from '@/post/interfaces/post.interface';
 import { ApiProperty } from '@nestjs/swagger';
 import {
   IsEnum,
@@ -7,6 +6,7 @@ import {
   IsUrl,
   ValidateIf,
 } from 'class-validator';
+import { Feelings, Privacy } from '@/post/interfaces/post.interface';
 
 export class CreatePostDto {
   @ApiProperty({
