@@ -2,7 +2,7 @@ import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { parseJson } from '@/helpers/utils';
 import { BaseCache } from '@/shared/redis/base.cache';
-import { UserDocument } from '@/user/interfaces/user.interface';
+import { UserDocument } from '@/user/models/user.model';
 
 @Injectable()
 export class UserCacheService extends BaseCache {

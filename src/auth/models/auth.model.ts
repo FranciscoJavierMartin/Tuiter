@@ -5,12 +5,6 @@ import { firstLetterUppercase } from '@/helpers/utils';
 
 const SALT_ROUND = 10;
 
-export type AuthDocument = AuthUser &
-  Document & {
-    comparePassword: (password: string) => boolean;
-    hashPassword: (password: string) => string;
-  };
-
 @Schema({
   collection: 'Auth',
   toJSON: {
@@ -74,3 +68,9 @@ AuthSchema.methods.comparePassword = function (password: string): boolean {
 AuthSchema.methods.hashPassword = function (password: string): string {
   return hashSync(password, SALT_ROUND);
 };
+
+export type AuthDocument = AuthUser &
+  Document & {
+    comparePassword: (password: string) => boolean;
+    hashPassword: (password: string) => string;
+  };

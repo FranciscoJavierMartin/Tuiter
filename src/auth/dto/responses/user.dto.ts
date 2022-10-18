@@ -2,8 +2,8 @@ import { ApiProperty } from '@nestjs/swagger';
 import {
   NotificationSettings,
   SocialLinks,
-  UserDocument,
 } from '@/user/interfaces/user.interface';
+import { UserDocument } from '@/user/models/user.model';
 
 export class UserDto {
   @ApiProperty({
@@ -122,8 +122,8 @@ export class UserDto {
     this.blockedBy = user.blockedBy.map((id) => id.toString());
     this.followersCount = user.followersCount;
     this.followingCount = user.followingCount;
-    this.notifications = user.notifications;
-    this.social = user.social;
+    this.notifications = user.notifications as unknown as NotificationSettings;
+    this.social = user.social as unknown as SocialLinks;
     this.bgImageId = user.bgImageId;
     this.bgImageVersion = user.bgImageVersion;
     this.profilePicture = user.profilePicture;

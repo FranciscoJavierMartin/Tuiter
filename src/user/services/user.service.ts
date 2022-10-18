@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ObjectId } from 'mongodb';
 import { AuthDocument } from '@/auth/models/auth.model';
-import { UserDocument } from '@/user/interfaces/user.interface';
+import { UserDocument } from '@/user/models/user.model';
 import { UserRepository } from '@/user/repositories/user.repository';
 
 @Injectable()

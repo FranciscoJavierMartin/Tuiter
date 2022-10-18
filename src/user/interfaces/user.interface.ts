@@ -1,30 +1,4 @@
-import { ObjectId } from 'mongodb';
-import mongoose, { Document } from 'mongoose';
-
-export interface UserDocument extends Document {
-  _id: string | ObjectId;
-  authId: string | ObjectId;
-  username?: string;
-  email?: string;
-  password?: string;
-  avatarColor?: string;
-  uId?: string;
-  postsCount: number;
-  work: string;
-  school: string;
-  quote: string;
-  location: string;
-  blocked: mongoose.Types.ObjectId[];
-  blockedBy: mongoose.Types.ObjectId[];
-  followersCount: number;
-  followingCount: number;
-  notifications: NotificationSettings;
-  social: SocialLinks;
-  bgImageVersion: string;
-  bgImageId: string;
-  profilePicture: string;
-  createdAt?: Date;
-}
+import { UserDocument } from '@/user/models/user.model';
 
 export interface ResetPasswordParams {
   username: string;
