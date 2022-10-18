@@ -65,6 +65,11 @@ export class AuthRepository {
       .exec();
   }
 
+  /**
+   * Update password reset token
+   * @param authId User id to be updated
+   * @param passwordToken New password token
+   */
   public async updatePasswordResetToken(
     authId: string,
     passwordToken: string,
