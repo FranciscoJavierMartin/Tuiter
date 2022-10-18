@@ -55,7 +55,7 @@ export class PostService {
 
     const post: Post = {
       _id: postId,
-      userId: user.userId,
+      authorId: user.userId,
       username: user.username,
       email: user.email,
       avatarColor: user.avatarColor,

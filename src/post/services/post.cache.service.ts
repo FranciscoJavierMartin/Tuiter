@@ -25,7 +25,7 @@ export class PostCacheService extends BaseCache {
   ) {
     const {
       _id,
-      userId,
+      authorId,
       username,
       email,
       avatarColor,
@@ -45,8 +45,8 @@ export class PostCacheService extends BaseCache {
     const dataToSave: string[] = [
       '_id',
       `${_id}`,
-      'userId',
-      `${userId}`,
+      'authorId',
+      `${authorId}`,
       'username',
       `${username}`,
       'email',

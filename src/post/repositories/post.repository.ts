@@ -54,7 +54,7 @@ export class PostRepository {
       throw new BadRequestException(`Post ${postId} not found`);
     }
 
-    return post.userId.toString();
+    return post.authorId.toString();
   }
 
   public async removePost(postId: string): Promise<void> {
