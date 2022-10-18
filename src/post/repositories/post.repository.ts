@@ -1,13 +1,8 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { FilterQuery, Model, Query, UpdateQuery } from 'mongoose';
+import { FilterQuery, Model } from 'mongoose';
 import { Post } from '@/post/models/post.schema';
-import {
-  GetPostsQuery,
-  QueryComplete,
-  QueryDeleted,
-} from '@/post/interfaces/post.interface';
-import { UserDocument } from '@/user/interfaces/user.interface';
+import { GetPostsQuery } from '@/post/interfaces/post.interface';
 
 @Injectable()
 export class PostRepository {
