@@ -2,11 +2,11 @@ import { Process, Processor } from '@nestjs/bull';
 import { DoneCallback, Job } from 'bull';
 import { BaseConsumer } from '@/shared/consumer/base.consumer';
 import { AuthDocument } from '@/auth/models/auth.model';
-import { AuthService } from '@/auth/auth.service';
+import { AuthRepository } from '@/auth/repositories/auth.repository';
 
 @Processor('auth')
 export class AuthConsumer extends BaseConsumer {
-  constructor(private readonly authService: AuthService) {
+  constructor(private readonly authRepository: AuthRepository) {
     super('AuthConsumer');
   }
 
@@ -16,7 +16,7 @@ export class AuthConsumer extends BaseConsumer {
     done: DoneCallback,
   ): Promise<void> {
     try {
-      this.authService.createAuthUser(job.data);
+      this.authRepository.createAuthUser(job.data);
       job.progress(100);
       done(null, job.data);
     } catch (error) {

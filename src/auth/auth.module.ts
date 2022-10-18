@@ -10,6 +10,7 @@ import { AuthController } from '@/auth/auth.controller';
 import { AuthUser, AuthSchema } from '@/auth/models/auth.model';
 import { JwtStrategy } from '@/auth/strategies/jwt.strategy';
 import { AuthConsumer } from '@/auth/consumers/auth.consumer';
+import { AuthRepository } from '@/auth/repositories/auth.repository';
 
 @Module({
   imports: [
@@ -63,6 +64,7 @@ import { AuthConsumer } from '@/auth/consumers/auth.consumer';
     UserModule,
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy, AuthConsumer],
+  providers: [AuthService, JwtStrategy, AuthConsumer, AuthRepository],
+  exports: [AuthRepository],
 })
 export class AuthModule {}

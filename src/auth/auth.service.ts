@@ -3,16 +3,14 @@ import {
   BadRequestException,
   Injectable,
 } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
 import { JwtService } from '@nestjs/jwt';
 import { InjectQueue } from '@nestjs/bull';
 import * as crypto from 'crypto';
 import { ObjectId } from 'mongodb';
-import { Model } from 'mongoose';
 import { Queue } from 'bull';
 import { UploadApiResponse } from 'cloudinary';
 import * as moment from 'moment';
-import { firstLetterUppercase, generateRandomIntegers } from '@/helpers/utils';
+import { generateRandomIntegers } from '@/helpers/utils';
 import {
   MailForgotPasswordData,
   MailResetPasswordData,
@@ -21,19 +19,20 @@ import { UploaderService } from '@/shared/services/uploader.service';
 import { UserService } from '@/user/services/user.service';
 import { UserCacheService } from '@/user/services/user.cache.service';
 import { UserDocument } from '@/user/interfaces/user.interface';
+import { UserRepository } from '@/user/repositories/user.repository';
 import { RegisterDto } from '@/auth/dto/requests/register.dto';
 import { ResponseRegisterDto } from '@/auth/dto/responses/register.dto';
-import { AuthUser, AuthDocument } from '@/auth/models/auth.model';
+import { AuthDocument } from '@/auth/models/auth.model';
 import { LoginDto } from '@/auth/dto/requests/login.dto';
 import { UserDto } from '@/auth/dto/responses/user.dto';
-import { UserRepository } from '@/user/repositories/user.repository';
+import { AuthRepository } from '@/auth/repositories/auth.repository';
 
 @Injectable()
 export class AuthService {
   constructor(
-    @InjectModel(AuthUser.name) private authModel: Model<AuthDocument>,
     private readonly uploaderService: UploaderService,
     private readonly jwtService: JwtService,
+    private readonly authRepository: AuthRepository,
     private readonly userService: UserService,
     private readonly userRepository: UserRepository,
     private readonly userCacheService: UserCacheService,
@@ -57,7 +56,12 @@ export class AuthService {
   ): Promise<ResponseRegisterDto> {
     let avatarUploaded: UploadApiResponse;
 
-    if (await this.checkIfUserExists(registerDto.email, registerDto.username)) {
+    if (
+      await this.authRepository.checkIfUserExists(
+        registerDto.email,
+        registerDto.username,
+      )
+    ) {
       throw new BadRequestException('User is already created');
     }
 
@@ -115,9 +119,8 @@ export class AuthService {
    * @returns User from DB and JWT
    */
   public async login(loginDto: LoginDto): Promise<ResponseRegisterDto> {
-    const authUser: AuthDocument = await this.getAuthUserByUsername(
-      loginDto.username,
-    );
+    const authUser: AuthDocument =
+      await this.authRepository.getAuthUserByUsername(loginDto.username);
 
     if (!authUser || !authUser.comparePassword(loginDto.password)) {
       throw new BadRequestException('Invalid credentials');
@@ -153,61 +156,6 @@ export class AuthService {
   }
 
   /**
-   * Create auth user in DB
-   * @param authUser auth user to be created
-   */
-  public async createAuthUser(authUser: AuthDocument): Promise<void> {
-    const authUserCreated = new this.authModel({ ...authUser });
-    await authUserCreated.save();
-  }
-
-  /**
-   * Check if users exists in db by email or username
-   * @param email
-   * @param username
-   * @returns True if user exists, False otherwise
-   */
-  public async checkIfUserExists(
-    email: string,
-    username: string,
-  ): Promise<boolean> {
-    return !!(await this.authModel
-      .exists({
-        $or: [
-          { username: firstLetterUppercase(username) },
-          { email: email.toLowerCase() },
-        ],
-      })
-      .exec());
-  }
-
-  /**
-   * Get auth user by username
-   * @param username User name
-   * @returns User from DB
-   */
-  public async getAuthUserByUsername(username: string): Promise<AuthDocument> {
-    return await this.authModel
-      .findOne({
-        username: firstLetterUppercase(username),
-      })
-      .exec();
-  }
-
-  /**
-   * Get auth user by email
-   * @param email User email
-   * @returns User from DB
-   */
-  public async getAuthUserByEmail(email: string): Promise<AuthDocument> {
-    return await this.authModel
-      .findOne({
-        email: email.toLowerCase(),
-      })
-      .exec();
-  }
-
-  /**
    * Get user from cache or DB
    * @param userId User id to find it
    * @returns User from cache or DB
@@ -227,7 +175,9 @@ export class AuthService {
    * @param email email to be sent
    */
   public async sendForgotPasswordEmail(email: string): Promise<void> {
-    const authUser: AuthDocument = await this.getAuthUserByEmail(email);
+    const authUser: AuthDocument = await this.authRepository.getAuthUserByEmail(
+      email,
+    );
 
     if (!authUser) {
       throw new BadRequestException('Invalid credentials');
@@ -236,14 +186,9 @@ export class AuthService {
     const randomBytes: Buffer = await Promise.resolve(crypto.randomBytes(20));
     const randomCharacters: string = randomBytes.toString('hex');
 
-    await this.authModel.updateOne(
-      {
-        _id: authUser._id,
-      },
-      {
-        passwordResetToken: randomCharacters,
-        passwordResetExpires: Date.now() * 60 * 60 * 1000,
-      },
+    await this.authRepository.updatePasswordResetToken(
+      authUser._id,
+      randomCharacters,
     );
 
     this.emailQueue.add('sendForgotPasswordEmail', {
@@ -264,7 +209,8 @@ export class AuthService {
     token: string,
     ip: string,
   ): Promise<void> {
-    const authUser: AuthDocument = await this.getAuthUserByPasswordToken(token);
+    const authUser: AuthDocument =
+      await this.authRepository.getAuthUserByPasswordToken(token);
 
     if (!authUser) {
       throw new BadRequestException('Token has expired');
@@ -300,21 +246,5 @@ export class AuthService {
       username,
       avatarColor,
     });
-  }
-
-  /**
-   * Get auth user by password reset token
-   * @param token Token to search user
-   * @returns Auth user
-   */
-  private async getAuthUserByPasswordToken(
-    token: string,
-  ): Promise<AuthDocument> {
-    return await this.authModel
-      .findOne({
-        passwordResetToken: token,
-        passwordResetExpires: { $gt: Date.now() },
-      })
-      .exec();
   }
 }
