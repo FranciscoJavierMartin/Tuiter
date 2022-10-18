@@ -7,10 +7,14 @@ import {
   UpdatePostParams,
 } from '@/post/interfaces/post.interface';
 import { PostRepository } from '@/post/repositories/post.repository';
+import { UserRepository } from '@/user/repositories/user.repository';
 
 @Processor('post')
 export class PostConsumer extends BaseConsumer {
-  constructor(private readonly postRespository: PostRepository) {
+  constructor(
+    private readonly postRespository: PostRepository,
+    private readonly userRespository: UserRepository,
+  ) {
     super('PostConsumer');
   }
 
@@ -32,7 +36,10 @@ export class PostConsumer extends BaseConsumer {
     done: DoneCallback,
   ): Promise<void> {
     try {
-      this.postRespository.removePost(job.data.postId, job.data.authorId);
+      await Promise.all([
+        await this.postRespository.removePost(job.data.postId),
+        await this.userRespository.decrementUserPostsCount(job.data.authorId),
+      ]);
       job.progress(100);
       done(null, job.data);
     } catch (error) {

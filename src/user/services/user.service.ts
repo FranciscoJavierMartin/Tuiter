@@ -1,16 +1,12 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
+import { Injectable } from '@nestjs/common';
 import { ObjectId } from 'mongodb';
-import mongoose, { Model } from 'mongoose';
 import { AuthDocument } from '@/auth/models/auth.model';
-import { User } from '@/user/models/user.model';
 import { UserDocument } from '@/user/interfaces/user.interface';
+import { UserRepository } from '@/user/repositories/user.repository';
 
 @Injectable()
 export class UserService {
-  constructor(
-    @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
-  ) {}
+  constructor(private readonly userRepository: UserRepository) {}
 
   /**
    * Transform AuthDocument in UserDocument. Only for new users
@@ -53,97 +49,5 @@ export class UserService {
         youtube: '',
       },
     } as unknown as UserDocument;
-  }
-
-  /**
-   * Insert user in DB
-   * @param data User to be created
-   */
-  public async addUserDataToDB(data: UserDocument): Promise<void> {
-    const userCreated = new this.userModel({ ...data });
-    await userCreated.save();
-  }
-
-  /**
-   * Get user from DB (User collection)
-   * @param userId user id
-   * @returns User from DB
-   */
-  public async getUserById(userId: string): Promise<UserDocument> {
-    const users: UserDocument[] = await this.userModel.aggregate([
-      { $match: { _id: new mongoose.Types.ObjectId(userId) } },
-      {
-        $lookup: {
-          from: 'Auth',
-          localField: 'authId',
-          foreignField: '_id',
-          as: 'authId',
-        },
-      },
-      { $unwind: '$authId' },
-      { $project: this.aggregateProject() },
-    ]);
-
-    if (users.length === 0) {
-      throw new NotFoundException('User not found');
-    }
-
-    return users[0];
-  }
-
-  /**
-   * Get user from 'users' collection
-   * @param authId Id from auth collection
-   * @returns User from 'Users' collection
-   */
-  public async getUserByAuthId(authId: string): Promise<UserDocument> {
-    const users: UserDocument[] = await this.userModel.aggregate([
-      { $match: { authId: new mongoose.Types.ObjectId(authId) } },
-      {
-        $lookup: {
-          from: 'Auth',
-          localField: 'authId',
-          foreignField: '_id',
-          as: 'authId',
-        },
-      },
-      { $unwind: '$authId' },
-      { $project: this.aggregateProject() },
-    ]);
-
-    if (users.length === 0) {
-      throw new NotFoundException('User not found');
-    }
-
-    return users[0];
-  }
-
-  /**
-   * This is to select fields in projections
-   * @returns Selected fields
-   */
-  private aggregateProject() {
-    return {
-      _id: 1,
-      username: '$authId.username',
-      uId: '$authId.uId',
-      email: '$authId.email',
-      avatarColor: '$authId.avatarColor',
-      createdAt: '$authId.createdAt',
-      postsCount: 1,
-      work: 1,
-      school: 1,
-      quote: 1,
-      location: 1,
-      blocked: 1,
-      blockedBy: 1,
-      followersCount: 1,
-      followingCount: 1,
-      notifications: 1,
-      social: 1,
-      bgImageVersion: 1,
-      bgImageId: 1,
-      profilePicture: 1,
-    };
   }
 }

@@ -8,14 +8,10 @@ import {
   QueryDeleted,
 } from '@/post/interfaces/post.interface';
 import { UserDocument } from '@/user/interfaces/user.interface';
-import { User } from '@/user/models/user.model';
 
 @Injectable()
 export class PostRepository {
-  constructor(
-    @InjectModel(Post.name) private postModel: Model<Post>,
-    @InjectModel(User.name) private userModel: Model<UserDocument>,
-  ) {}
+  constructor(@InjectModel(Post.name) private postModel: Model<Post>) {}
 
   /**
    * Save post to DB
@@ -66,13 +62,8 @@ export class PostRepository {
     return post.userId.toString();
   }
 
-  public async removePost(postId: string, authorId: string): Promise<void> {
-    const deletePost: Query<QueryComplete & QueryDeleted, Post> =
-      this.postModel.deleteOne({ _id: postId });
-    const decrementPostCount: UpdateQuery<UserDocument> =
-      this.userModel.updateOne({ _id: authorId }, { $inc: { postsCount: -1 } });
-
-    await Promise.all([deletePost, decrementPostCount]);
+  public async removePost(postId: string): Promise<void> {
+    await this.postModel.deleteOne({ _id: postId });
   }
 
   public async updatePost(postId: string, post: Post): Promise<void> {

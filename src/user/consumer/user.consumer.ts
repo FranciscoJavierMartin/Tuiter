@@ -2,11 +2,11 @@ import { Process, Processor } from '@nestjs/bull';
 import { DoneCallback, Job } from 'bull';
 import { BaseConsumer } from '@/shared/consumer/base.consumer';
 import { UserDocument } from '@/user/interfaces/user.interface';
-import { UserService } from '@/user/services/user.service';
+import { UserRepository } from '@/user/repositories/user.repository';
 
 @Processor('user')
 export class UserConsumer extends BaseConsumer {
-  constructor(private readonly userService: UserService) {
+  constructor(private readonly userRepository: UserRepository) {
     super('UserConsumer');
   }
 
@@ -16,7 +16,7 @@ export class UserConsumer extends BaseConsumer {
     done: DoneCallback,
   ): Promise<void> {
     try {
-      await this.userService.addUserDataToDB(job.data);
+      await this.userRepository.addUserDataToDB(job.data);
       job.progress(100);
       done(null, job.data);
     } catch (error) {

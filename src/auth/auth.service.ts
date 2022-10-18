@@ -26,6 +26,7 @@ import { ResponseRegisterDto } from '@/auth/dto/responses/register.dto';
 import { AuthUser, AuthDocument } from '@/auth/models/auth.model';
 import { LoginDto } from '@/auth/dto/requests/login.dto';
 import { UserDto } from '@/auth/dto/responses/user.dto';
+import { UserRepository } from '@/user/repositories/user.repository';
 
 @Injectable()
 export class AuthService {
@@ -34,6 +35,7 @@ export class AuthService {
     private readonly uploaderService: UploaderService,
     private readonly jwtService: JwtService,
     private readonly userService: UserService,
+    private readonly userRepository: UserRepository,
     private readonly userCacheService: UserCacheService,
     @InjectQueue('auth') private readonly authQueue: Queue<AuthDocument>,
     @InjectQueue('user') private readonly userQueue: Queue<UserDocument>,
@@ -121,7 +123,7 @@ export class AuthService {
       throw new BadRequestException('Invalid credentials');
     }
 
-    const user: UserDocument = await this.userService.getUserByAuthId(
+    const user: UserDocument = await this.userRepository.getUserByAuthId(
       authUser.id,
     );
 
@@ -215,7 +217,7 @@ export class AuthService {
       await this.userCacheService.getUserFromCache(userId);
 
     const existingUser: UserDocument =
-      cachedUser ?? (await this.userService.getUserById(userId));
+      cachedUser ?? (await this.userRepository.getUserById(userId));
 
     return existingUser;
   }

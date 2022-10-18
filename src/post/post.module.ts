@@ -2,20 +2,17 @@ import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { PassportModule } from '@nestjs/passport';
 import { BullModule } from '@nestjs/bull';
-import { User, UserSchema } from '@/user/models/user.model';
 import { PostService } from '@/post/services/post.service';
 import { PostController } from '@/post/post.controller';
 import { Post, PostSchema } from '@/post/models/post.schema';
 import { PostCacheService } from '@/post/services/post.cache.service';
 import { PostConsumer } from '@/post/consumer/post.consumer';
 import { PostRepository } from './repositories/post.repository';
+import { UserModule } from '@/user/user.module';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([
-      { name: Post.name, schema: PostSchema },
-      { name: User.name, schema: UserSchema },
-    ]),
+    MongooseModule.forFeature([{ name: Post.name, schema: PostSchema }]),
     PassportModule.register({ defaultStrategy: 'jwt' }),
     BullModule.registerQueue({
       name: 'post',
@@ -28,6 +25,7 @@ import { PostRepository } from './repositories/post.repository';
         removeOnComplete: true,
       },
     }),
+    UserModule,
   ],
   controllers: [PostController],
   providers: [PostService, PostCacheService, PostConsumer, PostRepository],
