@@ -1,6 +1,6 @@
 import { Prop, raw, Schema, SchemaFactory } from '@nestjs/mongoose';
-import mongoose from 'mongoose';
 import { ObjectId } from 'mongodb';
+import mongoose from 'mongoose';
 
 @Schema({
   collection: 'User',

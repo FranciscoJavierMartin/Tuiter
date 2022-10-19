@@ -70,11 +70,20 @@ export class UserRepository {
     return users[0];
   }
 
+  /**
+   * Update User in DB
+   * @param userId User id
+   * @param user User data
+   */
   public async updateUser(userId: string, user: User): Promise<void> {
     await this.userModel.updateOne({ _id: userId }, { $set: user });
   }
 
   // TODO: Refactor to include inside updateUser
+  /**
+   * Decrement (in one) user post count
+   * @param userId User id
+   */
   public async decrementUserPostsCount(userId: string): Promise<void> {
     await this.userModel
       .findByIdAndUpdate(userId, {
