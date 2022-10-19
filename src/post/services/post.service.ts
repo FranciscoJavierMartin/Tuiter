@@ -101,6 +101,11 @@ export class PostService {
     };
   }
 
+  /**
+   * Get posts paginated
+   * @param page Page number to retrieve
+   * @returns Post collection
+   */
   public async getAllPosts(page: number): Promise<PostsDto> {
     const skip: number = (page - 1) * PAGE_SIZE;
     const limit: number = PAGE_SIZE * page;
@@ -129,6 +134,11 @@ export class PostService {
     };
   }
 
+  /**
+   * Remove post
+   * @param postId Post id
+   * @param authorId Post's author id
+   */
   public async remove(postId: string, authorId: string): Promise<void> {
     this.socket.emit('delete post', postId);
 
@@ -151,6 +161,12 @@ export class PostService {
     this.postQueue.add('deletePostFromDB', { postId, authorId });
   }
 
+  /**
+   * Update post
+   * @param postId Post id
+   * @param updatePostDto Post data to be updated
+   * @param image (Optional) Image to add or update
+   */
   public async update(
     postId: string,
     updatePostDto: UpdatePostDto,
@@ -162,6 +178,7 @@ export class PostService {
       const originalPost: Post = await this.postRespository.getPostById(postId);
 
       try {
+        // Replace existing image
         if (originalPost.imgId && originalPost.imgVersion) {
           result = await this.uploaderService.uploadImage(
             image,
@@ -170,6 +187,7 @@ export class PostService {
             true,
           );
         } else {
+          // Add new image
           result = await this.uploaderService.uploadImage(image);
         }
       } catch (error) {

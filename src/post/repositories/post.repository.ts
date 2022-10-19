@@ -17,6 +17,14 @@ export class PostRepository {
     await postCreated.save();
   }
 
+  /**
+   * Get posts from DB
+   * @param query Filter params to get posts
+   * @param skip Skip X firsts posts
+   * @param limit Maximun ammount of posts to retrieve
+   * @param sort How to sort results
+   * @returns Posts from DB
+   */
   public async getPosts(
     query: GetPostsQuery,
     skip = 0,
@@ -39,14 +47,28 @@ export class PostRepository {
     ]);
   }
 
+  /**
+   * Get post by Id from DB
+   * @param postId post id to be retrieved
+   * @returns Post from DB
+   */
   public async getPostById(postId: string): Promise<Post> {
     return await this.postModel.findById(postId);
   }
 
+  /**
+   * Return ammount of posts from DB
+   * @returns Ammount of posts from DB
+   */
   public async postsCount(): Promise<number> {
     return await this.postModel.find({}).countDocuments();
   }
 
+  /**
+   * Retrieve post author id
+   * @param postId post Id
+   * @returns Post author id
+   */
   public async getPostAuthorId(postId: string): Promise<string> {
     const post = await this.getPostById(postId);
 
@@ -57,10 +79,19 @@ export class PostRepository {
     return post.authorId.toString();
   }
 
+  /**
+   * Remove post from DB
+   * @param postId Post id to be deleted
+   */
   public async removePost(postId: string): Promise<void> {
     await this.postModel.deleteOne({ _id: postId });
   }
 
+  /**
+   * Update post in DB
+   * @param postId Post id to be updated
+   * @param post Post info to update
+   */
   public async updatePost(postId: string, post: Post): Promise<void> {
     await this.postModel.updateOne({ _id: postId }, { $set: post });
   }

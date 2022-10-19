@@ -99,6 +99,12 @@ export class PostCacheService extends BaseCache {
     }
   }
 
+  /**
+   * Get posts from cache
+   * @param start start
+   * @param end end
+   * @returns Posts from cache
+   */
   public async getPostsFromCache(start: number, end: number): Promise<Post[]> {
     try {
       const reply: string[] = await this.client.ZRANGE('post', start, end, {
@@ -124,6 +130,10 @@ export class PostCacheService extends BaseCache {
     }
   }
 
+  /**
+   * Count posts in cache
+   * @returns Number of posts in cache
+   */
   public async getPostsCountInCache(): Promise<number> {
     try {
       return await this.client.ZCARD('post');
@@ -133,6 +143,11 @@ export class PostCacheService extends BaseCache {
     }
   }
 
+  /**
+   * Delete post in cache
+   * @param postId Post id
+   * @param authorId Post's author id
+   */
   public async deletePostFromCache(
     postId: string,
     authorId: string,
@@ -158,6 +173,12 @@ export class PostCacheService extends BaseCache {
     }
   }
 
+  /**
+   * Update post in cache
+   * @param postId Post id
+   * @param post Post content to be update
+   * @returns Updated post
+   */
   public async updatePostInCache(postId: string, post: Post): Promise<Post> {
     const {
       text,

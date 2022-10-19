@@ -6,6 +6,7 @@ import { ObjectId } from 'mongodb';
   collection: 'Post',
 })
 export class Post {
+  // TODO: Check if use type like in User
   _id: ObjectId;
 
   @Prop({

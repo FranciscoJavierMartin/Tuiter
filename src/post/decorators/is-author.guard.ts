@@ -5,6 +5,11 @@ import { PostRepository } from '@/post/repositories/post.repository';
 export class IsAuthorGuard implements CanActivate {
   constructor(private readonly postRespository: PostRepository) {}
 
+  /**
+   * Check if current user is post's author
+   * @param context Execution context
+   * @returns True if current user is post's author, false otherwise
+   */
   public async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     const postId = request.params.postId;
