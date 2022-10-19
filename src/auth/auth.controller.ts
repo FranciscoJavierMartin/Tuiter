@@ -17,6 +17,7 @@ import {
   ApiBody,
   ApiConsumes,
   ApiCreatedResponse,
+  ApiInternalServerErrorResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiTags,
@@ -88,6 +89,9 @@ export class AuthController {
     description: 'User info',
     type: UserDto,
   })
+  @ApiNotFoundResponse({
+    description: 'User not found in DB',
+  })
   @UseGuards(AuthGuard())
   public async getCurrentUser(@GetUser() user: CurrentUser): Promise<UserDto> {
     const userFromServer = await this.authService.getUser(user.userId);
@@ -97,6 +101,9 @@ export class AuthController {
   @Post('forgot-password')
   @ApiCreatedResponse({
     description: 'Send email to reset user password',
+  })
+  @ApiBadRequestResponse({
+    description: 'Invalid credentials',
   })
   public async forgotPassword(
     @Body() forgotPasswordDto: ForgotPasswordDto,
@@ -110,6 +117,9 @@ export class AuthController {
   @Post('reset-password/:token')
   @ApiCreatedResponse({
     description: 'Change user password and send an email to user',
+  })
+  @ApiBadRequestResponse({
+    description: 'Token has expired',
   })
   public async resetPassword(
     @Param('token') token: string,
