@@ -81,6 +81,12 @@ export class PostController {
   @ApiOkResponse({
     description: 'Remove post. Only for author',
   })
+  @ApiBadRequestResponse({
+    description: 'Post not found',
+  })
+  @ApiBadGatewayResponse({
+    description: 'Error on internal request',
+  })
   @UseGuards(AuthGuard(), IsAuthorGuard)
   remove(
     @Param('postId', ValidateIdPipe) postId: string,
@@ -94,6 +100,12 @@ export class PostController {
   @ApiConsumes('multipart/form-data')
   @ApiOkResponse({
     description: 'Update post. Only for author',
+  })
+  @ApiBadRequestResponse({
+    description: 'Post not found',
+  })
+  @ApiBadGatewayResponse({
+    description: 'Error on internal request',
   })
   @UseGuards(AuthGuard(), IsAuthorGuard)
   update(
