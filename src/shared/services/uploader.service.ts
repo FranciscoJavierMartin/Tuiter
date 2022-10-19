@@ -59,6 +59,11 @@ export class UploaderService {
     )}/image/upload/v${version}/${publicId}`;
   }
 
+  /**
+   * Remove image from Cloudinary
+   * @param imgId Image Id (Public id)
+   * @returns Result from remove image
+   */
   public async removeImage(imgId: string) {
     return cloudinary.uploader.destroy(imgId, {});
   }
