@@ -9,7 +9,6 @@ import * as crypto from 'crypto';
 import { ObjectId } from 'mongodb';
 import { Queue } from 'bull';
 import { UploadApiResponse } from 'cloudinary';
-import * as moment from 'moment';
 import { generateRandomIntegers } from '@/helpers/utils';
 import {
   MailForgotPasswordData,
@@ -225,7 +224,10 @@ export class AuthService {
       username: authUser.username,
       receiverEmail: authUser.email,
       ipaddress: ip,
-      date: moment().format('DD/MM/YYYY HH:mm'),
+      date: new Date().toLocaleDateString(undefined, {
+        hour: '2-digit',
+        minute: '2-digit',
+      }),
     });
   }
 
