@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { CreateReactionDto } from '@/reactions/dto/create-reaction.dto';
+import { AddReactionDto } from '@/reactions/dto/add-reaction.dto';
 import { UpdateReactionDto } from '@/reactions/dto/update-reaction.dto';
 
 @Injectable()
 export class ReactionsService {
-  create(createReactionDto: CreateReactionDto) {
+  create(addReactionDto: AddReactionDto) {
     return 'This action adds a new reaction';
   }
 
