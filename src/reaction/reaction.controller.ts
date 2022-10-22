@@ -9,12 +9,12 @@ import { CurrentUser } from '@/auth/interfaces/current-user.interface';
 @ApiTags('Reaction')
 @Controller('post/reactions')
 export class ReactionsController {
-  constructor(private readonly reactionsService: ReactionService) {}
+  constructor(private readonly reactionService: ReactionService) {}
 
   @Post()
   @ApiBearerAuth()
   @UseGuards(AuthGuard())
   add(@Body() addReactionDto: AddReactionDto, @GetUser() user: CurrentUser) {
-    return this.reactionsService.create(addReactionDto, user);
+    return this.reactionService.create(addReactionDto, user);
   }
 }

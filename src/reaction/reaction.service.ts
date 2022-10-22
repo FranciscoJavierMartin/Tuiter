@@ -11,6 +11,16 @@ export class ReactionService {
   ) {}
 
   create(addReactionDto: AddReactionDto, user: CurrentUser) {
+    const reactionData = {
+      postId: addReactionDto.postId,
+      userTo: addReactionDto.userTo,
+      userFrom: user.userId,
+      username: user.username,
+      feeling: addReactionDto.feeling,
+    };
+
+    this.reactionQueue.add('addPostReactionToDB', reactionData);
+
     return 'This action adds a new reaction';
   }
 }
