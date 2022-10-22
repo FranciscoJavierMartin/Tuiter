@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { CurrentUser } from '@/auth/interfaces/current-user.interface';
-import { AddReactionDto } from '@/reactions/dto/add-reaction.dto';
+import { AddReactionDto } from '@/reaction/dto/add-reaction.dto';
 import { InjectQueue } from '@nestjs/bull';
 import { Queue } from 'bull';
 
 @Injectable()
-export class ReactionsService {
+export class ReactionService {
   constructor(
     @InjectQueue('reaction') private readonly reactionQueue: Queue<any>,
   ) {}

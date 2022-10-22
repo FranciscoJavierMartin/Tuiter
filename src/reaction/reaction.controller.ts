@@ -1,7 +1,7 @@
 import { Controller, Post, Body, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { ReactionsService } from '@/reactions/reactions.service';
-import { AddReactionDto } from '@/reactions/dto/add-reaction.dto';
+import { ReactionsService } from '@/reaction/reaction.service';
+import { AddReactionDto } from '@/reaction/dto/add-reaction.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from '@/auth/decorators/get-user.decorator';
 import { CurrentUser } from '@/auth/interfaces/current-user.interface';

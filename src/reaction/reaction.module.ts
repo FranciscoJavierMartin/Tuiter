@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { ReactionsService } from '@/reactions/reactions.service';
-import { ReactionsController } from '@/reactions/reactions.controller';
+import { ReactionService } from '@/reaction/reaction.service';
+import { ReactionsController } from '@/reaction/reaction.controller';
 import { PassportModule } from '@nestjs/passport';
 import { BullModule } from '@nestjs/bull';
 
@@ -20,6 +20,6 @@ import { BullModule } from '@nestjs/bull';
     }),
   ],
   controllers: [ReactionsController],
-  providers: [ReactionsService],
+  providers: [ReactionService],
 })
-export class ReactionsModule {}
+export class ReactionModule {}
