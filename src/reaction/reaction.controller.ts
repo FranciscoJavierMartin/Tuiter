@@ -5,6 +5,7 @@ import { GetUser } from '@/auth/decorators/get-user.decorator';
 import { CurrentUser } from '@/auth/interfaces/current-user.interface';
 import { ReactionService } from '@/reaction/services/reaction.service';
 import { AddReactionDto } from '@/reaction/dto/requests/add-reaction.dto';
+import { IsNotAuthorGuard } from '@/post/decorators/is-not-author.guard';
 
 @ApiTags('Reaction')
 @Controller('post/reactions')
@@ -14,7 +15,7 @@ export class ReactionsController {
   // TODO: Add Swagger response decorators
   @Post()
   @ApiBearerAuth()
-  @UseGuards(AuthGuard())
+  @UseGuards(AuthGuard(), IsNotAuthorGuard)
   add(
     @Body() addReactionDto: AddReactionDto,
     @GetUser() user: CurrentUser,
