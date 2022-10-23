@@ -1,5 +1,13 @@
 import { ObjectId } from 'mongodb';
-import { Feelings } from '@/post/interfaces/post.interface';
+
+export enum Feelings {
+  angry = 'angry',
+  happy = 'happy',
+  like = 'like',
+  love = 'love',
+  sad = 'sad',
+  wow = 'wow',
+}
 
 export type Reactions = Record<Feelings, number>;
 

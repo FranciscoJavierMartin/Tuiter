@@ -6,7 +6,8 @@ import {
   IsUrl,
   ValidateIf,
 } from 'class-validator';
-import { Feelings, Privacy } from '@/post/interfaces/post.interface';
+import { Feelings } from '@/reaction/interfaces/reaction.interface';
+import { Privacy } from '@/post/interfaces/post.interface';
 
 export class CreatePostDto {
   @ApiProperty({

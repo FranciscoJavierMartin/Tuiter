@@ -2,8 +2,9 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { FilterQuery, Model } from 'mongoose';
 import { ObjectId } from 'mongodb';
+import { Feelings } from '@/reaction/interfaces/reaction.interface';
 import { Post } from '@/post/models/post.schema';
-import { Feelings, GetPostsQuery } from '@/post/interfaces/post.interface';
+import { GetPostsQuery } from '@/post/interfaces/post.interface';
 
 @Injectable()
 export class PostRepository {

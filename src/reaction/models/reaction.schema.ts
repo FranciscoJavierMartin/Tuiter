@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ObjectId } from 'mongodb';
 import mongoose from 'mongoose';
-import { Feelings } from '@/post/interfaces/post.interface';
+import { Feelings } from '@/reaction/interfaces/reaction.interface';
 
 // TODO: Add index to avoid user react twice to the same post
 @Schema({

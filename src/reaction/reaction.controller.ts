@@ -3,16 +3,15 @@ import { ApiBadRequestResponse, ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from '@/auth/decorators/get-user.decorator';
 import { CurrentUser } from '@/auth/interfaces/current-user.interface';
+import { IsNotAuthorGuard } from '@/post/decorators/is-not-author.guard';
 import { ReactionService } from '@/reaction/services/reaction.service';
 import { AddReactionDto } from '@/reaction/dto/requests/add-reaction.dto';
-import { IsNotAuthorGuard } from '@/post/decorators/is-not-author.guard';
 
 @ApiTags('Reaction')
 @Controller('post/reactions')
 export class ReactionsController {
   constructor(private readonly reactionService: ReactionService) {}
 
-  // TODO: Add Swagger response decorators
   @Post()
   @ApiBearerAuth()
   @ApiBadRequestResponse({

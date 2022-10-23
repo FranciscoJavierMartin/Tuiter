@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { ObjectId } from 'mongodb';
 import { parseJson } from '@/helpers/utils';
 import { BaseCache } from '@/shared/redis/base.cache';
-import { Feelings } from '@/post/interfaces/post.interface';
+import { Feelings } from '@/reaction/interfaces/reaction.interface';
 import {
   AddReactionData,
   Reactions,
