@@ -97,11 +97,18 @@ export class PostRepository {
     await this.postModel.updateOne({ _id: postId }, { $set: post });
   }
 
+  /**
+   * Update post reactions
+   * @param postId Post is
+   * @param newFeeling Feeling to increase count
+   * @param previousFeeling (Optional) Previous feeling to decrease count
+   * @returns Post document updated
+   */
   public async updatePostReactions(
     postId: ObjectId,
     newFeeling: Feelings,
     previousFeeling?: Feelings,
-  ) {
+  ): Promise<Post> {
     return await this.postModel.findByIdAndUpdate(
       postId,
       {
