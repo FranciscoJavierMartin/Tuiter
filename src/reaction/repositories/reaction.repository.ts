@@ -11,6 +11,12 @@ export class ReactionRepository {
     @InjectModel(Reaction.name) private readonly reactionModel: Model<Reaction>,
   ) {}
 
+  /**
+   * Save reaction in DB. If there is a previous, then replace it.
+   * @param reaction Reaction to be saved
+   * @param previousFeeling (Optional) Previous feeling
+   * @returns Updated document
+   */
   public async saveReaction(
     reaction: AddReactionData,
     previousFeeling?: Feelings,
