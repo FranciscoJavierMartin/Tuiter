@@ -1,9 +1,9 @@
-import { BaseConsumer } from '@/shared/consumer/base.consumer';
 import { Process, Processor } from '@nestjs/bull';
 import { DoneCallback, Job } from 'bull';
+import { BaseConsumer } from '@/shared/consumer/base.consumer';
+import { PostRepository } from '@/post/repositories/post.repository';
 import { ReactionRepository } from '@/reaction/repositories/reaction.repository';
 import { AddReactionJobData } from '@/reaction/interfaces/reaction.interface';
-import { PostRepository } from '@/post/repositories/post.repository';
 import { ReactionCacheService } from '@/reaction/services/reaction.cache.service';
 
 @Processor('reaction')

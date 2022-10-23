@@ -1,11 +1,11 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ObjectId } from 'mongodb';
+import { parseJson } from '@/helpers/utils';
 import { BaseCache } from '@/shared/redis/base.cache';
 import { Feelings } from '@/post/interfaces/post.interface';
 import { AddReactionData } from '@/reaction/interfaces/reaction.interface';
-import { Reaction } from '../models/reaction.schema';
-import { parseJson } from '@/helpers/utils';
+import { Reaction } from '@/reaction/models/reaction.schema';
 
 @Injectable()
 export class ReactionCacheService extends BaseCache {
