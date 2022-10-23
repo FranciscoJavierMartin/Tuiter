@@ -2,14 +2,16 @@ import { BaseConsumer } from '@/shared/consumer/base.consumer';
 import { Process, Processor } from '@nestjs/bull';
 import { DoneCallback, Job } from 'bull';
 import { ReactionRepository } from '@/reaction/repositories/reaction.repository';
-import { AddReactionJobData } from '../interfaces/reaction.interface';
+import { AddReactionJobData } from '@/reaction/interfaces/reaction.interface';
 import { PostRepository } from '@/post/repositories/post.repository';
+import { ReactionCacheService } from '@/reaction/services/reaction.cache.service';
 
 @Processor('reaction')
 export class ReactionConsumer extends BaseConsumer {
   constructor(
     private readonly reactionRepository: ReactionRepository,
     private readonly postRepository: PostRepository,
+    private readonly reactionCacheService: ReactionCacheService,
   ) {
     super('ReactionConsumer');
   }
@@ -19,7 +21,7 @@ export class ReactionConsumer extends BaseConsumer {
     job: Job<AddReactionJobData>,
     done: DoneCallback,
   ): Promise<void> {
-    const [reactionInDb] = await Promise.all([
+    const [reactionInDb, postUpdated] = await Promise.all([
       await this.reactionRepository.saveReaction(
         job.data.reaction,
         job.data.previousFeeling,
@@ -30,9 +32,14 @@ export class ReactionConsumer extends BaseConsumer {
         job.data.previousFeeling,
       ),
     ]);
-
-    console.log(reactionInDb.upsertedId);
     job.progress(50);
+
+    await this.reactionCacheService.savePostReactionToCache(
+      job.data.reaction.postId,
+      { ...job.data.reaction, _id: reactionInDb.upsertedId },
+      postUpdated.reactions,
+      job.data.previousFeeling,
+    );
 
     job.progress(100);
     done(null, job.data);

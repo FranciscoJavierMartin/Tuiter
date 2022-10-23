@@ -101,8 +101,8 @@ export class PostRepository {
     postId: ObjectId,
     newFeeling: Feelings,
     previousFeeling?: Feelings,
-  ): Promise<void> {
-    await this.postModel.findByIdAndUpdate(
+  ) {
+    return await this.postModel.findByIdAndUpdate(
       postId,
       {
         $inc: previousFeeling

@@ -30,6 +30,11 @@ import { ReactionCacheService } from './services/reaction.cache.service';
     PostModule,
   ],
   controllers: [ReactionsController],
-  providers: [ReactionService, ReactionRepository, ReactionConsumer, ReactionCacheService],
+  providers: [
+    ReactionService,
+    ReactionRepository,
+    ReactionConsumer,
+    ReactionCacheService,
+  ],
 })
 export class ReactionModule {}
