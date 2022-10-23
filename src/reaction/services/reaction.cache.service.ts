@@ -13,12 +13,19 @@ export class ReactionCacheService extends BaseCache {
     super('ReactionCache', configService);
   }
 
+  /**
+   * Save post reaction in cache
+   * @param key Post id
+   * @param reaction Reaction data to be stored. Include reaction id
+   * @param postReactions Post reactions
+   * @param previousFeeling (Optional) Previous feeling
+   */
   public async savePostReactionToCache(
     key: ObjectId,
     reaction: AddReactionData & { _id: ObjectId },
     postReactions: Record<string, number>,
     previousFeeling?: Feelings,
-  ) {
+  ): Promise<void> {
     try {
       if (previousFeeling) {
         this.removePostReactionFromCache(key, reaction.username, postReactions);
@@ -35,11 +42,17 @@ export class ReactionCacheService extends BaseCache {
     }
   }
 
+  /**
+   * Remove reaction from cache
+   * @param key Post id
+   * @param username Username who react to post
+   * @param postReactions Update post reactions
+   */
   public async removePostReactionFromCache(
     key: ObjectId,
     username: string,
     postReactions: Record<string, number>,
-  ) {
+  ): Promise<void> {
     try {
       const response: string[] = await this.client.LRANGE(
         `reactions:${key}`,
@@ -62,6 +75,12 @@ export class ReactionCacheService extends BaseCache {
     }
   }
 
+  /**
+   * Get previous reaction
+   * @param response Reactions
+   * @param username Username to filter
+   * @returns Reaction result
+   */
   private getPreviousReaction(response: string[], username: string): Reaction {
     return response
       .map((item) => parseJson<Reaction>(item))
