@@ -12,10 +12,10 @@ export class Reaction {
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+    ref: 'Post',
     index: true,
   })
-  postId: string | mongoose.Types.ObjectId;
+  postId: mongoose.Types.ObjectId;
 
   @Prop({ type: String, enum: Feelings })
   feeling: Feelings;
