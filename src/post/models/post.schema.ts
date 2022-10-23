@@ -1,6 +1,7 @@
 import { Prop, raw, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
 import { ObjectId } from 'mongodb';
+import { Reactions } from '@/reaction/interfaces/reaction.interface';
 
 @Schema({
   collection: 'Post',
@@ -65,7 +66,7 @@ export class Post {
       wow: { type: Number, default: 0 },
     }),
   )
-  reactions: Record<string, number>;
+  reactions: Reactions;
 }
 
 export const PostSchema = SchemaFactory.createForClass(Post);

@@ -8,7 +8,7 @@ import {
   ValidateIf,
 } from 'class-validator';
 import { ObjectId } from 'mongodb';
-import { Feelings } from '@/post/interfaces/post.interface';
+import { Feelings } from '@/reaction/interfaces/reaction.interface';
 
 export class AddReactionDto {
   @ApiProperty({

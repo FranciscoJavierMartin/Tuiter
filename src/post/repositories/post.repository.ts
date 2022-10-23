@@ -1,6 +1,8 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { FilterQuery, Model } from 'mongoose';
+import { ObjectId } from 'mongodb';
+import { Feelings } from '@/reaction/interfaces/reaction.interface';
 import { Post } from '@/post/models/post.schema';
 import { GetPostsQuery } from '@/post/interfaces/post.interface';
 
@@ -94,5 +96,33 @@ export class PostRepository {
    */
   public async updatePost(postId: string, post: Post): Promise<void> {
     await this.postModel.updateOne({ _id: postId }, { $set: post });
+  }
+
+  /**
+   * Update post reactions
+   * @param postId Post is
+   * @param newFeeling Feeling to increase count
+   * @param previousFeeling (Optional) Previous feeling to decrease count
+   * @returns Post document updated
+   */
+  public async updatePostReactions(
+    postId: ObjectId,
+    newFeeling: Feelings,
+    previousFeeling?: Feelings,
+  ): Promise<Post> {
+    return await this.postModel.findByIdAndUpdate(
+      postId,
+      {
+        $inc: previousFeeling
+          ? {
+              [`reactions.${previousFeeling}`]: -1,
+              [`reactions.${newFeeling}`]: 1,
+            }
+          : {
+              [`reactions.${newFeeling}`]: 1,
+            },
+      },
+      { new: true },
+    );
   }
 }
