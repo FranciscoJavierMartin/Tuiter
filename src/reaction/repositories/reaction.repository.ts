@@ -15,14 +15,14 @@ export class ReactionRepository {
     reaction: AddReactionData,
     previousFeeling?: Feelings,
   ) {
-    await this.reactionModel.replaceOne(
+    return await this.reactionModel.replaceOne(
       {
         postId: reaction.postId,
         feeling: previousFeeling,
         username: reaction.username,
       },
       reaction,
-      { upsert: true },
+      { upsert: true, new: true },
     );
   }
 }

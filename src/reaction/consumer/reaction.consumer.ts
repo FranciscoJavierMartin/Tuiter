@@ -19,7 +19,7 @@ export class ReactionConsumer extends BaseConsumer {
     job: Job<AddReactionJobData>,
     done: DoneCallback,
   ): Promise<void> {
-    await Promise.all([
+    const [reactionInDb] = await Promise.all([
       await this.reactionRepository.saveReaction(
         job.data.reaction,
         job.data.previousFeeling,
@@ -30,6 +30,8 @@ export class ReactionConsumer extends BaseConsumer {
         job.data.previousFeeling,
       ),
     ]);
+
+    console.log(reactionInDb.upsertedId);
     job.progress(50);
 
     job.progress(100);
