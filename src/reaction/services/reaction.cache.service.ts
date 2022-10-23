@@ -4,7 +4,10 @@ import { ObjectId } from 'mongodb';
 import { parseJson } from '@/helpers/utils';
 import { BaseCache } from '@/shared/redis/base.cache';
 import { Feelings } from '@/post/interfaces/post.interface';
-import { AddReactionData } from '@/reaction/interfaces/reaction.interface';
+import {
+  AddReactionData,
+  Reactions,
+} from '@/reaction/interfaces/reaction.interface';
 import { Reaction } from '@/reaction/models/reaction.schema';
 
 @Injectable()
@@ -23,7 +26,7 @@ export class ReactionCacheService extends BaseCache {
   public async savePostReactionToCache(
     key: ObjectId,
     reaction: AddReactionData & { _id: ObjectId },
-    postReactions: Record<string, number>,
+    postReactions: Reactions,
     previousFeeling?: Feelings,
   ): Promise<void> {
     try {
@@ -51,7 +54,7 @@ export class ReactionCacheService extends BaseCache {
   public async removePostReactionFromCache(
     key: ObjectId,
     username: string,
-    postReactions: Record<string, number>,
+    postReactions: Reactions,
   ): Promise<void> {
     try {
       const response: string[] = await this.client.LRANGE(
