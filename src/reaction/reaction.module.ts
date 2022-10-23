@@ -2,12 +2,13 @@ import { Module } from '@nestjs/common';
 import { BullModule } from '@nestjs/bull';
 import { PassportModule } from '@nestjs/passport';
 import { MongooseModule } from '@nestjs/mongoose';
-import { ReactionService } from '@/reaction/reaction.service';
+import { ReactionService } from '@/reaction/services/reaction.service';
 import { ReactionsController } from '@/reaction/reaction.controller';
 import { Reaction, ReactionSchema } from '@/reaction/models/reaction.schema';
 import { ReactionRepository } from '@/reaction/repositories/reaction.repository';
 import { ReactionConsumer } from '@/reaction/consumer/reaction.consumer';
 import { PostModule } from '@/post/post.module';
+import { ReactionCacheService } from './services/reaction.cache.service';
 
 @Module({
   imports: [
@@ -29,6 +30,6 @@ import { PostModule } from '@/post/post.module';
     PostModule,
   ],
   controllers: [ReactionsController],
-  providers: [ReactionService, ReactionRepository, ReactionConsumer],
+  providers: [ReactionService, ReactionRepository, ReactionConsumer, ReactionCacheService],
 })
 export class ReactionModule {}
