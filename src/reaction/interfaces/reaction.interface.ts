@@ -1,14 +1,7 @@
 import { ObjectId } from 'mongodb';
 import { Feelings } from '@/post/interfaces/post.interface';
 
-export interface Reactions {
-  like: number;
-  love: number;
-  happy: number;
-  wow: number;
-  sad: number;
-  angry: number;
-}
+export type Reactions = Record<Feelings, number>;
 
 export interface AddReactionJobData {
   reaction: AddReactionData;
