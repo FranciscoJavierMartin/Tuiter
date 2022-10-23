@@ -11,10 +11,14 @@ import { CurrentUser } from '@/auth/interfaces/current-user.interface';
 export class ReactionsController {
   constructor(private readonly reactionService: ReactionService) {}
 
+  // TODO: Add Swagger response decorators
   @Post()
   @ApiBearerAuth()
   @UseGuards(AuthGuard())
-  add(@Body() addReactionDto: AddReactionDto, @GetUser() user: CurrentUser) {
+  add(
+    @Body() addReactionDto: AddReactionDto,
+    @GetUser() user: CurrentUser,
+  ): void {
     return this.reactionService.create(addReactionDto, user);
   }
 }

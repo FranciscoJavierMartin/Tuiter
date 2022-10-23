@@ -15,7 +15,12 @@ export class ReactionService {
     private readonly reactionQueue: Queue<AddReactionJobData>,
   ) {}
 
-  create(addReactionDto: AddReactionDto, user: CurrentUser) {
+  /**
+   * Add reaction to post
+   * @param addReactionDto Reaction data
+   * @param user User who reacts to post
+   */
+  create(addReactionDto: AddReactionDto, user: CurrentUser): void {
     const reactionData: AddReactionData = {
       postId: addReactionDto.postId,
       feeling: addReactionDto.feeling,

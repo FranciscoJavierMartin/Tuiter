@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { UpdateResult } from 'mongodb';
+import { Feelings } from '@/post/interfaces/post.interface';
 import { Reaction } from '@/reaction/models/reaction.schema';
 import { AddReactionData } from '@/reaction/interfaces/reaction.interface';
-import { Feelings } from '@/post/interfaces/post.interface';
 
 @Injectable()
 export class ReactionRepository {
@@ -20,7 +21,7 @@ export class ReactionRepository {
   public async saveReaction(
     reaction: AddReactionData,
     previousFeeling?: Feelings,
-  ) {
+  ): Promise<UpdateResult> {
     return await this.reactionModel.replaceOne(
       {
         postId: reaction.postId,
