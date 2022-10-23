@@ -33,13 +33,13 @@ export class ReactionsController {
     return this.reactionService.create(addReactionDto, user);
   }
 
-  @Delete()
+  @Delete(':postId')
   @ApiBearerAuth()
   @UseGuards(AuthGuard(), IsNotAuthorGuard)
   remove(
     @Param('postId', ValidateIdPipe) postId: string,
-    @GetUser() user: CurrentUser,
+    @GetUser('username') [username]: string,
   ) {
-    return '';
+    return { postId, username };
   }
 }
