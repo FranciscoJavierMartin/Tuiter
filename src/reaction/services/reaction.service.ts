@@ -28,7 +28,5 @@ export class ReactionService {
       reaction: reactionData,
       previousFeeling: addReactionDto.previousFeeling,
     });
-
-    return 'This action adds a new reaction';
   }
 }
