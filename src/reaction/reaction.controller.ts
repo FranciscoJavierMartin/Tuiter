@@ -1,5 +1,5 @@
 import { Controller, Post, Body, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBadRequestResponse, ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from '@/auth/decorators/get-user.decorator';
 import { CurrentUser } from '@/auth/interfaces/current-user.interface';
@@ -15,6 +15,9 @@ export class ReactionsController {
   // TODO: Add Swagger response decorators
   @Post()
   @ApiBearerAuth()
+  @ApiBadRequestResponse({
+    description: 'Post not found',
+  })
   @UseGuards(AuthGuard(), IsNotAuthorGuard)
   add(
     @Body() addReactionDto: AddReactionDto,

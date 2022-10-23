@@ -13,7 +13,6 @@ export class IsNotAuthorGuard implements CanActivate {
   public async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     const postId = request.params.postId || request.body.postId;
-    console.log('Post id', postId);
 
     const authorId = await this.postRespository.getPostAuthorId(postId);
     const userId = request.user.userId;
