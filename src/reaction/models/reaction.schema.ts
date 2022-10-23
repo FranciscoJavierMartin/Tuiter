@@ -3,7 +3,6 @@ import { ObjectId } from 'mongodb';
 import mongoose from 'mongoose';
 import { Feelings } from '@/reaction/interfaces/reaction.interface';
 
-// TODO: Add index to avoid user react twice to the same post
 @Schema({
   collection: 'Reaction',
 })
@@ -20,7 +19,7 @@ export class Reaction {
   @Prop({ type: String, enum: Feelings })
   feeling: Feelings;
 
-  @Prop({ Type: String, required: true })
+  @Prop({ Type: String, index: true, required: true })
   username: string;
 
   @Prop({ type: String, required: true })
@@ -34,3 +33,11 @@ export class Reaction {
 }
 
 export const ReactionSchema = SchemaFactory.createForClass(Reaction);
+
+ReactionSchema.index(
+  {
+    postId: 1,
+    username: 1,
+  },
+  { unique: true },
+);
