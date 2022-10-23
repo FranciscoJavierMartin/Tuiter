@@ -1,25 +1,33 @@
 import { Injectable } from '@nestjs/common';
-import { CurrentUser } from '@/auth/interfaces/current-user.interface';
-import { AddReactionDto } from '@/reaction/dto/requests/add-reaction.dto';
 import { InjectQueue } from '@nestjs/bull';
 import { Queue } from 'bull';
+import { CurrentUser } from '@/auth/interfaces/current-user.interface';
+import { AddReactionDto } from '@/reaction/dto/requests/add-reaction.dto';
+import {
+  AddReactionData,
+  AddReactionJobData,
+} from '@/reaction/interfaces/reaction.interface';
 
 @Injectable()
 export class ReactionService {
   constructor(
-    @InjectQueue('reaction') private readonly reactionQueue: Queue<any>,
+    @InjectQueue('reaction')
+    private readonly reactionQueue: Queue<AddReactionJobData>,
   ) {}
 
   create(addReactionDto: AddReactionDto, user: CurrentUser) {
-    const reactionData = {
+    const reactionData: AddReactionData = {
       postId: addReactionDto.postId,
-      userTo: addReactionDto.userTo,
-      userFrom: user.userId,
-      username: user.username,
       feeling: addReactionDto.feeling,
+      avatarColor: user.avatarColor,
+      username: user.username,
+      profilePicture: addReactionDto.profilePicture,
     };
 
-    this.reactionQueue.add('addPostReactionToDB', reactionData);
+    this.reactionQueue.add('addPostReaction', {
+      reaction: reactionData,
+      previousFeeling: addReactionDto.previousFeeling,
+    });
 
     return 'This action adds a new reaction';
   }

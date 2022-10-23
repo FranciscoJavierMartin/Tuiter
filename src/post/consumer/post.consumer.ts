@@ -12,8 +12,8 @@ import { PostRepository } from '@/post/repositories/post.repository';
 @Processor('post')
 export class PostConsumer extends BaseConsumer {
   constructor(
-    private readonly postRespository: PostRepository,
-    private readonly userRespository: UserRepository,
+    private readonly postRepository: PostRepository,
+    private readonly userRepository: UserRepository,
   ) {
     super('PostConsumer');
   }
@@ -21,7 +21,7 @@ export class PostConsumer extends BaseConsumer {
   @Process({ name: 'addPostToDB', concurrency: 5 })
   public async addPostToDB(job: Job<Post>, done: DoneCallback): Promise<void> {
     try {
-      this.postRespository.savePostToDb(job.data);
+      this.postRepository.savePostToDb(job.data);
       job.progress(100);
       done(null, job.data);
     } catch (error) {
@@ -37,8 +37,8 @@ export class PostConsumer extends BaseConsumer {
   ): Promise<void> {
     try {
       await Promise.all([
-        await this.postRespository.removePost(job.data.postId),
-        await this.userRespository.decrementUserPostsCount(job.data.authorId),
+        await this.postRepository.removePost(job.data.postId),
+        await this.userRepository.decrementUserPostsCount(job.data.authorId),
       ]);
       job.progress(100);
       done(null, job.data);
@@ -54,7 +54,7 @@ export class PostConsumer extends BaseConsumer {
     done: DoneCallback,
   ): Promise<void> {
     try {
-      this.postRespository.updatePost(job.data.postId, job.data.post);
+      this.postRepository.updatePost(job.data.postId, job.data.post);
       job.progress(100);
       done(null, job.data);
     } catch (error) {
