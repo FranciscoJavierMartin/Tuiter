@@ -1,6 +1,14 @@
-import { Controller, Post, Body, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  UseGuards,
+  Delete,
+  Param,
+} from '@nestjs/common';
 import { ApiBadRequestResponse, ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
+import { ValidateIdPipe } from '@/shared/pipes/validate-id.pipe';
 import { GetUser } from '@/auth/decorators/get-user.decorator';
 import { CurrentUser } from '@/auth/interfaces/current-user.interface';
 import { IsNotAuthorGuard } from '@/post/decorators/is-not-author.guard';
@@ -23,5 +31,15 @@ export class ReactionsController {
     @GetUser() user: CurrentUser,
   ): void {
     return this.reactionService.create(addReactionDto, user);
+  }
+
+  @Delete()
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard(), IsNotAuthorGuard)
+  remove(
+    @Param('postId', ValidateIdPipe) postId: string,
+    @GetUser() user: CurrentUser,
+  ) {
+    return '';
   }
 }
