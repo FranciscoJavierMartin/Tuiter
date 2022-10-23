@@ -8,6 +8,7 @@ import {
 } from '@nestjs/common';
 import { ApiBadRequestResponse, ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
+import { ObjectId } from 'mongodb';
 import { ValidateIdPipe } from '@/shared/pipes/validate-id.pipe';
 import { GetUser } from '@/auth/decorators/get-user.decorator';
 import { CurrentUser } from '@/auth/interfaces/current-user.interface';
@@ -37,9 +38,9 @@ export class ReactionsController {
   @ApiBearerAuth()
   @UseGuards(AuthGuard(), IsNotAuthorGuard)
   remove(
-    @Param('postId', ValidateIdPipe) postId: string,
+    @Param('postId', ValidateIdPipe) postId: ObjectId,
     @GetUser('username') [username]: string,
   ) {
-    return { postId, username };
+    return this.reactionService.remove(postId, username);
   }
 }

@@ -3,7 +3,10 @@ import { DoneCallback, Job } from 'bull';
 import { BaseConsumer } from '@/shared/consumer/base.consumer';
 import { PostRepository } from '@/post/repositories/post.repository';
 import { ReactionRepository } from '@/reaction/repositories/reaction.repository';
-import { AddReactionJobData } from '@/reaction/interfaces/reaction.interface';
+import {
+  AddReactionJobData,
+  RemoveReactionJobData,
+} from '@/reaction/interfaces/reaction.interface';
 import { ReactionCacheService } from '@/reaction/services/reaction.cache.service';
 
 @Processor('reaction')
@@ -17,7 +20,7 @@ export class ReactionConsumer extends BaseConsumer {
   }
 
   @Process({ name: 'addPostReaction', concurrency: 5 })
-  public async addPostReactionToDB(
+  public async addPostReaction(
     job: Job<AddReactionJobData>,
     done: DoneCallback,
   ): Promise<void> {
@@ -43,6 +46,21 @@ export class ReactionConsumer extends BaseConsumer {
         job.data.previousFeeling,
       );
 
+      job.progress(100);
+      done(null, job.data);
+    } catch (error) {
+      this.logger.error(error);
+      done(error as Error);
+    }
+  }
+
+  @Process({ name: 'removePostReaction', concurrency: 5 })
+  public async removePostReaction(
+    job: Job<RemoveReactionJobData>,
+    done: DoneCallback,
+  ): Promise<void> {
+    try {
+      job.progress(50);
       job.progress(100);
       done(null, job.data);
     } catch (error) {
