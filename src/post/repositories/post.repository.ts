@@ -99,13 +99,13 @@ export class PostRepository {
   }
 
   /**
-   * Update post reactions
-   * @param postId Post is
+   * Increment post reactions
+   * @param postId Post id
    * @param newFeeling Feeling to increase count
    * @param previousFeeling (Optional) Previous feeling to decrease count
    * @returns Post document updated
    */
-  public async updatePostReactions(
+  public async incrementPostReactions(
     postId: ObjectId,
     newFeeling: Feelings,
     previousFeeling?: Feelings,
@@ -121,6 +121,27 @@ export class PostRepository {
           : {
               [`reactions.${newFeeling}`]: 1,
             },
+      },
+      { new: true },
+    );
+  }
+
+  /**
+   * Decrement post reactions
+   * @param postId Post id
+   * @param feeling Feeling to decrease count
+   * @returns Post document updated
+   */
+  public async decrementPostReactions(
+    postId: ObjectId,
+    feeling: Feelings,
+  ): Promise<Post> {
+    return await this.postModel.findByIdAndUpdate(
+      postId,
+      {
+        $inc: {
+          [`reactions.${feeling}`]: -1,
+        },
       },
       { new: true },
     );

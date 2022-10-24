@@ -30,7 +30,7 @@ export class ReactionConsumer extends BaseConsumer {
           job.data.reaction,
           job.data.previousFeeling,
         ),
-        await this.postRepository.updatePostReactions(
+        await this.postRepository.incrementPostReactions(
           job.data.reaction.postId,
           job.data.reaction.feeling,
           job.data.previousFeeling,
@@ -60,6 +60,15 @@ export class ReactionConsumer extends BaseConsumer {
     done: DoneCallback,
   ): Promise<void> {
     try {
+      const removedReaction = await this.reactionRepository.removeReaction(
+        job.data.postId,
+        job.data.username,
+      );
+
+      await this.postRepository.decrementPostReactions(
+        job.data.postId,
+        removedReaction.feeling,
+      );
       job.progress(50);
       job.progress(100);
       done(null, job.data);
