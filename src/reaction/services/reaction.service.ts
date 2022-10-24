@@ -21,7 +21,7 @@ export class ReactionService {
    * @param addReactionDto Reaction data
    * @param user User who reacts to post
    */
-  create(addReactionDto: AddReactionDto, user: CurrentUser): void {
+  public create(addReactionDto: AddReactionDto, user: CurrentUser): void {
     const reactionData: AddReactionData = {
       postId: addReactionDto.postId,
       feeling: addReactionDto.feeling,
@@ -36,7 +36,12 @@ export class ReactionService {
     });
   }
 
-  remove(postId: ObjectId, username: string): void {
+  /**
+   * Remove reaction from post
+   * @param postId Post id
+   * @param username Username who react to post
+   */
+  public remove(postId: ObjectId, username: string): void {
     this.reactionQueue.add('removePostReaction', {
       postId,
       username,

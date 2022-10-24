@@ -50,7 +50,7 @@ export class PostService {
     createPostDto: CreatePostDto,
     user: CurrentUser,
     image?: Express.Multer.File,
-  ) {
+  ): Promise<void> {
     const postId = new ObjectId();
 
     const post: Post = {
@@ -95,10 +95,6 @@ export class PostService {
     );
 
     this.postQueue.add('addPostToDB', post);
-
-    return {
-      message: 'Post created successfully',
-    };
   }
 
   /**

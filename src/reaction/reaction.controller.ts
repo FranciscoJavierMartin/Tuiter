@@ -27,7 +27,7 @@ export class ReactionsController {
     description: 'Post not found',
   })
   @UseGuards(AuthGuard(), IsNotAuthorGuard)
-  add(
+  public add(
     @Body() addReactionDto: AddReactionDto,
     @GetUser() user: CurrentUser,
   ): void {
@@ -37,10 +37,10 @@ export class ReactionsController {
   @Delete(':postId')
   @ApiBearerAuth()
   @UseGuards(AuthGuard(), IsNotAuthorGuard)
-  remove(
+  public remove(
     @Param('postId', ValidateIdPipe) postId: ObjectId,
     @GetUser('username') [username]: string,
-  ) {
+  ): void {
     return this.reactionService.remove(postId, username);
   }
 }

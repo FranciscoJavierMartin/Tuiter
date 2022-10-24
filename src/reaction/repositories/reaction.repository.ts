@@ -34,6 +34,12 @@ export class ReactionRepository {
   }
 
   // TODO: Check if only the feeling could be send
+  /**
+   * Remove reaction from DB
+   * @param postId Post id asociated to reaction
+   * @param username Username who react to post
+   * @returns Reaction removed
+   */
   public async removeReaction(
     postId: ObjectId,
     username: string,

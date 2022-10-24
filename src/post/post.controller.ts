@@ -54,7 +54,7 @@ export class PostController {
     description: 'Error on internal request',
   })
   @UseGuards(AuthGuard())
-  create(
+  public async create(
     @Body() createPostDto: CreatePostDto,
     @GetUser() user: CurrentUser,
     @UploadedFile(
@@ -64,7 +64,7 @@ export class PostController {
       }),
     )
     image?: Express.Multer.File,
-  ) {
+  ): Promise<void> {
     return this.postService.create(createPostDto, user, image);
   }
 
@@ -73,7 +73,9 @@ export class PostController {
     description: 'Get all posts',
     type: PostsDto,
   })
-  findAll(@Param('page', ParseIntPipe) page: number): Promise<PostsDto> {
+  public async findAll(
+    @Param('page', ParseIntPipe) page: number,
+  ): Promise<PostsDto> {
     return this.postService.getAllPosts(page);
   }
 
@@ -88,10 +90,10 @@ export class PostController {
     description: 'Error on internal request',
   })
   @UseGuards(AuthGuard(), IsAuthorGuard)
-  remove(
+  public async remove(
     @Param('postId', ValidateIdPipe) postId: string,
     @GetUser('userId') [userId]: string,
-  ) {
+  ): Promise<void> {
     return this.postService.remove(postId, userId);
   }
 
@@ -108,7 +110,7 @@ export class PostController {
     description: 'Error on internal request',
   })
   @UseGuards(AuthGuard(), IsAuthorGuard)
-  update(
+  public async update(
     @Param('postId', ValidateIdPipe) postId: string,
     @Body() updatePostDto: UpdatePostDto,
     @UploadedFile(
@@ -118,7 +120,7 @@ export class PostController {
       }),
     )
     image?: Express.Multer.File,
-  ) {
+  ): Promise<void> {
     return this.postService.update(postId, updatePostDto, image);
   }
 }
