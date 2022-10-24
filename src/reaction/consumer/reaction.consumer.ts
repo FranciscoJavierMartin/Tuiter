@@ -64,12 +64,18 @@ export class ReactionConsumer extends BaseConsumer {
         job.data.postId,
         job.data.username,
       );
-
-      await this.postRepository.decrementPostReactions(
+      const updatedPost = await this.postRepository.decrementPostReactions(
         job.data.postId,
         removedReaction.feeling,
       );
+
       job.progress(50);
+
+      await this.reactionCacheService.removePostReactionFromCache(
+        job.data.postId,
+        job.data.username,
+        updatedPost.reactions,
+      );
       job.progress(100);
       done(null, job.data);
     } catch (error) {
