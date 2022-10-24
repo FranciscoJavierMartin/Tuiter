@@ -6,7 +6,13 @@ import {
   Delete,
   Param,
 } from '@nestjs/common';
-import { ApiBadRequestResponse, ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBadRequestResponse,
+  ApiBearerAuth,
+  ApiCreatedResponse,
+  ApiOkResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { ObjectId } from 'mongodb';
 import { ValidateIdPipe } from '@/shared/pipes/validate-id.pipe';
@@ -23,6 +29,9 @@ export class ReactionsController {
 
   @Post()
   @ApiBearerAuth()
+  @ApiCreatedResponse({
+    description: 'Reaction added',
+  })
   @ApiBadRequestResponse({
     description: 'Post not found',
   })
@@ -36,6 +45,9 @@ export class ReactionsController {
 
   @Delete(':postId')
   @ApiBearerAuth()
+  @ApiOkResponse({
+    description: 'Reaction removed',
+  })
   @UseGuards(AuthGuard(), IsNotAuthorGuard)
   public remove(
     @Param('postId', ValidateIdPipe) postId: ObjectId,
