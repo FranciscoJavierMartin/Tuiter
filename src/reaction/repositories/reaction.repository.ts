@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { UpdateResult } from 'mongodb';
+import { UpdateResult, ObjectId } from 'mongodb';
 import { Feelings } from '@/reaction/interfaces/reaction.interface';
 import { Reaction } from '@/reaction/models/reaction.schema';
 import { AddReactionData } from '@/reaction/interfaces/reaction.interface';
@@ -30,6 +30,23 @@ export class ReactionRepository {
       },
       reaction,
       { upsert: true, new: true },
+    );
+  }
+
+  // TODO: Check if only the feeling could be send
+  /**
+   * Remove reaction from DB
+   * @param postId Post id asociated to reaction
+   * @param username Username who react to post
+   * @returns Reaction removed
+   */
+  public async removeReaction(
+    postId: ObjectId,
+    username: string,
+  ): Promise<Reaction> {
+    return await this.reactionModel.findOneAndDelete(
+      { postId, username },
+      { new: true },
     );
   }
 }

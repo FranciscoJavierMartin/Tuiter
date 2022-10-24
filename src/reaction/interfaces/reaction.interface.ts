@@ -11,6 +11,8 @@ export enum Feelings {
 
 export type Reactions = Record<Feelings, number>;
 
+export type ReactionJobData = AddReactionJobData | RemoveReactionJobData;
+
 export interface AddReactionJobData {
   reaction: AddReactionData;
   previousFeeling?: Feelings;
@@ -22,4 +24,9 @@ export interface AddReactionData {
   avatarColor: string;
   username: string;
   profilePicture: string;
+}
+
+export interface RemoveReactionJobData {
+  postId: ObjectId;
+  username: string;
 }
