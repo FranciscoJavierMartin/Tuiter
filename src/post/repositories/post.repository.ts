@@ -1,6 +1,8 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { FilterQuery, Model } from 'mongoose';
+import { ObjectId } from 'mongodb';
+import { Feelings } from '@/reaction/interfaces/reaction.interface';
 import { Post } from '@/post/models/post.schema';
 import { GetPostsQuery } from '@/post/interfaces/post.interface';
 
@@ -94,5 +96,54 @@ export class PostRepository {
    */
   public async updatePost(postId: string, post: Post): Promise<void> {
     await this.postModel.updateOne({ _id: postId }, { $set: post });
+  }
+
+  /**
+   * Increment post reactions
+   * @param postId Post id
+   * @param newFeeling Feeling to increase count
+   * @param previousFeeling (Optional) Previous feeling to decrease count
+   * @returns Post document updated
+   */
+  public async incrementPostReactions(
+    postId: ObjectId,
+    newFeeling: Feelings,
+    previousFeeling?: Feelings,
+  ): Promise<Post> {
+    return await this.postModel.findByIdAndUpdate(
+      postId,
+      {
+        $inc: previousFeeling
+          ? {
+              [`reactions.${previousFeeling}`]: -1,
+              [`reactions.${newFeeling}`]: 1,
+            }
+          : {
+              [`reactions.${newFeeling}`]: 1,
+            },
+      },
+      { new: true },
+    );
+  }
+
+  /**
+   * Decrement post reactions
+   * @param postId Post id
+   * @param feeling Feeling to decrease count
+   * @returns Post document updated
+   */
+  public async decrementPostReactions(
+    postId: ObjectId,
+    feeling: Feelings,
+  ): Promise<Post> {
+    return await this.postModel.findByIdAndUpdate(
+      postId,
+      {
+        $inc: {
+          [`reactions.${feeling}`]: -1,
+        },
+      },
+      { new: true },
+    );
   }
 }

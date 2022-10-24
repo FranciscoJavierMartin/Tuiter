@@ -6,15 +6,6 @@ export enum Privacy {
   Private = 'Private',
 }
 
-export enum Feelings {
-  angry = 'angry',
-  happy = 'happy',
-  like = 'like',
-  love = 'love',
-  sad = 'sad',
-  wow = 'wow',
-}
-
 export interface GetPostsQuery {
   _id?: ObjectId | string;
   username?: string;

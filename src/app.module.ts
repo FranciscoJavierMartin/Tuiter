@@ -7,7 +7,8 @@ import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handleba
 import { AuthModule } from '@/auth/auth.module';
 import { UserModule } from '@/user/user.module';
 import { SharedModule } from '@/shared/shared.module';
-import { PostModule } from './post/post.module';
+import { PostModule } from '@/post/post.module';
+import { ReactionModule } from '@/reaction/reaction.module';
 
 @Module({
   imports: [
@@ -50,6 +51,7 @@ import { PostModule } from './post/post.module';
     UserModule,
     SharedModule,
     PostModule,
+    ReactionModule,
   ],
   controllers: [],
   providers: [],
