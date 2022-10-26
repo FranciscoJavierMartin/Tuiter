@@ -26,6 +26,7 @@ import {
 } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ValidateIdPipe } from '@/shared/pipes/validate-id.pipe';
+import { FILE_SIZE_LIMIT_MB } from '@/shared/contants';
 import { CurrentUser } from '@/auth/interfaces/current-user.interface';
 import { GetUser } from '@/auth/decorators/get-user.decorator';
 import { PostService } from '@/post/services/post.service';
@@ -60,7 +61,7 @@ export class PostController {
     @UploadedFile(
       new ParseFilePipe({
         fileIsRequired: false,
-        validators: [new MaxFileSizeValidator({ maxSize: 50 * 1000 * 1000 })],
+        validators: [new MaxFileSizeValidator({ maxSize: FILE_SIZE_LIMIT_MB })],
       }),
     )
     image?: Express.Multer.File,
@@ -116,7 +117,7 @@ export class PostController {
     @UploadedFile(
       new ParseFilePipe({
         fileIsRequired: false,
-        validators: [new MaxFileSizeValidator({ maxSize: 50 * 1000 * 1000 })],
+        validators: [new MaxFileSizeValidator({ maxSize: FILE_SIZE_LIMIT_MB })],
       }),
     )
     image?: Express.Multer.File,

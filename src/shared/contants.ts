@@ -12,3 +12,8 @@ export const DEFAULT_JOB_OPTIONS: JobOptions = {
   },
   removeOnComplete: true,
 };
+
+export const REDIS_COMMENTS_COLLECTION = 'comments';
+export const REDIS_POSTS_COLLECTION = 'posts';
+export const REDIS_REACTIONS_COLLECTION = 'reactions';
+export const REDIS_USERS_COLLECTION = 'users';
