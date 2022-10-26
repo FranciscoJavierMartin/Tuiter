@@ -6,6 +6,7 @@ import {
   MailForgotPasswordData,
   MailResetPasswordData,
 } from '@/shared/emails/interfaces/email';
+import { CONSUMER_CONCURRENCY } from '@/shared/contants';
 
 @Processor('email')
 export class EmailConsumer extends BaseConsumer {
@@ -13,7 +14,10 @@ export class EmailConsumer extends BaseConsumer {
     super('EmailConsumer');
   }
 
-  @Process({ name: 'sendForgotPasswordEmail', concurrency: 5 })
+  @Process({
+    name: 'sendForgotPasswordEmail',
+    concurrency: CONSUMER_CONCURRENCY,
+  })
   public async sendForgotPasswordEmail(
     job: Job<MailForgotPasswordData>,
     done: DoneCallback,
@@ -35,7 +39,10 @@ export class EmailConsumer extends BaseConsumer {
     }
   }
 
-  @Process({ name: 'sendResetPasswordEmail', concurrency: 5 })
+  @Process({
+    name: 'sendResetPasswordEmail',
+    concurrency: CONSUMER_CONCURRENCY,
+  })
   public async sendResetPasswordEmail(
     job: Job<MailResetPasswordData>,
     done: DoneCallback,

@@ -3,6 +3,10 @@ import { ConfigService } from '@nestjs/config';
 import { ObjectId } from 'mongodb';
 import { parseJson } from '@/helpers/utils';
 import { BaseCache } from '@/shared/redis/base.cache';
+import {
+  REDIS_POSTS_COLLECTION,
+  REDIS_REACTIONS_COLLECTION,
+} from '@/shared/contants';
 import { Feelings } from '@/reaction/interfaces/reaction.interface';
 import {
   AddReactionData,
@@ -34,9 +38,12 @@ export class ReactionCacheService extends BaseCache {
         this.removePostReactionFromCache(key, reaction.username, postReactions);
       }
 
-      await this.client.LPUSH(`reactions:${key}`, JSON.stringify(reaction));
+      await this.client.LPUSH(
+        `${REDIS_REACTIONS_COLLECTION}:${key}`,
+        JSON.stringify(reaction),
+      );
       const dataToSave: string[] = ['reactions', JSON.stringify(postReactions)];
-      await this.client.HSET(`posts:${key}`, dataToSave);
+      await this.client.HSET(`${REDIS_POSTS_COLLECTION}:${key}`, dataToSave);
     } catch (error) {
       this.logger.error(error);
       throw new InternalServerErrorException(
@@ -58,18 +65,22 @@ export class ReactionCacheService extends BaseCache {
   ): Promise<void> {
     try {
       const response: string[] = await this.client.LRANGE(
-        `reactions:${key}`,
+        `${REDIS_REACTIONS_COLLECTION}:${key}`,
         0,
         -1,
       );
 
       const multi: ReturnType<typeof this.client.multi> = this.client.multi();
       const userPreviousReaction = this.getPreviousReaction(response, username);
-      multi.LREM(`reactions:${key}`, 1, JSON.stringify(userPreviousReaction));
+      multi.LREM(
+        `${REDIS_REACTIONS_COLLECTION}:${key}`,
+        1,
+        JSON.stringify(userPreviousReaction),
+      );
       await multi.exec();
 
       const dataToSave: string[] = ['reactions', JSON.stringify(postReactions)];
-      await this.client.HSET(`posts:${key}`, dataToSave);
+      await this.client.HSET(`${REDIS_POSTS_COLLECTION}:${key}`, dataToSave);
     } catch (error) {
       this.logger.error(error);
       throw new InternalServerErrorException(
