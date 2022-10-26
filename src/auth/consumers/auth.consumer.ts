@@ -1,6 +1,7 @@
 import { Process, Processor } from '@nestjs/bull';
 import { DoneCallback, Job } from 'bull';
 import { BaseConsumer } from '@/shared/consumer/base.consumer';
+import { CONSUMER_CONCURRENCY } from '@/shared/contants';
 import { AuthDocument } from '@/auth/models/auth.model';
 import { AuthRepository } from '@/auth/repositories/auth.repository';
 
@@ -10,7 +11,7 @@ export class AuthConsumer extends BaseConsumer {
     super('AuthConsumer');
   }
 
-  @Process({ name: 'addAuthUserToDB', concurrency: 5 })
+  @Process({ name: 'addAuthUserToDB', concurrency: CONSUMER_CONCURRENCY })
   public async addAuthUserToDB(
     job: Job<AuthDocument>,
     done: DoneCallback,
