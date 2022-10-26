@@ -2,12 +2,12 @@ import { Prop, raw, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
 import { ObjectId } from 'mongodb';
 import { Reactions } from '@/reaction/interfaces/reaction.interface';
+import { Privacy } from '@/post/interfaces/post.interface';
 
 @Schema({
   collection: 'Post',
 })
 export class Post {
-  // TODO: Check if use type like in User
   _id: ObjectId;
 
   @Prop({
@@ -47,8 +47,8 @@ export class Post {
   @Prop({ type: String, default: '' })
   gifUrl: string = '';
 
-  @Prop({ type: String, default: '' })
-  privacy: string = 'Public';
+  @Prop({ type: String, enum: Privacy })
+  privacy: Privacy;
 
   @Prop({ type: Number, default: 0 })
   commentsCount: number = 0;

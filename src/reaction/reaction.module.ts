@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { BullModule } from '@nestjs/bull';
 import { PassportModule } from '@nestjs/passport';
 import { MongooseModule } from '@nestjs/mongoose';
+import { DEFAULT_JOB_OPTIONS } from '@/shared/contants';
 import { PostModule } from '@/post/post.module';
 import { ReactionConsumer } from '@/reaction/consumer/reaction.consumer';
 import { Reaction, ReactionSchema } from '@/reaction/models/reaction.schema';
@@ -18,14 +19,7 @@ import { ReactionCacheService } from '@/reaction/services/reaction.cache.service
     PassportModule.register({ defaultStrategy: 'jwt' }),
     BullModule.registerQueue({
       name: 'reaction',
-      defaultJobOptions: {
-        attempts: 3,
-        backoff: {
-          type: 'fixed',
-          delay: 5000,
-        },
-        removeOnComplete: true,
-      },
+      defaultJobOptions: DEFAULT_JOB_OPTIONS,
     }),
     PostModule,
   ],

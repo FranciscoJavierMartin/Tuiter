@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { parseJson } from '@/helpers/utils';
 import { BaseCache } from '@/shared/redis/base.cache';
 import { UserDocument } from '@/user/models/user.model';
+import { REDIS_USERS_COLLECTION } from '@/shared/contants';
 
 @Injectable()
 export class UserCacheService extends BaseCache {
@@ -91,7 +92,7 @@ export class UserCacheService extends BaseCache {
         score: parseInt(userId, 10),
         value: key,
       });
-      await this.client.HSET(`users:${key}`, dataToSave);
+      await this.client.HSET(`${REDIS_USERS_COLLECTION}:${key}`, dataToSave);
     } catch (error) {
       this.logger.error(error);
       throw new InternalServerErrorException(

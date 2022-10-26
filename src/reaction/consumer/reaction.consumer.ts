@@ -1,6 +1,7 @@
 import { Process, Processor } from '@nestjs/bull';
 import { DoneCallback, Job } from 'bull';
 import { BaseConsumer } from '@/shared/consumer/base.consumer';
+import { CONSUMER_CONCURRENCY } from '@/shared/contants';
 import { PostRepository } from '@/post/repositories/post.repository';
 import { ReactionRepository } from '@/reaction/repositories/reaction.repository';
 import {
@@ -19,7 +20,7 @@ export class ReactionConsumer extends BaseConsumer {
     super('ReactionConsumer');
   }
 
-  @Process({ name: 'addPostReaction', concurrency: 5 })
+  @Process({ name: 'addPostReaction', concurrency: CONSUMER_CONCURRENCY })
   public async addPostReaction(
     job: Job<AddReactionJobData>,
     done: DoneCallback,
@@ -54,7 +55,7 @@ export class ReactionConsumer extends BaseConsumer {
     }
   }
 
-  @Process({ name: 'removePostReaction', concurrency: 5 })
+  @Process({ name: 'removePostReaction', concurrency: CONSUMER_CONCURRENCY })
   public async removePostReaction(
     job: Job<RemoveReactionJobData>,
     done: DoneCallback,

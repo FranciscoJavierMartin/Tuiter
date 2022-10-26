@@ -1,6 +1,7 @@
 import { Process, Processor } from '@nestjs/bull';
 import { DoneCallback, Job } from 'bull';
 import { BaseConsumer } from '@/shared/consumer/base.consumer';
+import { CONSUMER_CONCURRENCY } from '@/shared/contants';
 import { UserRepository } from '@/user/repositories/user.repository';
 import { Post } from '@/post/models/post.schema';
 import {
@@ -18,7 +19,7 @@ export class PostConsumer extends BaseConsumer {
     super('PostConsumer');
   }
 
-  @Process({ name: 'addPostToDB', concurrency: 5 })
+  @Process({ name: 'addPostToDB', concurrency: CONSUMER_CONCURRENCY })
   public async addPostToDB(job: Job<Post>, done: DoneCallback): Promise<void> {
     try {
       this.postRepository.savePostToDb(job.data);
@@ -30,7 +31,7 @@ export class PostConsumer extends BaseConsumer {
     }
   }
 
-  @Process({ name: 'deletePostFromDB', concurrency: 5 })
+  @Process({ name: 'deletePostFromDB', concurrency: CONSUMER_CONCURRENCY })
   public async deletePostFromDB(
     job: Job<DeletePostParams>,
     done: DoneCallback,
@@ -48,7 +49,7 @@ export class PostConsumer extends BaseConsumer {
     }
   }
 
-  @Process({ name: 'updatePostInDB', concurrency: 5 })
+  @Process({ name: 'updatePostInDB', concurrency: CONSUMER_CONCURRENCY })
   public async updatePostInDB(
     job: Job<UpdatePostParams>,
     done: DoneCallback,

@@ -17,13 +17,13 @@ import {
   ApiBody,
   ApiConsumes,
   ApiCreatedResponse,
-  ApiInternalServerErrorResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiTags,
 } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { AuthGuard } from '@nestjs/passport';
+import { FILE_SIZE_LIMIT } from '@/shared/contants';
 import { AuthService } from '@/auth/auth.service';
 import { RegisterDto } from '@/auth/dto/requests/register.dto';
 import { ResponseRegisterDto } from '@/auth/dto/responses/register.dto';
@@ -44,7 +44,7 @@ export class AuthController {
   @UseInterceptors(
     FileInterceptor('avatarImage', {
       limits: {
-        fieldSize: 50,
+        fieldSize: FILE_SIZE_LIMIT,
       },
     }),
   )

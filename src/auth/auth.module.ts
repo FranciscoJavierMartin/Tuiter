@@ -4,6 +4,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { BullModule } from '@nestjs/bull';
+import { DEFAULT_JOB_OPTIONS } from '@/shared/contants';
 import { UserModule } from '@/user/user.module';
 import { AuthService } from '@/auth/auth.service';
 import { AuthController } from '@/auth/auth.controller';
@@ -18,36 +19,15 @@ import { AuthRepository } from '@/auth/repositories/auth.repository';
     BullModule.registerQueue(
       {
         name: 'auth',
-        defaultJobOptions: {
-          attempts: 3,
-          backoff: {
-            type: 'fixed',
-            delay: 5000,
-          },
-          removeOnComplete: true,
-        },
+        defaultJobOptions: DEFAULT_JOB_OPTIONS,
       },
       {
         name: 'user',
-        defaultJobOptions: {
-          attempts: 3,
-          backoff: {
-            type: 'fixed',
-            delay: 5000,
-          },
-          removeOnComplete: true,
-        },
+        defaultJobOptions: DEFAULT_JOB_OPTIONS,
       },
       {
         name: 'email',
-        defaultJobOptions: {
-          attempts: 3,
-          backoff: {
-            type: 'fixed',
-            delay: 5000,
-          },
-          removeOnComplete: true,
-        },
+        defaultJobOptions: DEFAULT_JOB_OPTIONS,
       },
     ),
     PassportModule.register({ defaultStrategy: 'jwt' }),
@@ -57,14 +37,14 @@ import { AuthRepository } from '@/auth/repositories/auth.repository';
       useFactory: (configService: ConfigService) => {
         return {
           secret: configService.get('JWT_TOKEN'),
-          signOptions: { expiresIn: '7d' },
+          signOptions: { expiresIn: configService.get('JWT_EXPIRES_IN') },
         };
       },
     }),
     UserModule,
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy, AuthConsumer, AuthRepository],
+  providers: [JwtStrategy, AuthService, AuthConsumer, AuthRepository],
   exports: [AuthRepository],
 })
 export class AuthModule {}

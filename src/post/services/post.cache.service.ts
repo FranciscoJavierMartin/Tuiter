@@ -3,6 +3,12 @@ import { ConfigService } from '@nestjs/config';
 import { parseJson } from '@/helpers/utils';
 import { BaseCache } from '@/shared/redis/base.cache';
 import { Post } from '@/post/models/post.schema';
+import {
+  REDIS_COMMENTS_COLLECTION,
+  REDIS_POSTS_COLLECTION,
+  REDIS_REACTIONS_COLLECTION,
+  REDIS_USERS_COLLECTION,
+} from '@/shared/contants';
 
 @Injectable()
 export class PostCacheService extends BaseCache {
@@ -79,7 +85,7 @@ export class PostCacheService extends BaseCache {
 
     try {
       const postCount: string[] = await this.client.HMGET(
-        `users:${currentUserId}`,
+        `${REDIS_USERS_COLLECTION}:${currentUserId}`,
         'postsCount',
       );
       const multi: ReturnType<typeof this.client.multi> = this.client.multi();
@@ -87,9 +93,12 @@ export class PostCacheService extends BaseCache {
         score: parseInt(uId, 10),
         value: key,
       });
-      multi.HSET(`posts:${key}`, dataToSave);
+      multi.HSET(`${REDIS_POSTS_COLLECTION}:${key}`, dataToSave);
       const count: number = parseInt(postCount[0], 10) + 1;
-      multi.HSET(`users:${currentUserId}`, ['postsCount', count]);
+      multi.HSET(`${REDIS_USERS_COLLECTION}:${currentUserId}`, [
+        'postsCount',
+        count,
+      ]);
       multi.exec();
     } catch (error) {
       this.logger.error(error);
@@ -114,7 +123,7 @@ export class PostCacheService extends BaseCache {
       const multi: ReturnType<typeof this.client.multi> = this.client.multi();
 
       for (const value of reply) {
-        multi.HGETALL(`posts:${value}`);
+        multi.HGETALL(`${REDIS_POSTS_COLLECTION}:${value}`);
       }
 
       const replies: Post[] = (await multi.exec()) as unknown[] as Post[];
@@ -154,16 +163,19 @@ export class PostCacheService extends BaseCache {
   ): Promise<void> {
     try {
       const postCount: string[] = await this.client.HMGET(
-        `users:${authorId}`,
+        `${REDIS_USERS_COLLECTION}:${authorId}`,
         'postsCount',
       );
       const multi: ReturnType<typeof this.client.multi> = this.client.multi();
       multi.ZREM('post', postId);
-      multi.DEL(`posts:${postId}`);
-      multi.DEL(`comments:${postId}`);
-      multi.DEL(`reactions:${postId}`);
+      multi.DEL(`${REDIS_POSTS_COLLECTION}:${postId}`);
+      multi.DEL(`${REDIS_COMMENTS_COLLECTION}:${postId}`);
+      multi.DEL(`${REDIS_REACTIONS_COLLECTION}:${postId}`);
       const count: number = parseInt(postCount[0], 10) - 1;
-      multi.HSET(`users:${authorId}`, ['postsCount', count]);
+      multi.HSET(`${REDIS_USERS_COLLECTION}:${authorId}`, [
+        'postsCount',
+        count,
+      ]);
       await multi.exec();
     } catch (error) {
       this.logger.error(error);
@@ -210,9 +222,9 @@ export class PostCacheService extends BaseCache {
     ];
 
     try {
-      await this.client.HSET(`posts:${postId}`, dataToSave);
+      await this.client.HSET(`${REDIS_POSTS_COLLECTION}:${postId}`, dataToSave);
       const multi: ReturnType<typeof this.client.multi> = this.client.multi();
-      multi.HGETALL(`posts:${postId}`);
+      multi.HGETALL(`${REDIS_POSTS_COLLECTION}:${postId}`);
       const reply = await multi.exec();
       const postReply = reply as unknown as Post[];
       const updatedPost: Post = postReply[0];
