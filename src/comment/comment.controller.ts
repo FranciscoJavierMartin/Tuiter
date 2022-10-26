@@ -1,7 +1,7 @@
 import { Controller, Post, Body, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiTags } from '@nestjs/swagger';
-import { CommentService } from '@/comment/comment.service';
+import { CommentService } from '@/comment/services/comment.service';
 import { CreateCommentDto } from '@/comment/dto/create-comment.dto';
 
 @ApiTags('Comment')
@@ -11,7 +11,9 @@ export class CommentController {
 
   @Post()
   @UseGuards(AuthGuard())
-  create(@Body() createCommentDto: CreateCommentDto) {
+  public async create(
+    @Body() createCommentDto: CreateCommentDto,
+  ): Promise<void> {
     return this.commentService.create(createCommentDto);
   }
 }
