@@ -4,7 +4,7 @@ import { CommentService } from './comment.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
 
 @ApiTags('Comment')
-@Controller('post/comment')
+@Controller('post/comments')
 export class CommentController {
   constructor(private readonly commentService: CommentService) {}
 
