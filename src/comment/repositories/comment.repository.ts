@@ -6,7 +6,7 @@ import { PostRepository } from '@/post/repositories/post.repository';
 import { User } from '@/user/models/user.model';
 import { UserRepository } from '@/user/repositories/user.repository';
 import { AddCommentJobData } from '@/comment/interfaces/comment.interface';
-import { Comment } from '@/comment/models/comment.schema';
+import { Comment } from '@/comment/models/comment.model';
 
 @Injectable()
 export class CommentRepository {

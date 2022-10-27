@@ -6,7 +6,7 @@ import { Queue } from 'bull';
 import { CurrentUser } from '@/auth/interfaces/current-user.interface';
 import { CreateCommentDto } from '@/comment/dto/requests/create-comment.dto';
 import { CommentCacheService } from '@/comment/services/comment.cache.service';
-import { Comment } from '@/comment/models/comment.schema';
+import { Comment } from '@/comment/models/comment.model';
 import { CommentJobData } from '@/comment/interfaces/comment.interface';
 
 @Injectable()
@@ -17,6 +17,11 @@ export class CommentService {
     private readonly commentQueue: Queue<CommentJobData>,
   ) {}
 
+  /**
+   * Save comment
+   * @param createCommentDto Comment data to be saved
+   * @param user Comment's author
+   */
   public async create(
     createCommentDto: CreateCommentDto,
     user: CurrentUser,

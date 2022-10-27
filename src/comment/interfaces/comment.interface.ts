@@ -1,5 +1,5 @@
 import { ObjectId } from 'mongodb';
-import { Comment } from '@/comment/models/comment.schema';
+import { Comment } from '@/comment/models/comment.model';
 
 export type CommentJobData = AddCommentJobData;
 

@@ -13,6 +13,11 @@ export class CommentCacheService extends BaseCache {
     super('CommentCache', configService);
   }
 
+  /**
+   * Store comment in cache
+   * @param postId Post id where comment belong
+   * @param data Comment data to be stored in string format
+   */
   public async savePostCommentToCache(
     postId: ObjectId,
     data: string,

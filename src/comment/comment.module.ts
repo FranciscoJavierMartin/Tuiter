@@ -8,7 +8,7 @@ import { UserModule } from '@/user/user.module';
 import { CommentService } from '@/comment/services/comment.service';
 import { CommentController } from '@/comment/comment.controller';
 import { CommentCacheService } from '@/comment/services/comment.cache.service';
-import { Comment, CommentSchema } from '@/comment/models/comment.schema';
+import { Comment, CommentSchema } from '@/comment/models/comment.model';
 import { CommentRepository } from '@/comment/repositories/comment.repository';
 import { CommentConsumer } from '@/comment/consumer/comment.consumer';
 
