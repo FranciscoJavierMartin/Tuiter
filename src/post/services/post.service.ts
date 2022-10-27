@@ -59,6 +59,7 @@ export class PostService {
       username: user.username,
       email: user.email,
       avatarColor: user.avatarColor,
+      profilePicture: user.profilePicture,
       ...createPostDto,
       commentsCount: 0,
       imgId: '',

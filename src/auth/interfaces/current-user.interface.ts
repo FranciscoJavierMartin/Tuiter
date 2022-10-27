@@ -4,4 +4,5 @@ export interface CurrentUser {
   email: string;
   username: string;
   avatarColor: string;
+  profilePicture: string;
 }

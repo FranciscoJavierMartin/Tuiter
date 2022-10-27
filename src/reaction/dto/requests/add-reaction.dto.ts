@@ -50,16 +50,4 @@ export class AddReactionDto {
   @IsOptional()
   @IsEnum(Feelings)
   previousFeeling?: Feelings;
-
-  @ApiProperty({
-    description: 'Author profile picture',
-    default: '',
-    nullable: true,
-    required: false,
-  })
-  @ValidateIf((o) => !!o.profilePicture)
-  @IsOptional()
-  @IsString()
-  @IsUrl()
-  profilePicture: string = '';
 }
