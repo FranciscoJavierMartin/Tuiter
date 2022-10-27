@@ -16,7 +16,6 @@ export class CommentService {
   ): Promise<void> {
     const commentId = new ObjectId();
 
-    //TODO: Include profilePicture in JWT
     const commentData: Comment = {
       _id: commentId,
       postId: createCommentDto.postId as mongoose.Types.ObjectId,
@@ -26,5 +25,10 @@ export class CommentService {
       text: createCommentDto.text,
       createdAt: new Date(),
     };
+
+    await this.commentCacheService.savePostCommentToCache(
+      createCommentDto.postId,
+      JSON.stringify(commentData),
+    );
   }
 }
