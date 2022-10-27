@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
+import { InjectQueue } from '@nestjs/bull';
 import { ObjectId } from 'mongodb';
+import mongoose from 'mongoose';
+import { Queue } from 'bull';
 import { CurrentUser } from '@/auth/interfaces/current-user.interface';
 import { CreateCommentDto } from '@/comment/dto/requests/create-comment.dto';
 import { CommentCacheService } from '@/comment/services/comment.cache.service';
 import { Comment } from '@/comment/models/comment.schema';
-import mongoose from 'mongoose';
-import { InjectQueue } from '@nestjs/bull';
-import { Queue } from 'bull';
-import { CommentJobData } from '../interfaces/comment.interface';
+import { CommentJobData } from '@/comment/interfaces/comment.interface';
 
 @Injectable()
 export class CommentService {
