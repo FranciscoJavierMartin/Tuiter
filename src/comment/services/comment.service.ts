@@ -8,11 +8,14 @@ import { CreateCommentDto } from '@/comment/dto/requests/create-comment.dto';
 import { CommentCacheService } from '@/comment/services/comment.cache.service';
 import { Comment } from '@/comment/models/comment.model';
 import { CommentJobData } from '@/comment/interfaces/comment.interface';
+import { ID } from '@/shared/interfaces/types';
+import { CommentRepository } from '../repositories/comment.repository';
 
 @Injectable()
 export class CommentService {
   constructor(
     private readonly commentCacheService: CommentCacheService,
+    private readonly commentRepository: CommentRepository,
     @InjectQueue('comment')
     private readonly commentQueue: Queue<CommentJobData>,
   ) {}
@@ -51,5 +54,15 @@ export class CommentService {
       username: user.username,
       comment: commentData,
     });
+  }
+
+  public async findByPostId(postId: ID) {
+    const cachedComments: Comment[] =
+      await this.commentCacheService.getCommentsFromCache(postId);
+    const comments: Comment[] = cachedComments.length
+      ? cachedComments
+      : await this.commentRepository.getPostComments(postId);
+
+    return comments;
   }
 }

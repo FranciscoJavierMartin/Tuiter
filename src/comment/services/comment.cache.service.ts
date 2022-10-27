@@ -1,11 +1,13 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { ObjectId } from 'mongodb';
 import { BaseCache } from '@/shared/redis/base.cache';
 import {
   REDIS_COMMENTS_COLLECTION,
   REDIS_POSTS_COLLECTION,
 } from '@/shared/contants';
+import { ID } from '@/shared/interfaces/types';
+import { parseJson } from '@/helpers/utils';
+import { Comment } from '../models/comment.model';
 
 @Injectable()
 export class CommentCacheService extends BaseCache {
@@ -18,10 +20,7 @@ export class CommentCacheService extends BaseCache {
    * @param postId Post id where comment belong
    * @param data Comment data to be stored in string format
    */
-  public async savePostCommentToCache(
-    postId: ObjectId,
-    data: string,
-  ): Promise<void> {
+  public async savePostCommentToCache(postId: ID, data: string): Promise<void> {
     try {
       await this.client.LPUSH(`${REDIS_COMMENTS_COLLECTION}:${postId}`, data);
       const commentsCount: string[] = await this.client.HMGET(
@@ -33,6 +32,23 @@ export class CommentCacheService extends BaseCache {
         'commentsCount',
         count + 1,
       ]);
+    } catch (error) {
+      this.logger.error(error);
+      throw new InternalServerErrorException(
+        `Error adding comment for post ${postId} to Redis`,
+      );
+    }
+  }
+
+  public async getCommentsFromCache(postId: ID): Promise<Comment[]> {
+    try {
+      const comments: string[] = await this.client.LRANGE(
+        `${REDIS_COMMENTS_COLLECTION}:${postId}`,
+        0,
+        -1,
+      );
+
+      return comments.map((comment) => parseJson<Comment>(comment));
     } catch (error) {
       this.logger.error(error);
       throw new InternalServerErrorException(

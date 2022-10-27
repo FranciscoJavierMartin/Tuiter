@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { ObjectId } from 'mongodb';
 import { Post } from '@/post/models/post.schema';
 import { PostRepository } from '@/post/repositories/post.repository';
 import { User } from '@/user/models/user.model';
@@ -35,5 +36,20 @@ export class CommentRepository {
     ]);
 
     // TODO: Send comments notifications
+  }
+
+  public async getPostComments(postId: ObjectId): Promise<Comment[]> {
+    return await this.commentModel.aggregate([
+      {
+        $match: {
+          postId,
+        },
+      },
+      {
+        $sort: {
+          createdAt: -1,
+        },
+      },
+    ]);
   }
 }
