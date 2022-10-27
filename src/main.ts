@@ -23,6 +23,7 @@ async function bootstrap() {
     .setTitle('Chatty')
     .setDescription('API for Chatty app')
     .setVersion('1.0')
+    .addBearerAuth()
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

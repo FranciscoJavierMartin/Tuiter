@@ -4,6 +4,7 @@ export interface JwtPayload {
   email: string;
   username: string;
   avatarColor: string;
+  profilePicture: string;
   iat: number;
   exp: number;
 }

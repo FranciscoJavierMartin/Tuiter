@@ -103,7 +103,14 @@ export class AuthService {
     this.authQueue.add('addAuthUserToDB', authUser);
     this.userQueue.add('addUserToDB', userDataToCache);
 
-    const jwtToken: string = this.signToken(authUser, userObjectId);
+    const jwtToken: string = this.signToken({
+      avatarColor: authUser.avatarColor,
+      email: authUser.email,
+      profilePicture: userDataToCache.profilePicture,
+      uId,
+      userId: userObjectId,
+      username: authUser.username,
+    });
 
     return {
       message: 'User created successfully',
@@ -129,12 +136,13 @@ export class AuthService {
       authUser.id,
     );
 
-    const userJwt: string = this.jwtService.sign({
-      userId: user._id,
+    const userJwt: string = this.signToken({
+      userId: user._id as ObjectId,
       uId: authUser.uId,
       email: authUser.email,
       username: authUser.username,
       avatarColor: authUser.avatarColor,
+      profilePicture: user.profilePicture,
     });
 
     const userDocument: UserDocument = {
@@ -234,19 +242,30 @@ export class AuthService {
   /**
    * Create JWT token
    * @param payload user data to be included in payload
-   * @param userObjectId user id in db
    * @returns JWT Token
    */
-  private signToken(
-    { uId, email, username, avatarColor }: AuthDocument,
-    userObjectId: ObjectId,
-  ): string {
+  private signToken({
+    uId,
+    email,
+    username,
+    avatarColor,
+    profilePicture,
+    userId,
+  }: {
+    uId: string;
+    email: string;
+    username: string;
+    avatarColor: string;
+    profilePicture: string;
+    userId: ObjectId;
+  }): string {
     return this.jwtService.sign({
-      userId: userObjectId,
+      userId,
       uId,
       email,
       username,
       avatarColor,
+      profilePicture,
     });
   }
 }
