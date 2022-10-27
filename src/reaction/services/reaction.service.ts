@@ -27,7 +27,7 @@ export class ReactionService {
       feeling: addReactionDto.feeling,
       avatarColor: user.avatarColor,
       username: user.username,
-      profilePicture: addReactionDto.profilePicture,
+      profilePicture: user.profilePicture,
     };
 
     this.reactionQueue.add('addPostReaction', {

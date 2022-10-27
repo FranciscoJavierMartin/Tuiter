@@ -66,16 +66,4 @@ export class CreatePostDto {
   @IsUrl()
   @IsOptional()
   gifUrl: string = '';
-
-  @ApiProperty({
-    description: 'Author profile picture',
-    default: '',
-    nullable: true,
-    required: false,
-  })
-  @ValidateIf((o) => !!o.profilePicture)
-  @IsOptional()
-  @IsString()
-  @IsUrl()
-  profilePicture: string = '';
 }
