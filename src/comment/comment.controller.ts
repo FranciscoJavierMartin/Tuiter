@@ -2,7 +2,7 @@ import { Controller, Post, Body, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiTags } from '@nestjs/swagger';
 import { CommentService } from '@/comment/services/comment.service';
-import { CreateCommentDto } from '@/comment/dto/create-comment.dto';
+import { CreateCommentDto } from '@/comment/dto/requests/create-comment.dto';
 import { CurrentUser } from '@/auth/interfaces/current-user.interface';
 import { GetUser } from '@/auth/decorators/get-user.decorator';
 

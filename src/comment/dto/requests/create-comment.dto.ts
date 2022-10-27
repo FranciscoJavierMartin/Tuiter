@@ -1,11 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsMongoId,
-  IsOptional,
-  IsString,
-  IsUrl,
-  ValidateIf,
-} from 'class-validator';
+import { IsMongoId, IsString } from 'class-validator';
 import { ID } from '@/shared/interfaces/types';
 
 export class CreateCommentDto {
@@ -34,16 +28,4 @@ export class CreateCommentDto {
   })
   @IsString()
   text: string;
-
-  @ApiProperty({
-    description: 'Author profile picture',
-    default: '',
-    nullable: true,
-    required: false,
-  })
-  @ValidateIf((o) => !!o.profilePicture)
-  @IsOptional()
-  @IsString()
-  @IsUrl()
-  profilePicture: string = '';
 }
