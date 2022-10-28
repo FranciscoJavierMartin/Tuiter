@@ -65,8 +65,8 @@ export class AuthService {
       throw new BadRequestException('User is already created');
     }
 
-    const authObjectId: ObjectId = new ObjectId();
-    const userObjectId: ObjectId = new ObjectId();
+    const authObjectId: ID = new ObjectId();
+    const userObjectId: ID = new ObjectId();
     const uId = generateRandomIntegers(12).toString();
 
     const authUser: AuthDocument = {
@@ -78,7 +78,7 @@ export class AuthService {
     try {
       avatarUploaded = await this.uploaderService.uploadImage(
         avatarImage,
-        userObjectId,
+        userObjectId.toString(),
         true,
         true,
       );
@@ -96,7 +96,7 @@ export class AuthService {
       avatarUploaded.public_id,
     );
     await this.userCacheService.storeUserToCache(
-      userObjectId,
+      userObjectId.toString(),
       uId,
       userDataToCache,
     );

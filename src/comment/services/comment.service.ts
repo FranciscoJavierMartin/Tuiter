@@ -29,8 +29,8 @@ export class CommentService {
     createCommentDto: CreateCommentDto,
     user: CurrentUser,
   ): Promise<void> {
-    const commentId: ObjectId = new ObjectId();
-    const postId: ObjectId = createCommentDto.postId;
+    const commentId: ID = new ObjectId();
+    const postId: ID = createCommentDto.postId;
 
     const commentData: Comment = {
       _id: commentId,
