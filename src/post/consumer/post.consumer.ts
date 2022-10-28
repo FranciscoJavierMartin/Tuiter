@@ -3,7 +3,7 @@ import { DoneCallback, Job } from 'bull';
 import { BaseConsumer } from '@/shared/consumer/base.consumer';
 import { CONSUMER_CONCURRENCY } from '@/shared/contants';
 import { UserRepository } from '@/user/repositories/user.repository';
-import { Post } from '@/post/models/post.schema';
+import { Post } from '@/post/models/post.model';
 import {
   DeletePostParams,
   UpdatePostParams,

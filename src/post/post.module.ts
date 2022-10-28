@@ -6,7 +6,7 @@ import { DEFAULT_JOB_OPTIONS } from '@/shared/contants';
 import { UserModule } from '@/user/user.module';
 import { PostService } from '@/post/services/post.service';
 import { PostController } from '@/post/post.controller';
-import { Post, PostSchema } from '@/post/models/post.schema';
+import { Post, PostSchema } from '@/post/models/post.model';
 import { PostCacheService } from '@/post/services/post.cache.service';
 import { PostConsumer } from '@/post/consumer/post.consumer';
 import { PostRepository } from '@/post/repositories/post.repository';

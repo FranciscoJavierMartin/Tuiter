@@ -7,7 +7,7 @@ import mongoose from 'mongoose';
 })
 export class User {
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Auth', index: true })
-  authId: string;
+  authId: ObjectId;
 
   @Prop({ type: String, default: '' })
   profilePicture: string;

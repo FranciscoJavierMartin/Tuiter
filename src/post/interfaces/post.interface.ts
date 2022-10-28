@@ -1,5 +1,5 @@
-import { ObjectId } from 'mongodb';
-import { Post } from '@/post/models/post.schema';
+import { ID } from '@/shared/interfaces/types';
+import { Post } from '@/post/models/post.model';
 
 export enum Privacy {
   Public = 'Public',
@@ -7,7 +7,7 @@ export enum Privacy {
 }
 
 export interface GetPostsQuery {
-  _id?: ObjectId | string;
+  _id?: ID;
   username?: string;
   imgId?: string;
   gifUrl?: string;

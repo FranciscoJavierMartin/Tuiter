@@ -15,7 +15,7 @@ export class Post {
     ref: 'User',
     index: true,
   })
-  authorId: string | mongoose.Types.ObjectId;
+  authorId: mongoose.Types.ObjectId;
 
   @Prop({ Type: String, required: true })
   username: string;

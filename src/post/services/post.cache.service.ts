@@ -2,7 +2,7 @@ import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { parseJson } from '@/helpers/utils';
 import { BaseCache } from '@/shared/redis/base.cache';
-import { Post } from '@/post/models/post.schema';
+import { Post } from '@/post/models/post.model';
 import {
   REDIS_COMMENTS_COLLECTION,
   REDIS_POSTS_COLLECTION,

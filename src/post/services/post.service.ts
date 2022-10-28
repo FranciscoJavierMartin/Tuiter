@@ -6,13 +6,15 @@ import {
 import { WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { InjectQueue } from '@nestjs/bull';
 import { ObjectId } from 'mongodb';
+import mongoose from 'mongoose';
 import { Server } from 'socket.io';
 import { Queue } from 'bull';
 import { UploadApiResponse } from 'cloudinary';
+import { ID } from '@/shared/interfaces/types';
 import { UploaderService } from '@/shared/services/uploader.service';
 import { CurrentUser } from '@/auth/interfaces/current-user.interface';
 import { CreatePostDto } from '@/post/dto/requests/create-post.dto';
-import { Post } from '@/post/models/post.schema';
+import { Post } from '@/post/models/post.model';
 import { PostCacheService } from '@/post/services/post.cache.service';
 import { PostsDto } from '@/post/dto/responses/posts.dto';
 import {
@@ -55,7 +57,7 @@ export class PostService {
 
     const post: Post = {
       _id: postId,
-      authorId: user.userId,
+      authorId: new mongoose.Types.ObjectId(user.userId),
       username: user.username,
       email: user.email,
       avatarColor: user.avatarColor,

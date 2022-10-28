@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { UpdateResult, ObjectId } from 'mongodb';
 import { Feelings } from '@/reaction/interfaces/reaction.interface';
-import { Reaction } from '@/reaction/models/reaction.schema';
+import { Reaction } from '@/reaction/models/reaction.model';
 import { AddReactionData } from '@/reaction/interfaces/reaction.interface';
 
 @Injectable()

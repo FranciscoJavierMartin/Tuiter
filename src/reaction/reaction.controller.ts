@@ -14,13 +14,13 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
-import { ObjectId } from 'mongodb';
 import { ValidateIdPipe } from '@/shared/pipes/validate-id.pipe';
 import { GetUser } from '@/auth/decorators/get-user.decorator';
 import { CurrentUser } from '@/auth/interfaces/current-user.interface';
 import { IsNotAuthorGuard } from '@/post/decorators/is-not-author.guard';
 import { ReactionService } from '@/reaction/services/reaction.service';
 import { AddReactionDto } from '@/reaction/dto/requests/add-reaction.dto';
+import { ID } from '@/shared/interfaces/types';
 
 @ApiTags('Reaction')
 @Controller('post/reactions')
@@ -50,7 +50,7 @@ export class ReactionsController {
   })
   @UseGuards(AuthGuard(), IsNotAuthorGuard)
   public remove(
-    @Param('postId', ValidateIdPipe) postId: ObjectId,
+    @Param('postId', ValidateIdPipe) postId: ID,
     @GetUser('username') [username]: string,
   ): void {
     return this.reactionService.remove(postId, username);

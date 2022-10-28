@@ -12,7 +12,7 @@ import {
   AddReactionData,
   Reactions,
 } from '@/reaction/interfaces/reaction.interface';
-import { Reaction } from '@/reaction/models/reaction.schema';
+import { Reaction } from '@/reaction/models/reaction.model';
 
 @Injectable()
 export class ReactionCacheService extends BaseCache {
