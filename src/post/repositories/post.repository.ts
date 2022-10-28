@@ -146,4 +146,16 @@ export class PostRepository {
       { new: true },
     );
   }
+
+  public async incrementPostCount(postId: ObjectId): Promise<Post> {
+    return await this.postModel.findByIdAndUpdate(
+      postId,
+      {
+        $inc: {
+          commentsCount: 1,
+        },
+      },
+      { new: true },
+    );
+  }
 }
