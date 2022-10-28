@@ -1,6 +1,7 @@
 import { Prop, raw, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ObjectId } from 'mongodb';
 import mongoose from 'mongoose';
+import { ID } from '@/shared/interfaces/types';
 
 @Schema({
   collection: 'User',
@@ -97,7 +98,7 @@ export const UserSchema = SchemaFactory.createForClass(User);
 
 export type UserDocument = User &
   Document & {
-    _id: ObjectId | string;
+    _id: ID;
     username?: string;
     email?: string;
     password?: string;

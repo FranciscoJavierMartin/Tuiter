@@ -1,7 +1,7 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { ObjectId } from 'mongodb';
 import { parseJson } from '@/helpers/utils';
+import { ID } from '@/shared/interfaces/types';
 import { BaseCache } from '@/shared/redis/base.cache';
 import {
   REDIS_POSTS_COLLECTION,
@@ -22,50 +22,54 @@ export class ReactionCacheService extends BaseCache {
 
   /**
    * Save post reaction in cache
-   * @param key Post id
+   * @param postId Post id
    * @param reaction Reaction data to be stored. Include reaction id
    * @param postReactions Post reactions
    * @param previousFeeling (Optional) Previous feeling
    */
   public async savePostReactionToCache(
-    key: ObjectId,
-    reaction: AddReactionData & { _id: ObjectId },
+    postId: ID,
+    reaction: AddReactionData & { _id: ID },
     postReactions: Reactions,
     previousFeeling?: Feelings,
   ): Promise<void> {
     try {
       if (previousFeeling) {
-        this.removePostReactionFromCache(key, reaction.username, postReactions);
+        this.removePostReactionFromCache(
+          postId,
+          reaction.username,
+          postReactions,
+        );
       }
 
       await this.client.LPUSH(
-        `${REDIS_REACTIONS_COLLECTION}:${key}`,
+        `${REDIS_REACTIONS_COLLECTION}:${postId}`,
         JSON.stringify(reaction),
       );
       const dataToSave: string[] = ['reactions', JSON.stringify(postReactions)];
-      await this.client.HSET(`${REDIS_POSTS_COLLECTION}:${key}`, dataToSave);
+      await this.client.HSET(`${REDIS_POSTS_COLLECTION}:${postId}`, dataToSave);
     } catch (error) {
       this.logger.error(error);
       throw new InternalServerErrorException(
-        `Error adding post reaction ${key} to Redis`,
+        `Error adding post reaction ${postId} to Redis`,
       );
     }
   }
 
   /**
    * Remove reaction from cache
-   * @param key Post id
+   * @param postId Post id
    * @param username Username who react to post
    * @param postReactions Update post reactions
    */
   public async removePostReactionFromCache(
-    key: ObjectId,
+    postId: ID,
     username: string,
     postReactions: Reactions,
   ): Promise<void> {
     try {
       const response: string[] = await this.client.LRANGE(
-        `${REDIS_REACTIONS_COLLECTION}:${key}`,
+        `${REDIS_REACTIONS_COLLECTION}:${postId}`,
         0,
         -1,
       );
@@ -73,18 +77,18 @@ export class ReactionCacheService extends BaseCache {
       const multi: ReturnType<typeof this.client.multi> = this.client.multi();
       const userPreviousReaction = this.getPreviousReaction(response, username);
       multi.LREM(
-        `${REDIS_REACTIONS_COLLECTION}:${key}`,
+        `${REDIS_REACTIONS_COLLECTION}:${postId}`,
         1,
         JSON.stringify(userPreviousReaction),
       );
       await multi.exec();
 
       const dataToSave: string[] = ['reactions', JSON.stringify(postReactions)];
-      await this.client.HSET(`${REDIS_POSTS_COLLECTION}:${key}`, dataToSave);
+      await this.client.HSET(`${REDIS_POSTS_COLLECTION}:${postId}`, dataToSave);
     } catch (error) {
       this.logger.error(error);
       throw new InternalServerErrorException(
-        `Error removing post reaction ${key} from Redis`,
+        `Error removing post reaction ${postId} from Redis`,
       );
     }
   }

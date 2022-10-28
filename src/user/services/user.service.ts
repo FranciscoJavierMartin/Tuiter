@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { ObjectId } from 'mongodb';
+import { ID } from '@/shared/interfaces/types';
 import { AuthDocument } from '@/auth/models/auth.model';
 import { UserDocument } from '@/user/models/user.model';
 import { UserRepository } from '@/user/repositories/user.repository';
@@ -14,7 +14,7 @@ export class UserService {
    * @param userObjectId user id to be created in DB
    * @returns User from auth
    */
-  public getUserData(data: AuthDocument, userObjectId: ObjectId): UserDocument {
+  public getUserData(data: AuthDocument, userObjectId: ID): UserDocument {
     const { _id, username, email, uId, password, avatarColor } = data;
     return {
       _id: userObjectId,

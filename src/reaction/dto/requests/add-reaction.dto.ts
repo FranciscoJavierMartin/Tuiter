@@ -1,14 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsEnum,
-  IsMongoId,
-  IsOptional,
-  IsString,
-  IsUrl,
-  ValidateIf,
-} from 'class-validator';
-import { ObjectId } from 'mongodb';
+import { IsEnum, IsMongoId, IsOptional, IsString } from 'class-validator';
 import { Feelings } from '@/reaction/interfaces/reaction.interface';
+import { ID } from '@/shared/interfaces/types';
 
 export class AddReactionDto {
   @ApiProperty({
@@ -18,7 +11,7 @@ export class AddReactionDto {
     required: true,
   })
   @IsMongoId()
-  userTo: ObjectId;
+  userTo: ID;
 
   @ApiProperty({
     description: 'Post id where reaction belong',
@@ -26,7 +19,7 @@ export class AddReactionDto {
     required: true,
   })
   @IsMongoId()
-  postId: ObjectId;
+  postId: ID;
 
   @ApiProperty({
     description: 'Post reaction',

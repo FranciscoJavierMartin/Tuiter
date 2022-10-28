@@ -1,4 +1,4 @@
-import { ObjectId } from 'mongodb';
+import { ID } from '@/shared/interfaces/types';
 
 export enum Feelings {
   angry = 'angry',
@@ -19,7 +19,7 @@ export interface AddReactionJobData {
 }
 
 export interface AddReactionData {
-  postId: ObjectId;
+  postId: ID;
   feeling: Feelings;
   avatarColor: string;
   username: string;
@@ -27,6 +27,6 @@ export interface AddReactionData {
 }
 
 export interface RemoveReactionJobData {
-  postId: ObjectId;
+  postId: ID;
   username: string;
 }

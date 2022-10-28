@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectQueue } from '@nestjs/bull';
 import { Queue } from 'bull';
-import { ObjectId } from 'mongodb';
+import { ID } from '@/shared/interfaces/types';
 import { CurrentUser } from '@/auth/interfaces/current-user.interface';
 import { AddReactionDto } from '@/reaction/dto/requests/add-reaction.dto';
 import {
@@ -41,7 +41,7 @@ export class ReactionService {
    * @param postId Post id
    * @param username Username who react to post
    */
-  public remove(postId: ObjectId, username: string): void {
+  public remove(postId: ID, username: string): void {
     this.reactionQueue.add('removePostReaction', {
       postId,
       username,

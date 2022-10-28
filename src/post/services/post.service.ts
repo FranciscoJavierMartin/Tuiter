@@ -10,7 +10,6 @@ import mongoose from 'mongoose';
 import { Server } from 'socket.io';
 import { Queue } from 'bull';
 import { UploadApiResponse } from 'cloudinary';
-import { ID } from '@/shared/interfaces/types';
 import { UploaderService } from '@/shared/services/uploader.service';
 import { CurrentUser } from '@/auth/interfaces/current-user.interface';
 import { CreatePostDto } from '@/post/dto/requests/create-post.dto';
