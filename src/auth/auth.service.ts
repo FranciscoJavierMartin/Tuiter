@@ -15,6 +15,7 @@ import {
   MailResetPasswordData,
 } from '@/shared/emails/interfaces/email';
 import { UploaderService } from '@/shared/services/uploader.service';
+import { ID } from '@/shared/interfaces/types';
 import { UserService } from '@/user/services/user.service';
 import { UserCacheService } from '@/user/services/user.cache.service';
 import { UserDocument } from '@/user/models/user.model';
@@ -77,7 +78,7 @@ export class AuthService {
     try {
       avatarUploaded = await this.uploaderService.uploadImage(
         avatarImage,
-        userObjectId.toString(),
+        userObjectId,
         true,
         true,
       );
@@ -95,7 +96,7 @@ export class AuthService {
       avatarUploaded.public_id,
     );
     await this.userCacheService.storeUserToCache(
-      userObjectId.toString(),
+      userObjectId,
       uId,
       userDataToCache,
     );
@@ -137,7 +138,7 @@ export class AuthService {
     );
 
     const userJwt: string = this.signToken({
-      userId: user._id as ObjectId,
+      userId: user._id as ID,
       uId: authUser.uId,
       email: authUser.email,
       username: authUser.username,
@@ -257,7 +258,7 @@ export class AuthService {
     username: string;
     avatarColor: string;
     profilePicture: string;
-    userId: ObjectId;
+    userId: ID;
   }): string {
     return this.jwtService.sign({
       userId,
