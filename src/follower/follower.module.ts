@@ -6,15 +6,25 @@ import { FollowerController } from '@/follower/follower.controller';
 import { Follower, FollowerSchema } from '@/follower/models/follower.model';
 import { FollowerCacheService } from './services/follower.cache.service';
 import { BlockUserCacheService } from './services/block-user.cache.service';
+import { BlockUserRepository } from './repositories/block-user.repository.service';
+import { UserModule } from '@/user/user.module';
+import { User, UserSchema } from '@/user/models/user.model';
 
 @Module({
   imports: [
     MongooseModule.forFeature([
       { name: Follower.name, schema: FollowerSchema },
+      { name: User.name, schema: UserSchema },
     ]),
     PassportModule.register({ defaultStrategy: 'jwt' }),
+    UserModule,
   ],
   controllers: [FollowerController],
-  providers: [FollowerService, FollowerCacheService, BlockUserCacheService],
+  providers: [
+    FollowerService,
+    FollowerCacheService,
+    BlockUserCacheService,
+    BlockUserRepository,
+  ],
 })
 export class FollowerModule {}
