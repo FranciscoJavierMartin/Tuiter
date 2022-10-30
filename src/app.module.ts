@@ -11,6 +11,7 @@ import { PostModule } from '@/post/post.module';
 import { ReactionModule } from '@/reaction/reaction.module';
 import { CommentModule } from '@/comment/comment.module';
 import { FollowerModule } from '@/follower/follower.module';
+import { BlockUserModule } from '@/block-user/block-user.module';
 
 @Module({
   imports: [
@@ -56,6 +57,7 @@ import { FollowerModule } from '@/follower/follower.module';
     ReactionModule,
     CommentModule,
     FollowerModule,
+    BlockUserModule,
   ],
   controllers: [],
   providers: [],
