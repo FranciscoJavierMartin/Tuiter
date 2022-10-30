@@ -14,7 +14,7 @@ export class BlockUserController {
 
   @Put('block/:followerId')
   @UseGuards(AuthGuard(), NotMySelfGuard)
-  public block(
+  public async block(
     @Param('followerId', ValidateIdPipe) followerId: ID,
     @GetUser('userId') [userId]: string,
   ) {
