@@ -6,9 +6,10 @@ import { FollowerController } from '@/follower/follower.controller';
 import { Follower, FollowerSchema } from '@/follower/models/follower.model';
 import { FollowerCacheService } from './services/follower.cache.service';
 import { BlockUserCacheService } from './services/block-user.cache.service';
-import { BlockUserRepository } from './repositories/block-user.repository.service';
+import { BlockUserRepository } from './repositories/block-user.repository';
 import { UserModule } from '@/user/user.module';
 import { User, UserSchema } from '@/user/models/user.model';
+import { FollowerRepository } from './repositories/follower.repository';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { User, UserSchema } from '@/user/models/user.model';
     FollowerCacheService,
     BlockUserCacheService,
     BlockUserRepository,
+    FollowerRepository,
   ],
 })
 export class FollowerModule {}

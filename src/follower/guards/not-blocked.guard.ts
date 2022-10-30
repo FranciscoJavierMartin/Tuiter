@@ -1,5 +1,5 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
-import { BlockUserRepository } from '@/follower/repositories/block-user.repository.service';
+import { BlockUserRepository } from '@/follower/repositories/block-user.repository';
 
 @Injectable()
 export class NotBlockedGuard implements CanActivate {

@@ -20,6 +20,6 @@ export class FollowerController {
     @Param('followeeId', ValidateIdPipe) followeeId: ID,
     @GetUser() user: CurrentUser,
   ) {
-    // return this.followerService.follow(followeeId, user.userId, user.username);
+    return this.followerService.follow(followeeId, user.userId, user.username);
   }
 }
