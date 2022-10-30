@@ -52,4 +52,20 @@ export class FollowerService {
       userId,
     });
   }
+
+  public async unfollow(followeeId: ID, userId: ID) {
+    // TODO: Move to decorator
+    if (!(await this.followerRepository.isFollowing(userId, followeeId))) {
+      throw new BadRequestException('User is not following followee user');
+    }
+
+    await Promise.all([
+      this.followerCacheService.decrementFollowingCountInCache(userId),
+      this.followerCacheService.decrementFollowersCountInCache(followeeId),
+      this.followerCacheService.removeFollowerUserInCache(followeeId, userId),
+      this.followerCacheService.removeFollowingUserInCache(userId, followeeId),
+    ]);
+
+    // this.followerQueue.add()
+  }
 }

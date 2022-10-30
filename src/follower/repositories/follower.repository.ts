@@ -20,6 +20,7 @@ export class FollowerRepository {
   }
 
   public async saveFollowerInDB(userId: ID, followeeId: ID) {
+    // TODO: Check how to do with BulkWrite
     await Promise.all([
       this.followerModel.create({
         followeeId,
