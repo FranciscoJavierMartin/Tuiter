@@ -41,7 +41,7 @@ export class FollowerService {
     await Promise.all([
       this.followerCacheService.incrementFollowingCountInCache(userId),
       this.followerCacheService.incrementFollowersCountInCache(followeeId),
-      this.followerCacheService.saveFollowerUserInCache(followeeId, userId),
+      this.followerCacheService.saveFollowerUserInCache(userId, followeeId),
       this.followerCacheService.saveFollowingUserInCache(userId, followeeId),
     ]);
 

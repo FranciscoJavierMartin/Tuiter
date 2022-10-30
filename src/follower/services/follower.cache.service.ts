@@ -19,7 +19,7 @@ export class FollowerCacheService extends BaseCache {
   }
 
   public async incrementFollowersCountInCache(userId: ID): Promise<void> {
-    return this.updateFollowersCount(userId, 'followingCount', 1);
+    return this.updateFollowersCount(userId, 'followersCount', 1);
   }
 
   public async decrementFollowingCountInCache(userId: ID): Promise<void> {
@@ -27,7 +27,7 @@ export class FollowerCacheService extends BaseCache {
   }
 
   public async decrementFollowersCountInCache(userId: ID): Promise<void> {
-    return this.updateFollowersCount(userId, 'followingCount', -1);
+    return this.updateFollowersCount(userId, 'followersCount', -1);
   }
 
   public async saveFollowerUserInCache(
