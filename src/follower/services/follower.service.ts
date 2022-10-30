@@ -62,7 +62,7 @@ export class FollowerService {
     await Promise.all([
       this.followerCacheService.decrementFollowingCountInCache(userId),
       this.followerCacheService.decrementFollowersCountInCache(followeeId),
-      this.followerCacheService.removeFollowerUserInCache(followeeId, userId),
+      this.followerCacheService.removeFollowerUserInCache(userId, followeeId),
       this.followerCacheService.removeFollowingUserInCache(userId, followeeId),
     ]);
 
