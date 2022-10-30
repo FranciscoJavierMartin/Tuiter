@@ -1,4 +1,8 @@
-import { REDIS_USERS_COLLECTION } from '@/shared/contants';
+import {
+  REDIS_FOLLOWERS_COLLECTION,
+  REDIS_FOLLOWING_COLLECTION,
+  REDIS_USERS_COLLECTION,
+} from '@/shared/contants';
 import { ID } from '@/shared/interfaces/types';
 import { BaseCache } from '@/shared/redis/base.cache';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
@@ -18,6 +22,26 @@ export class FollowerCacheService extends BaseCache {
     return this.updateFollowersCount(userId, 'followingCount', 1);
   }
 
+  public async saveFollowerUserInCache(
+    userId: ID,
+    followeeId: ID,
+  ): Promise<void> {
+    return this.storeFollowerInCache(
+      `${REDIS_FOLLOWERS_COLLECTION}:${followeeId}`,
+      userId,
+    );
+  }
+
+  public async saveFollowingUserInCache(
+    userId: ID,
+    followeeId: ID,
+  ): Promise<void> {
+    return this.storeFollowerInCache(
+      `${REDIS_FOLLOWING_COLLECTION}:${userId}`,
+      followeeId,
+    );
+  }
+
   private async updateFollowersCount(
     userId: ID,
     field: 'followersCount' | 'followingCount',
@@ -29,6 +53,15 @@ export class FollowerCacheService extends BaseCache {
         field,
         value,
       );
+    } catch (error) {
+      this.logger.error(error);
+      throw new InternalServerErrorException();
+    }
+  }
+
+  private async storeFollowerInCache(key: string, value: ID): Promise<void> {
+    try {
+      await this.client.LPUSH(key, value.toString());
     } catch (error) {
       this.logger.error(error);
       throw new InternalServerErrorException();
