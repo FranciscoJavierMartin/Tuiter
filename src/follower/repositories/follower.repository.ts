@@ -19,13 +19,25 @@ export class FollowerRepository {
     });
   }
 
-  public async saveFollowerInDB(userId: ID, followeeId: ID) {
+  public async saveFollowerInDB(userId: ID, followeeId: ID): Promise<void> {
+    // TODO: Check how to do with BulkWrite
     await Promise.all([
       this.followerModel.create({
         followeeId,
         followerId: userId,
       }),
       this.userRepository.updateUserFollowersCount(userId, followeeId, 1),
+    ]);
+  }
+
+  public async removeFollowerFromDB(userId: ID, followeeId: ID): Promise<void> {
+    // TODO: Check how to do with BulkWrite
+    await Promise.all([
+      this.followerModel.findOneAndRemove({
+        followeeId,
+        followerId: userId,
+      }),
+      this.userRepository.updateUserFollowersCount(userId, followeeId, -1),
     ]);
   }
 }

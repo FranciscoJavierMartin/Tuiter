@@ -19,7 +19,15 @@ export class FollowerCacheService extends BaseCache {
   }
 
   public async incrementFollowersCountInCache(userId: ID): Promise<void> {
-    return this.updateFollowersCount(userId, 'followingCount', 1);
+    return this.updateFollowersCount(userId, 'followersCount', 1);
+  }
+
+  public async decrementFollowingCountInCache(userId: ID): Promise<void> {
+    return this.updateFollowersCount(userId, 'followingCount', -1);
+  }
+
+  public async decrementFollowersCountInCache(userId: ID): Promise<void> {
+    return this.updateFollowersCount(userId, 'followersCount', -1);
   }
 
   public async saveFollowerUserInCache(
@@ -37,6 +45,26 @@ export class FollowerCacheService extends BaseCache {
     followeeId: ID,
   ): Promise<void> {
     return this.storeFollowerInCache(
+      `${REDIS_FOLLOWING_COLLECTION}:${userId}`,
+      followeeId,
+    );
+  }
+
+  public async removeFollowerUserInCache(
+    userId: ID,
+    followeeId: ID,
+  ): Promise<void> {
+    return this.deleteFollowerInCache(
+      `${REDIS_FOLLOWERS_COLLECTION}:${followeeId}`,
+      userId,
+    );
+  }
+
+  public async removeFollowingUserInCache(
+    userId: ID,
+    followeeId: ID,
+  ): Promise<void> {
+    return this.deleteFollowerInCache(
       `${REDIS_FOLLOWING_COLLECTION}:${userId}`,
       followeeId,
     );
@@ -62,6 +90,15 @@ export class FollowerCacheService extends BaseCache {
   private async storeFollowerInCache(key: string, value: ID): Promise<void> {
     try {
       await this.client.LPUSH(key, value.toString());
+    } catch (error) {
+      this.logger.error(error);
+      throw new InternalServerErrorException();
+    }
+  }
+
+  private async deleteFollowerInCache(key: string, value: ID): Promise<void> {
+    try {
+      await this.client.LREM(key, 1, value.toString());
     } catch (error) {
       this.logger.error(error);
       throw new InternalServerErrorException();
