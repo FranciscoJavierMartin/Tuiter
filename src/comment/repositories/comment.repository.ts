@@ -26,9 +26,7 @@ export class CommentRepository {
   }: AddCommentJobData): Promise<void> {
     const comments: Promise<Comment> = this.commentModel.create(comment);
     const post: Promise<Post> = this.postRepository.incrementPostCount(postId);
-    const user: Promise<User> = this.userRepository.getUserById(
-      userTo.toString(),
-    );
+    const user: Promise<User> = this.userRepository.getUserById(userTo);
     const response: [Comment, Post, User] = await Promise.all([
       comments,
       post,

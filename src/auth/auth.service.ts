@@ -168,7 +168,7 @@ export class AuthService {
    * @param userId User id to find it
    * @returns User from cache or DB
    */
-  public async getUser(userId: string): Promise<UserDocument> {
+  public async getUser(userId: ID): Promise<UserDocument> {
     const cachedUser: UserDocument =
       await this.userCacheService.getUserFromCache(userId);
 

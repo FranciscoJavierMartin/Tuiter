@@ -58,16 +58,10 @@ $ npm run test:e2e
 $ npm run test:cov
 ```
 
-## Support
+## Follower model consideration
+For a better understanding of the follower model, think in the next example.
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
+- A cat is a follower for a mouse. 
+- A mouse is a followee for a cat.
+- A follower follows a followee.
+- A followee is being followed by a follower

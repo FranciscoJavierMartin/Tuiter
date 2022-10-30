@@ -10,6 +10,7 @@ import { SharedModule } from '@/shared/shared.module';
 import { PostModule } from '@/post/post.module';
 import { ReactionModule } from '@/reaction/reaction.module';
 import { CommentModule } from '@/comment/comment.module';
+import { FollowerModule } from '@/follower/follower.module';
 
 @Module({
   imports: [
@@ -54,6 +55,7 @@ import { CommentModule } from '@/comment/comment.module';
     PostModule,
     ReactionModule,
     CommentModule,
+    FollowerModule,
   ],
   controllers: [],
   providers: [],

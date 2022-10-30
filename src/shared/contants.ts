@@ -17,3 +17,5 @@ export const REDIS_COMMENTS_COLLECTION = 'comments';
 export const REDIS_POSTS_COLLECTION = 'posts';
 export const REDIS_REACTIONS_COLLECTION = 'reactions';
 export const REDIS_USERS_COLLECTION = 'users';
+export const REDIS_FOLLOWING_COLLECTION = 'following';
+export const REDIS_FOLLOWERS_COLLECTION = 'followers';
