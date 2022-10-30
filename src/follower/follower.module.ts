@@ -5,6 +5,7 @@ import { FollowerService } from '@/follower/services/follower.service';
 import { FollowerController } from '@/follower/follower.controller';
 import { Follower, FollowerSchema } from '@/follower/models/follower.model';
 import { FollowerCacheService } from './services/follower.cache.service';
+import { BlockUserCacheService } from './services/block-user.cache.service';
 
 @Module({
   imports: [
@@ -14,6 +15,6 @@ import { FollowerCacheService } from './services/follower.cache.service';
     PassportModule.register({ defaultStrategy: 'jwt' }),
   ],
   controllers: [FollowerController],
-  providers: [FollowerService, FollowerCacheService],
+  providers: [FollowerService, FollowerCacheService, BlockUserCacheService],
 })
 export class FollowerModule {}
