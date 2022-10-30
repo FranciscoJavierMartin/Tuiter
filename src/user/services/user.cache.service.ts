@@ -2,8 +2,9 @@ import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { parseJson } from '@/helpers/utils';
 import { BaseCache } from '@/shared/redis/base.cache';
-import { UserDocument } from '@/user/models/user.model';
 import { REDIS_USERS_COLLECTION } from '@/shared/contants';
+import { ID } from '@/shared/interfaces/types';
+import { UserDocument } from '@/user/models/user.model';
 
 @Injectable()
 export class UserCacheService extends BaseCache {
@@ -103,13 +104,13 @@ export class UserCacheService extends BaseCache {
 
   /**
    * Retrieve user from cache
-   * @param key User key to search
+   * @param userId User key to search
    * @returns
    */
-  public async getUserFromCache(key: string): Promise<UserDocument | null> {
+  public async getUserFromCache(userId: ID): Promise<UserDocument | null> {
     try {
       const response: UserDocument = (await this.client.HGETALL(
-        `users:${key}`,
+        `users:${userId}`,
       )) as unknown as UserDocument;
 
       response.createdAt = new Date(parseJson(`${response.createdAt}`));

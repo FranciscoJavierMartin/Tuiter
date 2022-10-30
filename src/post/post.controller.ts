@@ -32,7 +32,7 @@ import { GetUser } from '@/auth/decorators/get-user.decorator';
 import { PostService } from '@/post/services/post.service';
 import { CreatePostDto } from '@/post/dto/requests/create-post.dto';
 import { PostsDto } from '@/post/dto/responses/posts.dto';
-import { IsAuthorGuard } from '@/post/decorators/is-author.guard';
+import { IsAuthorGuard } from '@/post/guards/is-author.guard';
 import { UpdatePostDto } from '@/post/dto/requests/update-post.dto';
 
 @ApiTags('Post')

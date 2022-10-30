@@ -2,6 +2,7 @@ import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { parseJson } from '@/helpers/utils';
 import { BaseCache } from '@/shared/redis/base.cache';
+import { ID } from '@/shared/interfaces/types';
 import { Post } from '@/post/models/post.model';
 import {
   REDIS_COMMENTS_COLLECTION,
@@ -25,7 +26,7 @@ export class PostCacheService extends BaseCache {
    */
   public async storePostToCache(
     key: string,
-    currentUserId: string,
+    currentUserId: ID,
     uId: string,
     post: Post,
   ) {

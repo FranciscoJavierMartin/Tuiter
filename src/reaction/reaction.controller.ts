@@ -17,7 +17,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { ValidateIdPipe } from '@/shared/pipes/validate-id.pipe';
 import { GetUser } from '@/auth/decorators/get-user.decorator';
 import { CurrentUser } from '@/auth/interfaces/current-user.interface';
-import { IsNotAuthorGuard } from '@/post/decorators/is-not-author.guard';
+import { IsNotAuthorGuard } from '@/post/guards/is-not-author.guard';
 import { ReactionService } from '@/reaction/services/reaction.service';
 import { AddReactionDto } from '@/reaction/dto/requests/add-reaction.dto';
 import { ID } from '@/shared/interfaces/types';
