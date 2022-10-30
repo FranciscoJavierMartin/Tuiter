@@ -1,5 +1,5 @@
 import { Controller, Get, Param, Put, UseGuards } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { ID } from '@/shared/interfaces/types';
 import { ValidateIdPipe } from '@/shared/pipes/validate-id.pipe';
@@ -32,8 +32,11 @@ export class FollowerController {
   }
 
   @Get('following')
+  @ApiOkResponse({
+    description: 'Users who current user follows',
+  })
   @UseGuards(AuthGuard())
   public async getFollowingUsers(@GetUser('userId') [userId]: string) {
-    return userId;
+    return this.followerService.getFollowingUsers(userId as unknown as ID);
   }
 }
