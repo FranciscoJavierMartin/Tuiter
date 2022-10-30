@@ -6,6 +6,7 @@ import { FollowerService } from '@/follower/follower.service';
 import { NotMySelfGuard } from './guards/not-my-self.guard';
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from '@/auth/decorators/get-user.decorator';
+import { CurrentUser } from '@/auth/interfaces/current-user.interface';
 
 @ApiTags('Follow')
 @Controller('user')
@@ -16,7 +17,7 @@ export class FollowerController {
   @UseGuards(AuthGuard(), NotMySelfGuard)
   public async follow(
     @Param('followeeId', ValidateIdPipe) followeeId: ID,
-    @GetUser() user: any,
+    @GetUser() user: CurrentUser,
   ) {
     return { followeeId, user };
   }
