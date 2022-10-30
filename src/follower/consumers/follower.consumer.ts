@@ -28,4 +28,22 @@ export class FollowerConsumer extends BaseConsumer {
       done(error as Error);
     }
   }
+
+  @Process({ name: 'removeFollowerFromDB', concurrency: CONSUMER_CONCURRENCY })
+  public async removeFollowerFromDB(
+    job: Job<AddFollowJobData>,
+    done: DoneCallback,
+  ): Promise<void> {
+    try {
+      await this.followerRepository.removeFollowerFromDB(
+        job.data.userId,
+        job.data.followeeId,
+      );
+      job.progress(100);
+      done(null, job.data);
+    } catch (error) {
+      this.logger.error(error);
+      done(error as Error);
+    }
+  }
 }

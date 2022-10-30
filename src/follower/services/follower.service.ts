@@ -66,6 +66,9 @@ export class FollowerService {
       this.followerCacheService.removeFollowingUserInCache(userId, followeeId),
     ]);
 
-    // this.followerQueue.add()
+    this.followerQueue.add('removeFollowerFromDB', {
+      followeeId,
+      userId,
+    });
   }
 }
