@@ -14,6 +14,14 @@ export class FollowerService {
     private readonly followerRepository: FollowerRepository,
   ) {}
 
+  /**
+   * Check if user is blocked
+   * Check if user is following
+   * Increase following count
+   * Increase followers count
+   * Add to following list
+   * Add to followers list
+   */
   public async follow(followeeId: ID, userId: ID, username: string) {
     // TODO: Remove when decorator is stable
     if (await this.blockUserCacheService.isUserBlockedBy(followeeId, userId)) {
@@ -24,5 +32,10 @@ export class FollowerService {
     if (await this.followerRepository.isFollowing(userId, followeeId)) {
       throw new BadRequestException('User is already following followee user');
     }
+
+    await Promise.all([
+      this.followerCacheService.incrementFollowingCountInCache(userId),
+      this.followerCacheService.incrementFollowersCountInCache(followeeId),
+    ]);
   }
 }
