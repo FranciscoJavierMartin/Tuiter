@@ -51,52 +51,19 @@ export class FollowerRepository {
   public async getFollowingUsers(userId: ObjectId): Promise<FollowerData[]> {
     return this.followerModel.aggregate([
       { $match: { followerId: new ObjectId(userId) } },
-      {
-        $lookup: {
-          from: 'User',
-          localField: 'followeeId',
-          foreignField: '_id',
-          as: 'followeeId',
-        },
-      },
-      { $unwind: '$followeeId' },
-      {
-        $lookup: {
-          from: 'Auth',
-          localField: 'followeeId.authId',
-          foreignField: '_id',
-          as: 'authId',
-        },
-      },
-      { $unwind: '$authId' },
-      {
-        $addFields: {
-          _id: '$followeeId._id',
-          username: '$authId.username',
-          avatarColor: '$authId.avatarColor',
-          uId: '$authId.uId',
-          postCount: '$authId.postsCount',
-          followersCount: '$authId.followersCount',
-          followingCount: '$authId.followingCount',
-          profilePicture: '$authId.profilePicture',
-          userProfile: '$followeeId',
-        },
-      },
-      {
-        $project: {
-          authId: 0,
-          followerId: 0,
-          followeeId: 0,
-          createdAt: 0,
-          __v: 0,
-        },
-      },
+      ...this.getSchemaDataForFollowers(),
     ]);
   }
 
   public async getFollowers(userId: ObjectId): Promise<FollowerData[]> {
     return this.followerModel.aggregate([
       { $match: { followeeId: new ObjectId(userId) } },
+      ...this.getSchemaDataForFollowers(),
+    ]);
+  }
+
+  private getSchemaDataForFollowers() {
+    return [
       {
         $lookup: {
           from: 'User',
@@ -137,6 +104,6 @@ export class FollowerRepository {
           __v: 0,
         },
       },
-    ]);
+    ];
   }
 }
