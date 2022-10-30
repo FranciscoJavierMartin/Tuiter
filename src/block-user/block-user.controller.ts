@@ -5,7 +5,7 @@ import { ValidateIdPipe } from '@/shared/pipes/validate-id.pipe';
 import { ID } from '@/shared/interfaces/types';
 import { GetUser } from '@/auth/decorators/get-user.decorator';
 import { NotMySelfGuard } from '@/follower/guards/not-my-self.guard';
-import { BlockUserService } from '@/block-user/block-user.service';
+import { BlockUserService } from '@/block-user/services/block-user.service';
 
 @ApiTags('Block user')
 @Controller('user')
@@ -18,6 +18,6 @@ export class BlockUserController {
     @Param('followerId', ValidateIdPipe) followerId: ID,
     @GetUser('userId') [userId]: string,
   ) {
-    return { followerId, userId };
+    return this.blockUserService.block(userId as unknown as ID, followerId);
   }
 }

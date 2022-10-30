@@ -3,7 +3,7 @@ import { InjectQueue } from '@nestjs/bull';
 import { Queue } from 'bull';
 import { ID } from '@/shared/interfaces/types';
 import { FollowerCacheService } from '@/follower/services/follower.cache.service';
-import { BlockUserCacheService } from '@/follower/services/block-user.cache.service';
+import { BlockUserCacheService } from '@/block-user/services/block-user.cache.service';
 import { FollowerRepository } from '@/follower/repositories/follower.repository';
 import { FollowJobData } from '@/follower/interfaces/follower.interface';
 
