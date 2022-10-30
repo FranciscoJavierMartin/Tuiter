@@ -1,10 +1,11 @@
 import { Controller, Param, Put, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { AuthGuard } from '@nestjs/passport';
 import { ValidateIdPipe } from '@/shared/pipes/validate-id.pipe';
 import { ID } from '@/shared/interfaces/types';
-import { BlockUserService } from '@/block-user/block-user.service';
-import { AuthGuard } from '@nestjs/passport';
+import { GetUser } from '@/auth/decorators/get-user.decorator';
 import { NotMySelfGuard } from '@/follower/guards/not-my-self.guard';
+import { BlockUserService } from '@/block-user/block-user.service';
 
 @ApiTags('Block user')
 @Controller('user')
@@ -13,7 +14,10 @@ export class BlockUserController {
 
   @Put('block/:followerId')
   @UseGuards(AuthGuard(), NotMySelfGuard)
-  public block(@Param('followerId', ValidateIdPipe) followerId: ID) {
-    return followerId;
+  public block(
+    @Param('followerId', ValidateIdPipe) followerId: ID,
+    @GetUser('userId') [userId]: string,
+  ) {
+    return { followerId, userId };
   }
 }
