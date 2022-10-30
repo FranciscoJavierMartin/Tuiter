@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import mongoose, { Model } from 'mongoose';
+import { ObjectId } from 'mongodb';
 import { ID } from '@/shared/interfaces/types';
 import { User, UserDocument } from '@/user/models/user.model';
 
@@ -91,6 +92,25 @@ export class UserRepository {
         $inc: { postsCount: -1 },
       })
       .exec();
+  }
+
+  public async updateUserFollowersCount(
+    followerId: ObjectId,
+    followeeId: ObjectId,
+    increment: number,
+  ): Promise<void> {
+    await Promise.all([
+      this.userModel.findByIdAndUpdate(followerId, {
+        $inc: {
+          followingCount: increment,
+        },
+      }),
+      this.userModel.findByIdAndUpdate(followeeId, {
+        $inc: {
+          followersCount: increment,
+        },
+      }),
+    ]);
   }
 
   /**
