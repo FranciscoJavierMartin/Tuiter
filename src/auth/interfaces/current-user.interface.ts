@@ -1,5 +1,7 @@
+import { ID } from '@/shared/interfaces/types';
+
 export interface CurrentUser {
-  userId: string;
+  userId: ID;
   uId: string;
   email: string;
   username: string;

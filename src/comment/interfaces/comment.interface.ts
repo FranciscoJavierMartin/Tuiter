@@ -6,7 +6,7 @@ export type CommentJobData = AddCommentJobData;
 export interface AddCommentJobData {
   postId: ID;
   userTo: ID;
-  userFrom: string;
+  userFrom: ID;
   username: string;
   comment: Comment;
 }

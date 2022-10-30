@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import mongoose, { Model } from 'mongoose';
+import { ID } from '@/shared/interfaces/types';
 import { User, UserDocument } from '@/user/models/user.model';
 
 @Injectable()
@@ -21,7 +22,7 @@ export class UserRepository {
    * @param userId user id
    * @returns User from DB
    */
-  public async getUserById(userId: string): Promise<UserDocument> {
+  public async getUserById(userId: ID): Promise<UserDocument> {
     const users: UserDocument[] = await this.userModel.aggregate([
       { $match: { _id: new mongoose.Types.ObjectId(userId) } },
       {
