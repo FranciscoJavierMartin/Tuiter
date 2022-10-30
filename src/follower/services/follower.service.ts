@@ -84,4 +84,15 @@ export class FollowerService {
 
     return followingUsers;
   }
+
+  public async getFollowers(userId: ID) {
+    const cachedFollowers =
+      await this.followerCacheService.getFollowersFromCache(userId);
+
+    const followers = cachedFollowers.length
+      ? cachedFollowers
+      : await this.followerRepository.getFollowers(userId);
+
+    return followers;
+  }
 }

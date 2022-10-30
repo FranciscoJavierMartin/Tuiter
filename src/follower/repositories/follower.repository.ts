@@ -49,7 +49,6 @@ export class FollowerRepository {
   }
 
   public async getFollowingUsers(userId: ObjectId): Promise<FollowerData[]> {
-    console.log(typeof userId);
     return this.followerModel.aggregate([
       { $match: { followerId: new ObjectId(userId) } },
       {

@@ -38,4 +38,12 @@ export class FollowerController {
   public async getFollowingUsers(@Param('userId', ValidateIdPipe) userId: ID) {
     return this.followerService.getFollowingUsers(userId);
   }
+
+  @Get('followers/:userId')
+  @ApiOkResponse({
+    description: 'Users who follow passed user',
+  })
+  public async getFollowers(@Param('userId', ValidateIdPipe) userId: ID) {
+    return this.followerService.getFollowers(userId);
+  }
 }
