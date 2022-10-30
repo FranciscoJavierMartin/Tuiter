@@ -1,17 +1,18 @@
 import { Module } from '@nestjs/common';
 import { PassportModule } from '@nestjs/passport';
 import { MongooseModule } from '@nestjs/mongoose';
+import { BullModule } from '@nestjs/bull';
+import { DEFAULT_JOB_OPTIONS } from '@/shared/contants';
+import { UserModule } from '@/user/user.module';
 import { FollowerService } from '@/follower/services/follower.service';
 import { FollowerController } from '@/follower/follower.controller';
 import { Follower, FollowerSchema } from '@/follower/models/follower.model';
-import { FollowerCacheService } from './services/follower.cache.service';
-import { BlockUserCacheService } from './services/block-user.cache.service';
-import { BlockUserRepository } from './repositories/block-user.repository';
-import { UserModule } from '@/user/user.module';
+import { FollowerCacheService } from '@/follower/services/follower.cache.service';
+import { BlockUserCacheService } from '@/follower/services/block-user.cache.service';
+import { BlockUserRepository } from '@/follower/repositories/block-user.repository';
 import { User, UserSchema } from '@/user/models/user.model';
-import { FollowerRepository } from './repositories/follower.repository';
-import { BullModule } from '@nestjs/bull';
-import { DEFAULT_JOB_OPTIONS } from '@/shared/contants';
+import { FollowerRepository } from '@/follower/repositories/follower.repository';
+import { FollowerConsumer } from '@/follower/consumers/follower.consumer';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { DEFAULT_JOB_OPTIONS } from '@/shared/contants';
     BlockUserCacheService,
     BlockUserRepository,
     FollowerRepository,
+    FollowerConsumer,
   ],
 })
 export class FollowerModule {}

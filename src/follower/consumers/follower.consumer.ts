@@ -6,13 +6,13 @@ import { AddFollowJobData } from '@/follower/interfaces/follower.interface';
 import { FollowerRepository } from '@/follower/repositories/follower.repository';
 
 @Processor('follower')
-export class PostConsumer extends BaseConsumer {
+export class FollowerConsumer extends BaseConsumer {
   constructor(private readonly followerRepository: FollowerRepository) {
     super('FollowerConsumer');
   }
 
-  @Process({ name: 'addPostToDB', concurrency: CONSUMER_CONCURRENCY })
-  public async addPostToDB(
+  @Process({ name: 'addFollowerToDB', concurrency: CONSUMER_CONCURRENCY })
+  public async addFollowerToDB(
     job: Job<AddFollowJobData>,
     done: DoneCallback,
   ): Promise<void> {
