@@ -49,9 +49,21 @@ export class FollowerRepository {
   }
 
   public async getFollowingUsers(userId: ObjectId): Promise<FollowerData[]> {
-    console.log(typeof userId);
     return this.followerModel.aggregate([
       { $match: { followerId: new ObjectId(userId) } },
+      ...this.getSchemaDataForFollowers(),
+    ]);
+  }
+
+  public async getFollowers(userId: ObjectId): Promise<FollowerData[]> {
+    return this.followerModel.aggregate([
+      { $match: { followeeId: new ObjectId(userId) } },
+      ...this.getSchemaDataForFollowers(),
+    ]);
+  }
+
+  private getSchemaDataForFollowers() {
+    return [
       {
         $lookup: {
           from: 'User',
@@ -92,6 +104,6 @@ export class FollowerRepository {
           __v: 0,
         },
       },
-    ]);
+    ];
   }
 }

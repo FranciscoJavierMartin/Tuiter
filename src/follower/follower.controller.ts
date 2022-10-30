@@ -31,12 +31,19 @@ export class FollowerController {
     return this.followerService.unfollow(followeeId, user.userId);
   }
 
-  @Get('following')
+  @Get('following/:userId')
   @ApiOkResponse({
-    description: 'Users who current user follows',
+    description: 'Users who passed user follows',
   })
-  @UseGuards(AuthGuard())
-  public async getFollowingUsers(@GetUser('userId') [userId]: string) {
-    return this.followerService.getFollowingUsers(userId as unknown as ID);
+  public async getFollowingUsers(@Param('userId', ValidateIdPipe) userId: ID) {
+    return this.followerService.getFollowingUsers(userId);
+  }
+
+  @Get('followers/:userId')
+  @ApiOkResponse({
+    description: 'Users who follow passed user',
+  })
+  public async getFollowers(@Param('userId', ValidateIdPipe) userId: ID) {
+    return this.followerService.getFollowers(userId);
   }
 }

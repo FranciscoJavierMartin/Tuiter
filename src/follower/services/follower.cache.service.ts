@@ -1,5 +1,6 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import mongoose from 'mongoose';
 import { ObjectId } from 'mongodb';
 import {
   REDIS_FOLLOWERS_COLLECTION,
@@ -11,7 +12,6 @@ import { BaseCache } from '@/shared/redis/base.cache';
 import { UserCacheService } from '@/user/services/user.cache.service';
 import { UserDocument } from '@/user/models/user.model';
 import { FollowerData } from '@/follower/interfaces/follower.interface';
-import mongoose from 'mongoose';
 
 @Injectable()
 export class FollowerCacheService extends BaseCache {
@@ -22,38 +22,12 @@ export class FollowerCacheService extends BaseCache {
     super('FollowerCache', configService);
   }
 
-  public async getFollowingUsersFromCache(userId: ID) {
-    try {
-      const response: string[] = await this.client.LRANGE(
-        `${REDIS_FOLLOWING_COLLECTION}:${userId}`,
-        0,
-        -1,
-      );
-      const followingUsers: FollowerData[] = [];
+  public async getFollowingUsersFromCache(userId: ID): Promise<FollowerData[]> {
+    return this.getFollowerUsersFromCache(userId, REDIS_FOLLOWING_COLLECTION);
+  }
 
-      for (const item of response) {
-        const user: UserDocument = await this.userCacheService.getUserFromCache(
-          new ObjectId(item),
-        );
-
-        followingUsers.push({
-          _id: new mongoose.Types.ObjectId(user._id),
-          username: user.username,
-          avatarColor: user.avatarColor,
-          postCount: user.postsCount,
-          followersCount: user.followersCount,
-          followingCount: user.followingCount,
-          profilePicture: user.profilePicture,
-          uId: user.uId,
-          userProfile: user,
-        });
-      }
-
-      return followingUsers;
-    } catch (error) {
-      this.logger.error(error);
-      throw new InternalServerErrorException();
-    }
+  public async getFollowersFromCache(userId: ID) {
+    return this.getFollowerUsersFromCache(userId, REDIS_FOLLOWERS_COLLECTION);
   }
 
   public async incrementFollowingCountInCache(userId: ID): Promise<void> {
@@ -141,6 +115,40 @@ export class FollowerCacheService extends BaseCache {
   private async deleteFollowerInCache(key: string, value: ID): Promise<void> {
     try {
       await this.client.LREM(key, 1, value.toString());
+    } catch (error) {
+      this.logger.error(error);
+      throw new InternalServerErrorException();
+    }
+  }
+
+  private async getFollowerUsersFromCache(userId: ID, collection: string) {
+    try {
+      const response: string[] = await this.client.LRANGE(
+        `${collection}:${userId}`,
+        0,
+        -1,
+      );
+      const followingUsers: FollowerData[] = [];
+
+      for (const item of response) {
+        const user: UserDocument = await this.userCacheService.getUserFromCache(
+          new ObjectId(item),
+        );
+
+        followingUsers.push({
+          _id: new mongoose.Types.ObjectId(user._id),
+          username: user.username,
+          avatarColor: user.avatarColor,
+          postCount: user.postsCount,
+          followersCount: user.followersCount,
+          followingCount: user.followingCount,
+          profilePicture: user.profilePicture,
+          uId: user.uId,
+          userProfile: user,
+        });
+      }
+
+      return followingUsers;
     } catch (error) {
       this.logger.error(error);
       throw new InternalServerErrorException();
