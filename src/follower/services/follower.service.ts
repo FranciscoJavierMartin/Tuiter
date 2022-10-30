@@ -1,9 +1,12 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
+import { InjectQueue } from '@nestjs/bull';
+import { Queue } from 'bull';
 import { ID } from '@/shared/interfaces/types';
+import { UserCacheService } from '@/user/services/user.cache.service';
 import { FollowerCacheService } from '@/follower/services/follower.cache.service';
 import { BlockUserCacheService } from '@/follower/services/block-user.cache.service';
 import { FollowerRepository } from '@/follower/repositories/follower.repository';
-import { UserCacheService } from '@/user/services/user.cache.service';
+import { FollowJobData } from '@/follower/interfaces/follower.interface';
 
 @Injectable()
 export class FollowerService {
@@ -12,6 +15,8 @@ export class FollowerService {
     private readonly followerCacheService: FollowerCacheService,
     private readonly blockUserCacheService: BlockUserCacheService,
     private readonly followerRepository: FollowerRepository,
+    @InjectQueue('follower')
+    private readonly followerQueue: Queue<FollowJobData>,
   ) {}
 
   /**
@@ -41,5 +46,10 @@ export class FollowerService {
     ]);
 
     // TODO: Emit "add follower"
+
+    this.followerQueue.add('addFollowerToDB', {
+      followeeId,
+      userId,
+    });
   }
 }

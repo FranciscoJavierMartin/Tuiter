@@ -10,6 +10,8 @@ import { BlockUserRepository } from './repositories/block-user.repository';
 import { UserModule } from '@/user/user.module';
 import { User, UserSchema } from '@/user/models/user.model';
 import { FollowerRepository } from './repositories/follower.repository';
+import { BullModule } from '@nestjs/bull';
+import { DEFAULT_JOB_OPTIONS } from '@/shared/contants';
 
 @Module({
   imports: [
@@ -18,6 +20,10 @@ import { FollowerRepository } from './repositories/follower.repository';
       { name: User.name, schema: UserSchema },
     ]),
     PassportModule.register({ defaultStrategy: 'jwt' }),
+    BullModule.registerQueue({
+      name: 'follower',
+      defaultJobOptions: DEFAULT_JOB_OPTIONS,
+    }),
     UserModule,
   ],
   controllers: [FollowerController],
