@@ -36,5 +36,6 @@ import { FollowerConsumer } from '@/follower/consumers/follower.consumer';
     FollowerRepository,
     FollowerConsumer,
   ],
+  exports: [FollowerService, FollowerRepository],
 })
 export class FollowerModule {}
