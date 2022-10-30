@@ -25,7 +25,11 @@ export class FollowerService {
    * Add to following list
    * Add to followers list
    */
-  public async follow(followeeId: ID, userId: ID, username: string) {
+  public async follow(
+    followeeId: ID,
+    userId: ID,
+    username: string,
+  ): Promise<void> {
     // TODO: Remove when decorator is stable
     if (await this.blockUserCacheService.isUserBlockedBy(followeeId, userId)) {
       throw new BadRequestException('User is blocked by followee user');
@@ -51,7 +55,7 @@ export class FollowerService {
     });
   }
 
-  public async unfollow(followeeId: ID, userId: ID) {
+  public async unfollow(followeeId: ID, userId: ID): Promise<void> {
     // TODO: Move to decorator
     if (!(await this.followerRepository.isFollowing(userId, followeeId))) {
       throw new BadRequestException('User is not following followee user');
@@ -68,5 +72,16 @@ export class FollowerService {
       followeeId,
       userId,
     });
+  }
+
+  public async getFollowingUsers(userId: ID) {
+    const cachedFollowingUsers =
+      await this.followerCacheService.getFollowingUsersFromCache(userId);
+
+    const followingUsers = cachedFollowingUsers.length
+      ? cachedFollowingUsers
+      : await this.followerRepository.getFollowingUsers(userId);
+
+    return followingUsers;
   }
 }

@@ -1,3 +1,6 @@
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { ObjectId } from 'mongodb';
 import {
   REDIS_FOLLOWERS_COLLECTION,
   REDIS_FOLLOWING_COLLECTION,
@@ -5,13 +8,52 @@ import {
 } from '@/shared/contants';
 import { ID } from '@/shared/interfaces/types';
 import { BaseCache } from '@/shared/redis/base.cache';
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
+import { UserCacheService } from '@/user/services/user.cache.service';
+import { UserDocument } from '@/user/models/user.model';
+import { FollowerData } from '@/follower/interfaces/follower.interface';
+import mongoose from 'mongoose';
 
 @Injectable()
 export class FollowerCacheService extends BaseCache {
-  constructor(configService: ConfigService) {
+  constructor(
+    configService: ConfigService,
+    private readonly userCacheService: UserCacheService,
+  ) {
     super('FollowerCache', configService);
+  }
+
+  public async getFollowingUsersFromCache(userId: ID) {
+    try {
+      const response: string[] = await this.client.LRANGE(
+        `${REDIS_FOLLOWING_COLLECTION}:${userId}`,
+        0,
+        -1,
+      );
+      const followingUsers: FollowerData[] = [];
+
+      for (const item of response) {
+        const user: UserDocument = await this.userCacheService.getUserFromCache(
+          new ObjectId(item),
+        );
+
+        followingUsers.push({
+          _id: new mongoose.Types.ObjectId(user._id),
+          username: user.username,
+          avatarColor: user.avatarColor,
+          postCount: user.postsCount,
+          followersCount: user.followersCount,
+          followingCount: user.followingCount,
+          profilePicture: user.profilePicture,
+          uId: user.uId,
+          userProfile: user,
+        });
+      }
+
+      return followingUsers;
+    } catch (error) {
+      this.logger.error(error);
+      throw new InternalServerErrorException();
+    }
   }
 
   public async incrementFollowingCountInCache(userId: ID): Promise<void> {
