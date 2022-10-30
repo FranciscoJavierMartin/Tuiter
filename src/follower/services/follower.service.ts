@@ -1,9 +1,14 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { ID } from '@/shared/interfaces/types';
+import { FollowerCacheService } from '@/follower/services/follower.cache.service';
 
 @Injectable()
 export class FollowerService {
-  follow(followeeId: ID, userId: ID, username: string) {
-    throw new Error('Method not implemented.');
+  constructor(private readonly followerCacheService: FollowerCacheService) {}
+
+  public async follow(followeeId: ID, userId: ID, username: string) {
+    if (this.followerCacheService.isUserBlockedBy(followeeId, userId)) {
+      throw new BadRequestException('User is blocked by followee user');
+    }
   }
 }
