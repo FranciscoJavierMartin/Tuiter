@@ -80,7 +80,7 @@ export class FollowerService {
 
     const followingUsers = cachedFollowingUsers.length
       ? cachedFollowingUsers
-      : []; //await this.followerRepository.getFollowingUsers(userId);
+      : await this.followerRepository.getFollowingUsers(userId);
 
     return followingUsers;
   }
