@@ -1,4 +1,4 @@
-import { Controller, Param, Put, UseGuards } from '@nestjs/common';
+import { Controller, Param, Patch, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { ValidateIdPipe } from '@/shared/pipes/validate-id.pipe';
@@ -12,7 +12,7 @@ import { BlockUserService } from '@/block-user/services/block-user.service';
 export class BlockUserController {
   constructor(private readonly blockUserService: BlockUserService) {}
 
-  @Put('block/:followerId')
+  @Patch('block/:followerId')
   @UseGuards(AuthGuard(), NotMySelfGuard)
   public async block(
     @Param('followerId', ValidateIdPipe) followerId: ID,
