@@ -5,7 +5,7 @@ import { createClient } from 'redis';
 export type RedisClient = ReturnType<typeof createClient>;
 
 export abstract class BaseCache implements OnModuleInit {
-  public client: RedisClient;
+  protected client: RedisClient;
   protected logger: Logger;
 
   constructor(cacheName: string, configService: ConfigService) {
