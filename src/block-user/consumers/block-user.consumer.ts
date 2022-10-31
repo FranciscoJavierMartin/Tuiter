@@ -17,6 +17,10 @@ export class BlockUserConsumer extends BaseConsumer {
     done: DoneCallback,
   ): Promise<void> {
     try {
+      await this.blockUserRepository.blockUser(
+        job.data.userId,
+        job.data.followerId,
+      );
       job.progress(100);
       done(null, job.data);
     } catch (error) {
