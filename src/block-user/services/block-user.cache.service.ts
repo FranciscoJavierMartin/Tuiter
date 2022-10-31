@@ -34,6 +34,13 @@ export class BlockUserCacheService extends BaseCache {
     ]);
   }
 
+  public async unblockUser(userId: ID, followerId: ID): Promise<void[]> {
+    return Promise.all([
+      this.unblockUserInCache(userId, followerId, 'blocked'),
+      this.unblockUserInCache(followerId, userId, 'blockedBy'),
+    ]);
+  }
+
   private async blockUserInCache(
     userId: ID,
     followerId: ID,
@@ -50,6 +57,31 @@ export class BlockUserCacheService extends BaseCache {
       await this.client.HSET(`${REDIS_USERS_COLLECTION}:${userId.toString()}`, [
         prop,
         JSON.stringify(blocked),
+      ]);
+    } catch (error) {
+      this.logger.error(error);
+      throw new InternalServerErrorException('Server error. Try again');
+    }
+  }
+
+  private async unblockUserInCache(
+    userId: ID,
+    followerId: ID,
+    prop: 'blocked' | 'blockedBy',
+  ) {
+    try {
+      const response: string = await this.client.HGET(
+        `${REDIS_USERS_COLLECTION}:${userId}`,
+        prop,
+      );
+      const blocked: string[] = parseJson<string[]>(response);
+      const followerIdString = followerId.toString();
+      //TODO: Remove blocked user
+      // blocked.push(followerId.toString());
+
+      await this.client.HSET(`${REDIS_USERS_COLLECTION}:${userId.toString()}`, [
+        prop,
+        JSON.stringify(blocked.filter((id) => id !== followerIdString)),
       ]);
     } catch (error) {
       this.logger.error(error);

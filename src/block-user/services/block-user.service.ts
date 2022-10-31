@@ -33,4 +33,19 @@ export class BlockUserService {
       followerId,
     });
   }
+
+  public async unblock(userId: ID, followerId: ID) {
+    if (
+      !(await this.blockUserCacheService.isUserBlockedBy(userId, followerId))
+    ) {
+      throw new BadRequestException('User is not blocked');
+    }
+
+    await this.blockUserCacheService.unblockUser(userId, followerId);
+
+    // this.blockUserQueue.add('addBlockUserToDB', {
+    //   userId,
+    //   followerId,
+    // });
+  }
 }
