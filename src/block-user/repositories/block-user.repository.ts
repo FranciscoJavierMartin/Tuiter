@@ -47,4 +47,34 @@ export class BlockUserRepository {
       ),
     ]);
   }
+
+  public async unblockUser(
+    userId: ObjectId,
+    followerId: ObjectId,
+  ): Promise<void> {
+    await Promise.all([
+      this.userModel.findOneAndUpdate(
+        {
+          _id: userId,
+          blocked: followerId,
+        },
+        {
+          $pull: {
+            blocked: followerId,
+          },
+        },
+      ),
+      this.userModel.findOneAndUpdate(
+        {
+          _id: followerId,
+          blockedBy: userId,
+        },
+        {
+          $pull: {
+            blockedBy: userId,
+          },
+        },
+      ),
+    ]);
+  }
 }

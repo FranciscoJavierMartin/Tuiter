@@ -43,9 +43,9 @@ export class BlockUserService {
 
     await this.blockUserCacheService.unblockUser(userId, followerId);
 
-    // this.blockUserQueue.add('addBlockUserToDB', {
-    //   userId,
-    //   followerId,
-    // });
+    this.blockUserQueue.add('removeBlockUserToDB', {
+      userId,
+      followerId,
+    });
   }
 }

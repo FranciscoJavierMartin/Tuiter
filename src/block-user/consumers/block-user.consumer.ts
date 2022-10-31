@@ -28,4 +28,22 @@ export class BlockUserConsumer extends BaseConsumer {
       done(error as Error);
     }
   }
+
+  @Process({ name: 'removeBlockUserToDB', concurrency: CONSUMER_CONCURRENCY })
+  public async removeBlockUserToDB(
+    job: Job<AddBlockUserJobData>,
+    done: DoneCallback,
+  ): Promise<void> {
+    try {
+      await this.blockUserRepository.unblockUser(
+        job.data.userId,
+        job.data.followerId,
+      );
+      job.progress(100);
+      done(null, job.data);
+    } catch (error) {
+      this.logger.error(error);
+      done(error as Error);
+    }
+  }
 }
