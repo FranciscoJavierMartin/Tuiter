@@ -13,11 +13,14 @@ export class FollowerRepository {
     @InjectModel(Follower.name) private followerModel: Model<Follower>,
   ) {}
 
-  public async isFollowing(userId: ObjectId, followeeId: ObjectId) {
-    return await this.followerModel.findOne({
+  public async isFollowing(
+    userId: ObjectId,
+    followeeId: ObjectId,
+  ): Promise<boolean> {
+    return !!(await this.followerModel.findOne({
       followeeId,
       followerId: userId,
-    });
+    }));
   }
 
   public async saveFollowerInDB(

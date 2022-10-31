@@ -18,23 +18,19 @@ export class BlockUserService {
   ) {}
 
   public async block(userId: ID, followerId: ID) {
-    const mio = await this.followerRepository.isFollowing(followerId, userId);
-    console.log(mio);
-    return mio;
+    if (await this.blockUserCacheService.isUserBlockedBy(userId, followerId)) {
+      throw new BadRequestException('User is already blocked');
+    }
 
-    //   if (await this.blockUserCacheService.isUserBlockedBy(userId, followerId)) {
-    //   throw new BadRequestException('User is already blocked');
-    // }
+    if (await this.followerRepository.isFollowing(followerId, userId)) {
+      this.followerService.unfollow(userId, followerId);
+    }
 
-    // if (await this.followerRepository.isFollowing(followerId, userId)) {
-    //   this.followerService.unfollow(userId, followerId);
-    // }
+    await this.blockUserCacheService.blockUser(userId, followerId);
 
-    // await this.blockUserCacheService.blockUser(userId, followerId);
-
-    // this.blockUserQueue.add('addBlockUserToDB', {
-    //   userId,
-    //   followerId,
-    // });
+    this.blockUserQueue.add('addBlockUserToDB', {
+      userId,
+      followerId,
+    });
   }
 }
