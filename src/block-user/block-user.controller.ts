@@ -18,6 +18,9 @@ export class BlockUserController {
     @Param('followerId', ValidateIdPipe) followerId: ID,
     @GetUser('userId') [userId]: string,
   ) {
-    return this.blockUserService.block(userId as unknown as ID, followerId);
+    return await this.blockUserService.block(
+      userId as unknown as ID,
+      followerId,
+    );
   }
 }

@@ -9,7 +9,6 @@ import { FollowerService } from '@/follower/services/follower.service';
 import { FollowerController } from '@/follower/follower.controller';
 import { Follower, FollowerSchema } from '@/follower/models/follower.model';
 import { FollowerCacheService } from '@/follower/services/follower.cache.service';
-import { BlockUserRepository } from '@/follower/repositories/block-user.repository';
 import { User, UserSchema } from '@/user/models/user.model';
 import { FollowerRepository } from '@/follower/repositories/follower.repository';
 import { FollowerConsumer } from '@/follower/consumers/follower.consumer';
@@ -32,7 +31,6 @@ import { FollowerConsumer } from '@/follower/consumers/follower.consumer';
   providers: [
     FollowerService,
     FollowerCacheService,
-    BlockUserRepository,
     FollowerRepository,
     FollowerConsumer,
   ],
