@@ -53,7 +53,6 @@ export class BlockUserCacheService extends BaseCache {
       );
       const blocked: string[] = parseJson<string[]>(response);
       blocked.push(followerId.toString());
-
       await this.client.HSET(`${REDIS_USERS_COLLECTION}:${userId.toString()}`, [
         prop,
         JSON.stringify(blocked),
@@ -76,9 +75,6 @@ export class BlockUserCacheService extends BaseCache {
       );
       const blocked: string[] = parseJson<string[]>(response);
       const followerIdString = followerId.toString();
-      //TODO: Remove blocked user
-      // blocked.push(followerId.toString());
-
       await this.client.HSET(`${REDIS_USERS_COLLECTION}:${userId.toString()}`, [
         prop,
         JSON.stringify(blocked.filter((id) => id !== followerIdString)),
