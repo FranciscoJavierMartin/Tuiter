@@ -29,7 +29,7 @@ export class PostCacheService extends BaseCache {
     currentUserId: ID,
     uId: string,
     post: Post,
-  ) {
+  ): Promise<void> {
     const {
       _id,
       authorId,
