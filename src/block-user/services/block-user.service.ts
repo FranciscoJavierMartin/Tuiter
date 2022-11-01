@@ -25,7 +25,6 @@ export class BlockUserService {
       throw new BadRequestException('User is already blocked');
     }
 
-    // TODO: Get from service not repo
     if (await this.followerService.isFollowing(followerId, userId)) {
       this.followerService.unfollow(userId, followerId);
     }
