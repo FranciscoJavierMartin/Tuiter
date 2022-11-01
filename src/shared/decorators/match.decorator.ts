@@ -8,7 +8,7 @@ export function IsEqualTo<T>(
   property: keyof T,
   validationOptions?: ValidationOptions,
 ) {
-  return (object: any, propertyName: string) => {
+  return (object: any, propertyName: string): void => {
     registerDecorator({
       name: 'isEqualTo',
       target: object.constructor,
