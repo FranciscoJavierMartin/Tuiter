@@ -19,6 +19,7 @@ import {
   ApiCreatedResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
+  ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -34,7 +35,6 @@ import { ForgotPasswordDto } from '@/auth/dto/requests/forgot-password.dto';
 import { InfoMessageDto } from '@/auth/dto/responses/info-message.dto';
 import { ResetPasswordDto } from '@/auth/dto/requests/reset-password.dto';
 import { CurrentUser } from '@/auth/interfaces/current-user.interface';
-import { getQueues } from '@/helpers/utils';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -81,7 +81,6 @@ export class AuthController {
   })
   @ApiBody({ type: LoginDto })
   public async login(@Body() loginDto: LoginDto): Promise<ResponseRegisterDto> {
-    getQueues('test', 'prueba');
     return this.authService.login(loginDto);
   }
 
@@ -117,6 +116,10 @@ export class AuthController {
   }
 
   @Post('reset-password/:token')
+  @ApiParam({
+    name: 'Token',
+    description: 'Auto generated token to change validation',
+  })
   @ApiCreatedResponse({
     description: 'Change user password and send an email to user',
   })
