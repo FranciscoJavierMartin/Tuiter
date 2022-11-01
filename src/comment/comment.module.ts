@@ -27,6 +27,6 @@ import { CommentConsumer } from '@/comment/consumer/comment.consumer';
     CommentConsumer,
     CommentRepository,
   ],
-  exports: [CommentRepository],
+  exports: [],
 })
 export class CommentModule {}
