@@ -2,8 +2,8 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectQueue } from '@nestjs/bull';
 import { Queue } from 'bull';
 import { ID } from '@/shared/interfaces/types';
-import { FollowerCacheService } from '@/follower/services/follower.cache.service';
 import { BlockUserCacheService } from '@/block-user/services/block-user.cache.service';
+import { FollowerCacheService } from '@/follower/services/follower.cache.service';
 import { FollowerRepository } from '@/follower/repositories/follower.repository';
 import {
   FollowerData,
@@ -110,5 +110,15 @@ export class FollowerService {
       : await this.followerRepository.getFollowers(userId);
 
     return followers;
+  }
+
+  /**
+   * Check if user follows the followee user
+   * @param userId User who follows id
+   * @param followeeId User who is being followed id
+   * @returns True if user follows the followee user, false otherwise
+   */
+  public async isFollowing(userId: ID, followeeId: ID): Promise<boolean> {
+    return await this.followerRepository.isFollowing(userId, followeeId);
   }
 }
