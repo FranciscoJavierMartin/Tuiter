@@ -1,5 +1,10 @@
 import { Controller, Param, Patch, UseGuards } from '@nestjs/common';
-import { ApiBadRequestResponse, ApiParam, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBadRequestResponse,
+  ApiBearerAuth,
+  ApiParam,
+  ApiTags,
+} from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { ValidateIdPipe } from '@/shared/pipes/validate-id.pipe';
 import { ID } from '@/shared/interfaces/types';
@@ -19,6 +24,7 @@ export class BlockUserController {
     required: true,
     description: 'User who will be blocked id',
   })
+  @ApiBearerAuth()
   @ApiBadRequestResponse({
     description: 'User is already blocked',
   })
@@ -37,6 +43,7 @@ export class BlockUserController {
     required: true,
     description: 'User who will be unblocked id',
   })
+  @ApiBearerAuth()
   @ApiBadRequestResponse({
     description: 'User is not blocked',
   })

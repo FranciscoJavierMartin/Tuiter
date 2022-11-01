@@ -3,13 +3,14 @@ import { InjectQueue } from '@nestjs/bull';
 import { ObjectId } from 'mongodb';
 import mongoose from 'mongoose';
 import { Queue } from 'bull';
+import { ID } from '@/shared/interfaces/types';
 import { CurrentUser } from '@/auth/interfaces/current-user.interface';
 import { CreateCommentDto } from '@/comment/dto/requests/create-comment.dto';
+import { CommentDto } from '@/comment/dto/responses/comment.dto';
 import { CommentCacheService } from '@/comment/services/comment.cache.service';
 import { Comment } from '@/comment/models/comment.model';
 import { CommentJobData } from '@/comment/interfaces/comment.interface';
-import { ID } from '@/shared/interfaces/types';
-import { CommentRepository } from '../repositories/comment.repository';
+import { CommentRepository } from '@/comment/repositories/comment.repository';
 
 @Injectable()
 export class CommentService {
@@ -56,7 +57,12 @@ export class CommentService {
     });
   }
 
-  public async findByPostId(postId: ID) {
+  /**
+   * Get all comments from post
+   * @param postId Post id
+   * @returns Comments from post
+   */
+  public async findByPostId(postId: ID): Promise<CommentDto[]> {
     const cachedComments: Comment[] =
       await this.commentCacheService.getCommentsFromCache(postId);
     const comments: Comment[] = cachedComments.length

@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { PassportModule } from '@nestjs/passport';
 import { BullModule } from '@nestjs/bull';
-import { DEFAULT_JOB_OPTIONS } from '@/shared/contants';
+import { getQueues } from '@/helpers/utils';
 import { PostModule } from '@/post/post.module';
 import { UserModule } from '@/user/user.module';
 import { CommentService } from '@/comment/services/comment.service';
@@ -16,10 +16,7 @@ import { CommentConsumer } from '@/comment/consumer/comment.consumer';
   imports: [
     MongooseModule.forFeature([{ name: Comment.name, schema: CommentSchema }]),
     PassportModule.register({ defaultStrategy: 'jwt' }),
-    BullModule.registerQueue({
-      name: 'comment',
-      defaultJobOptions: DEFAULT_JOB_OPTIONS,
-    }),
+    BullModule.registerQueue(...getQueues('comment')),
     PostModule,
     UserModule,
   ],

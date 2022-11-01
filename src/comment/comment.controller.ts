@@ -4,14 +4,16 @@ import {
   ApiBearerAuth,
   ApiBody,
   ApiCreatedResponse,
+  ApiOkResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { ID } from '@/shared/interfaces/types';
+import { ValidateIdPipe } from '@/shared/pipes/validate-id.pipe';
 import { GetUser } from '@/auth/decorators/get-user.decorator';
 import { CurrentUser } from '@/auth/interfaces/current-user.interface';
 import { CommentService } from '@/comment/services/comment.service';
 import { CreateCommentDto } from '@/comment/dto/requests/create-comment.dto';
-import { ID } from '@/shared/interfaces/types';
-import { ValidateIdPipe } from '@/shared/pipes/validate-id.pipe';
+import { CommentDto } from '@/comment/dto/responses/comment.dto';
 
 @ApiTags('Comment')
 @Controller('post/comments')
@@ -33,7 +35,13 @@ export class CommentController {
   }
 
   @Get(':postId')
-  public async findByPostId(@Param('postId', ValidateIdPipe) postId: ID) {
+  @ApiOkResponse({
+    description: 'Comments which belong to post',
+    type: [CommentDto],
+  })
+  public async findByPostId(
+    @Param('postId', ValidateIdPipe) postId: ID,
+  ): Promise<CommentDto[]> {
     return this.commentService.findByPostId(postId);
   }
 }
