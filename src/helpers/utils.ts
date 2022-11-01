@@ -19,6 +19,18 @@ const queues: BullModuleOptions[] = [
     defaultJobOptions: DEFAULT_JOB_OPTIONS,
   },
   {
+    name: 'follower',
+    defaultJobOptions: DEFAULT_JOB_OPTIONS,
+  },
+  {
+    name: 'post',
+    defaultJobOptions: DEFAULT_JOB_OPTIONS,
+  },
+  {
+    name: 'reaction',
+    defaultJobOptions: DEFAULT_JOB_OPTIONS,
+  },
+  {
     name: 'user',
     defaultJobOptions: DEFAULT_JOB_OPTIONS,
   },

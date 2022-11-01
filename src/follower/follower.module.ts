@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { PassportModule } from '@nestjs/passport';
 import { MongooseModule } from '@nestjs/mongoose';
 import { BullModule } from '@nestjs/bull';
-import { DEFAULT_JOB_OPTIONS } from '@/shared/contants';
+import { getQueues } from '@/helpers/utils';
 import { UserModule } from '@/user/user.module';
 import { BlockUserModule } from '@/block-user/block-user.module';
 import { FollowerService } from '@/follower/services/follower.service';
@@ -20,10 +20,7 @@ import { FollowerConsumer } from '@/follower/consumers/follower.consumer';
       { name: User.name, schema: UserSchema },
     ]),
     PassportModule.register({ defaultStrategy: 'jwt' }),
-    BullModule.registerQueue({
-      name: 'follower',
-      defaultJobOptions: DEFAULT_JOB_OPTIONS,
-    }),
+    BullModule.registerQueue(...getQueues('follower')),
     UserModule,
     BlockUserModule,
   ],

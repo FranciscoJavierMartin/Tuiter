@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { PassportModule } from '@nestjs/passport';
 import { BullModule } from '@nestjs/bull';
-import { DEFAULT_JOB_OPTIONS } from '@/shared/contants';
+import { getQueues } from '@/helpers/utils';
 import { UserModule } from '@/user/user.module';
 import { PostService } from '@/post/services/post.service';
 import { PostController } from '@/post/post.controller';
@@ -15,10 +15,7 @@ import { PostRepository } from '@/post/repositories/post.repository';
   imports: [
     MongooseModule.forFeature([{ name: Post.name, schema: PostSchema }]),
     PassportModule.register({ defaultStrategy: 'jwt' }),
-    BullModule.registerQueue({
-      name: 'post',
-      defaultJobOptions: DEFAULT_JOB_OPTIONS,
-    }),
+    BullModule.registerQueue(...getQueues('post')),
     UserModule,
   ],
   controllers: [PostController],
