@@ -1,9 +1,9 @@
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { parseJson } from '@/helpers/utils';
 import { REDIS_USERS_COLLECTION } from '@/shared/contants';
 import { ID } from '@/shared/interfaces/types';
 import { BaseCache } from '@/shared/redis/base.cache';
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class BlockUserCacheService extends BaseCache {
@@ -11,6 +11,12 @@ export class BlockUserCacheService extends BaseCache {
     super('BlockUserCache', configService);
   }
 
+  /**
+   * Check if user is block by followee user
+   * @param followeeId Followee user id
+   * @param userId User id
+   * @returns True if user has been block by followee user, false otherwise
+   */
   public async isUserBlockedBy(followeeId: ID, userId: ID): Promise<boolean> {
     try {
       const response = await this.client.HGET(
@@ -27,20 +33,36 @@ export class BlockUserCacheService extends BaseCache {
     }
   }
 
-  public async blockUser(userId: ID, followerId: ID): Promise<void[]> {
-    return Promise.all([
+  /**
+   * Add block to users
+   * @param userId User who block id
+   * @param followerId User who will be blocked id
+   */
+  public async blockUser(userId: ID, followerId: ID): Promise<void> {
+    await Promise.all([
       this.blockUserInCache(userId, followerId, 'blocked'),
       this.blockUserInCache(followerId, userId, 'blockedBy'),
     ]);
   }
 
-  public async unblockUser(userId: ID, followerId: ID): Promise<void[]> {
-    return Promise.all([
+  /**
+   * Remove block from user
+   * @param userId User who unblock id
+   * @param followerId User who is blocked id
+   */
+  public async unblockUser(userId: ID, followerId: ID): Promise<void> {
+    await Promise.all([
       this.unblockUserInCache(userId, followerId, 'blocked'),
       this.unblockUserInCache(followerId, userId, 'blockedBy'),
     ]);
   }
 
+  /**
+   * Add block to users in cache
+   * @param userId User who block id
+   * @param followerId User who will be blocked id
+   * @param prop Prop where the id will be added
+   */
   private async blockUserInCache(
     userId: ID,
     followerId: ID,
@@ -63,6 +85,12 @@ export class BlockUserCacheService extends BaseCache {
     }
   }
 
+  /**
+   * Remove block from users in cache
+   * @param userId User who unblock id
+   * @param followerId User who will be unblocked id
+   * @param prop Prop where the id will be removed
+   */
   private async unblockUserInCache(
     userId: ID,
     followerId: ID,

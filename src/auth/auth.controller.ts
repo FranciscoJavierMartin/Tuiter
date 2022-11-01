@@ -19,6 +19,7 @@ import {
   ApiCreatedResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
+  ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -115,6 +116,10 @@ export class AuthController {
   }
 
   @Post('reset-password/:token')
+  @ApiParam({
+    name: 'Token',
+    description: 'Auto generated token to change validation',
+  })
   @ApiCreatedResponse({
     description: 'Change user password and send an email to user',
   })

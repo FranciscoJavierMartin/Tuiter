@@ -22,6 +22,7 @@ import {
   ApiConsumes,
   ApiCreatedResponse,
   ApiOkResponse,
+  ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -70,6 +71,10 @@ export class PostController {
   }
 
   @Get(':page')
+  @ApiParam({
+    name: 'Page',
+    description: 'Page to retrieve',
+  })
   @ApiOkResponse({
     description: 'Get all posts',
     type: PostsDto,
@@ -81,6 +86,10 @@ export class PostController {
   }
 
   @Delete(':postId')
+  @ApiParam({
+    name: 'Post id',
+    description: 'Post id to remove',
+  })
   @ApiOkResponse({
     description: 'Remove post. Only for author',
   })
@@ -99,6 +108,10 @@ export class PostController {
   }
 
   @Put(':postId')
+  @ApiParam({
+    name: 'Post id',
+    description: 'Post id to update',
+  })
   @UseInterceptors(FileInterceptor('image'))
   @ApiConsumes('multipart/form-data')
   @ApiOkResponse({

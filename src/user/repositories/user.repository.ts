@@ -117,7 +117,7 @@ export class UserRepository {
    * This is to select fields in projections
    * @returns Selected fields
    */
-  private aggregateProject() {
+  private aggregateProject(): { [key: string]: string | number } {
     return {
       _id: 1,
       username: '$authId.username',

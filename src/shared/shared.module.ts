@@ -1,6 +1,6 @@
 import { Global, Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { v2 } from 'cloudinary';
+import { ConfigOptions, v2 } from 'cloudinary';
 import { UploaderService } from '@/shared/services/uploader.service';
 import { EmailService } from '@/shared/emails/email.service';
 import { EmailConsumer } from '@/shared/emails/email.consumer';
@@ -12,7 +12,7 @@ import { EmailConsumer } from '@/shared/emails/email.consumer';
     {
       inject: [ConfigService],
       provide: 'Cloudinary',
-      useFactory: (configService: ConfigService) => {
+      useFactory: (configService: ConfigService): ConfigOptions => {
         return v2.config({
           cloud_name: configService.get('CLOUDINARY_CLOUD_NAME'),
           api_key: configService.get('CLOUDINARY_API_KEY'),

@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum, IsMongoId, IsOptional, IsString } from 'class-validator';
-import { Feelings } from '@/reaction/interfaces/reaction.interface';
 import { ID } from '@/shared/interfaces/types';
+import { Feelings } from '@/reaction/interfaces/reaction.interface';
 
 export class AddReactionDto {
   @ApiProperty({

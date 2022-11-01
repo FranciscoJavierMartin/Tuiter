@@ -1,3 +1,29 @@
+import { DEFAULT_JOB_OPTIONS } from '@/shared/contants';
+import { BullModuleOptions } from '@nestjs/bull';
+
+const queues: BullModuleOptions[] = [
+  {
+    name: 'auth',
+    defaultJobOptions: DEFAULT_JOB_OPTIONS,
+  },
+  {
+    name: 'blockuser',
+    defaultJobOptions: DEFAULT_JOB_OPTIONS,
+  },
+  {
+    name: 'comment',
+    defaultJobOptions: DEFAULT_JOB_OPTIONS,
+  },
+  {
+    name: 'email',
+    defaultJobOptions: DEFAULT_JOB_OPTIONS,
+  },
+  {
+    name: 'user',
+    defaultJobOptions: DEFAULT_JOB_OPTIONS,
+  },
+];
+
 /**
  * Generate a ramdon number with determined length
  * @param lenght Number lenght
@@ -45,4 +71,13 @@ export function parseJson<T = any>(prop: string): T {
   }
 
   return res;
+}
+
+/**
+ * Get queues for bull
+ * @param names Queue names to get
+ * @returns Queues filtered
+ */
+export function getQueues(...names: string[]): BullModuleOptions[] {
+  return queues.filter((queue) => names.includes(queue.name));
 }

@@ -22,30 +22,61 @@ export class FollowerCacheService extends BaseCache {
     super('FollowerCache', configService);
   }
 
+  /**
+   * Get users who user is following
+   * @param userId User id
+   * @returns Users who passed user is following
+   */
   public async getFollowingUsersFromCache(userId: ID): Promise<FollowerData[]> {
     return this.getFollowerUsersFromCache(userId, REDIS_FOLLOWING_COLLECTION);
   }
 
-  public async getFollowersFromCache(userId: ID) {
+  /**
+   * Get users who user is following
+   * @param userId User id
+   * @returns Users who passed user is following
+   */
+  public async getFollowersFromCache(userId: ID): Promise<FollowerData[]> {
     return this.getFollowerUsersFromCache(userId, REDIS_FOLLOWERS_COLLECTION);
   }
 
+  /**
+   * Increment following count
+   * @param userId User id to increment following count
+   */
   public async incrementFollowingCountInCache(userId: ID): Promise<void> {
     return this.updateFollowersCount(userId, 'followingCount', 1);
   }
 
+  /**
+   * Increment followers count
+   * @param userId User id to increment followers count
+   */
   public async incrementFollowersCountInCache(userId: ID): Promise<void> {
     return this.updateFollowersCount(userId, 'followersCount', 1);
   }
 
+  /**
+   * Decrement following count
+   * @param userId User id to decrement following count
+   */
   public async decrementFollowingCountInCache(userId: ID): Promise<void> {
     return this.updateFollowersCount(userId, 'followingCount', -1);
   }
 
+  /**
+   * Decrement followers count
+   * @param userId User id to decrement followers count
+   */
   public async decrementFollowersCountInCache(userId: ID): Promise<void> {
     return this.updateFollowersCount(userId, 'followersCount', -1);
   }
 
+  /**
+   * Add follower to followee list
+   * @param userId User id who follows followee user
+   * @param followeeId User id who is being follow
+   */
   public async saveFollowerUserInCache(
     userId: ID,
     followeeId: ID,
@@ -56,6 +87,11 @@ export class FollowerCacheService extends BaseCache {
     );
   }
 
+  /**
+   * Add followee to follower list
+   * @param userId User id who follows followee user
+   * @param followeeId User id who is being follow
+   */
   public async saveFollowingUserInCache(
     userId: ID,
     followeeId: ID,
@@ -66,6 +102,11 @@ export class FollowerCacheService extends BaseCache {
     );
   }
 
+  /**
+   * Remove follower from user list
+   * @param userId Follower id
+   * @param followeeId Followee id
+   */
   public async removeFollowerUserInCache(
     userId: ID,
     followeeId: ID,
@@ -76,6 +117,11 @@ export class FollowerCacheService extends BaseCache {
     );
   }
 
+  /**
+   * Remove following user from user list
+   * @param userId User id
+   * @param followeeId Followee id
+   */
   public async removeFollowingUserInCache(
     userId: ID,
     followeeId: ID,
@@ -86,6 +132,12 @@ export class FollowerCacheService extends BaseCache {
     );
   }
 
+  /**
+   * Update followers count
+   * @param userId User id to being updated
+   * @param field Field to be updated
+   * @param value How much increase (or decrease) the count
+   */
   private async updateFollowersCount(
     userId: ID,
     field: 'followersCount' | 'followingCount',
@@ -103,6 +155,11 @@ export class FollowerCacheService extends BaseCache {
     }
   }
 
+  /**
+   * Add element to list
+   * @param key List where to add element
+   * @param value Element to add
+   */
   private async storeFollowerInCache(key: string, value: ID): Promise<void> {
     try {
       await this.client.LPUSH(key, value.toString());
@@ -112,6 +169,11 @@ export class FollowerCacheService extends BaseCache {
     }
   }
 
+  /**
+   * Remove element from list
+   * @param key List where element will be removed
+   * @param value Element to be removed
+   */
   private async deleteFollowerInCache(key: string, value: ID): Promise<void> {
     try {
       await this.client.LREM(key, 1, value.toString());
@@ -121,7 +183,16 @@ export class FollowerCacheService extends BaseCache {
     }
   }
 
-  private async getFollowerUsersFromCache(userId: ID, collection: string) {
+  /**
+   * Get followers/following from cache
+   * @param userId User id who list belong
+   * @param collection Where to get the users
+   * @returns Followers/Following users
+   */
+  private async getFollowerUsersFromCache(
+    userId: ID,
+    collection: string,
+  ): Promise<FollowerData[]> {
     try {
       const response: string[] = await this.client.LRANGE(
         `${collection}:${userId}`,

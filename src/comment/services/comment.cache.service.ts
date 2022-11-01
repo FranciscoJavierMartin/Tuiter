@@ -1,13 +1,13 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { parseJson } from '@/helpers/utils';
 import { BaseCache } from '@/shared/redis/base.cache';
 import {
   REDIS_COMMENTS_COLLECTION,
   REDIS_POSTS_COLLECTION,
 } from '@/shared/contants';
 import { ID } from '@/shared/interfaces/types';
-import { parseJson } from '@/helpers/utils';
-import { Comment } from '../models/comment.model';
+import { Comment } from '@/comment/models/comment.model';
 
 @Injectable()
 export class CommentCacheService extends BaseCache {

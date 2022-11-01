@@ -17,11 +17,17 @@ export class BlockUserService {
     private readonly blockUserQueue: Queue<BlockUserJobData>,
   ) {}
 
-  public async block(userId: ID, followerId: ID) {
+  /**
+   * Block follower
+   * @param userId User who block id
+   * @param followerId User who will be blocked id
+   */
+  public async block(userId: ID, followerId: ID): Promise<void> {
     if (await this.blockUserCacheService.isUserBlockedBy(userId, followerId)) {
       throw new BadRequestException('User is already blocked');
     }
 
+    // TODO: Get from service not repo
     if (await this.followerRepository.isFollowing(followerId, userId)) {
       this.followerService.unfollow(userId, followerId);
     }
@@ -34,7 +40,12 @@ export class BlockUserService {
     });
   }
 
-  public async unblock(userId: ID, followerId: ID) {
+  /**
+   * Unblock follower
+   * @param userId User who unblock id
+   * @param followerId User who will be unblocked id
+   */
+  public async unblock(userId: ID, followerId: ID): Promise<void> {
     if (
       !(await this.blockUserCacheService.isUserBlockedBy(userId, followerId))
     ) {
