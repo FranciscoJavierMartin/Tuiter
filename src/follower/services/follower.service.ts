@@ -5,10 +5,8 @@ import { ID } from '@/shared/interfaces/types';
 import { BlockUserCacheService } from '@/block-user/services/block-user.cache.service';
 import { FollowerCacheService } from '@/follower/services/follower.cache.service';
 import { FollowerRepository } from '@/follower/repositories/follower.repository';
-import {
-  FollowerData,
-  FollowJobData,
-} from '@/follower/interfaces/follower.interface';
+import { FollowJobData } from '@/follower/interfaces/follower.interface';
+import { FollowerDto } from '@/follower/dto/responses/follower.dto';
 
 @Injectable()
 export class FollowerService {
@@ -85,7 +83,7 @@ export class FollowerService {
    * @param userId User id
    * @returns Users who passed user is following
    */
-  public async getFollowingUsers(userId: ID): Promise<FollowerData[]> {
+  public async getFollowingUsers(userId: ID): Promise<FollowerDto[]> {
     const cachedFollowingUsers =
       await this.followerCacheService.getFollowingUsersFromCache(userId);
 
@@ -101,7 +99,7 @@ export class FollowerService {
    * @param userId User id
    * @returns User who follow passed user
    */
-  public async getFollowers(userId: ID): Promise<FollowerData[]> {
+  public async getFollowers(userId: ID): Promise<FollowerDto[]> {
     const cachedFollowers =
       await this.followerCacheService.getFollowersFromCache(userId);
 

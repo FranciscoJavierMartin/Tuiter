@@ -4,7 +4,7 @@ import { Model, PipelineStage } from 'mongoose';
 import { ObjectId } from 'mongodb';
 import { UserRepository } from '@/user/repositories/user.repository';
 import { Follower } from '@/follower/models/follower.model';
-import { FollowerData } from '@/follower/interfaces/follower.interface';
+import { FollowerDto } from '@/follower/dto/responses/follower.dto';
 
 @Injectable()
 export class FollowerRepository {
@@ -72,31 +72,9 @@ export class FollowerRepository {
    * @param userId User id
    * @returns Following users
    */
-  public async getFollowingUsers(userId: ObjectId): Promise<FollowerData[]> {
+  public async getFollowingUsers(userId: ObjectId): Promise<FollowerDto[]> {
     return this.followerModel.aggregate([
       { $match: { followerId: new ObjectId(userId) } },
-      ...this.getSchemaDataForFollowers(),
-    ]);
-  }
-
-  /**
-   * Get users who follow passed user
-   * @param userId User id
-   * @returns User followers
-   */
-  public async getFollowers(userId: ObjectId): Promise<FollowerData[]> {
-    return this.followerModel.aggregate([
-      { $match: { followeeId: new ObjectId(userId) } },
-      ...this.getSchemaDataForFollowers(),
-    ]);
-  }
-
-  /**
-   * Get schema data
-   * @returns Schama data
-   */
-  private getSchemaDataForFollowers(): PipelineStage[] {
-    return [
       {
         $lookup: {
           from: 'User',
@@ -121,10 +99,10 @@ export class FollowerRepository {
           username: '$authId.username',
           avatarColor: '$authId.avatarColor',
           uId: '$authId.uId',
-          postCount: '$authId.postsCount',
-          followersCount: '$authId.followersCount',
-          followingCount: '$authId.followingCount',
-          profilePicture: '$authId.profilePicture',
+          postsCount: '$followeeId.postsCount',
+          followersCount: '$followeeId.followersCount',
+          followingCount: '$followeeId.followingCount',
+          profilePicture: '$followeeId.profilePicture',
           userProfile: '$followeeId',
         },
       },
@@ -137,6 +115,57 @@ export class FollowerRepository {
           __v: 0,
         },
       },
-    ];
+    ]);
+  }
+
+  /**
+   * Get users who follow passed user
+   * @param userId User id
+   * @returns User followers
+   */
+  public async getFollowers(userId: ObjectId): Promise<FollowerDto[]> {
+    return this.followerModel.aggregate([
+      { $match: { followeeId: new ObjectId(userId) } },
+      {
+        $lookup: {
+          from: 'User',
+          localField: 'followerId',
+          foreignField: '_id',
+          as: 'followerId',
+        },
+      },
+      { $unwind: '$followerId' },
+      {
+        $lookup: {
+          from: 'Auth',
+          localField: 'followerId.authId',
+          foreignField: '_id',
+          as: 'authId',
+        },
+      },
+      { $unwind: '$authId' },
+      {
+        $addFields: {
+          _id: '$followerId._id',
+          username: '$authId.username',
+          avatarColor: '$authId.avatarColor',
+          uId: '$authId.uId',
+          postsCount: '$followerId.postsCount',
+          followersCount: '$followerId.followersCount',
+          followingCount: '$followerId.followingCount',
+          profilePicture: '$followerId.profilePicture',
+          userProfile: '$followerId',
+        },
+      },
+      {
+        $project: {
+          authId: 0,
+          followerId: 0,
+          followeeId: 0,
+          createdAt: 0,
+          __v: 0,
+        },
+      },
+    ]);
   }
 }

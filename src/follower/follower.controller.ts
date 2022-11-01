@@ -7,7 +7,7 @@ import { GetUser } from '@/auth/decorators/get-user.decorator';
 import { CurrentUser } from '@/auth/interfaces/current-user.interface';
 import { FollowerService } from '@/follower/services/follower.service';
 import { NotMySelfGuard } from '@/follower/guards/not-my-self.guard';
-import { FollowerData } from '@/follower/interfaces/follower.interface';
+import { FollowerDto } from '@/follower/dto/responses/follower.dto';
 
 @ApiTags('Follow')
 @Controller('user')
@@ -47,20 +47,22 @@ export class FollowerController {
   @Get('following/:userId')
   @ApiOkResponse({
     description: 'Users who passed user follows',
+    type: [FollowerDto],
   })
   public async getFollowingUsers(
     @Param('userId', ValidateIdPipe) userId: ID,
-  ): Promise<FollowerData[]> {
+  ): Promise<FollowerDto[]> {
     return this.followerService.getFollowingUsers(userId);
   }
 
   @Get('followers/:userId')
   @ApiOkResponse({
     description: 'Users who follow passed user',
+    type: [FollowerDto],
   })
   public async getFollowers(
     @Param('userId', ValidateIdPipe) userId: ID,
-  ): Promise<FollowerData[]> {
+  ): Promise<FollowerDto[]> {
     return this.followerService.getFollowers(userId);
   }
 }

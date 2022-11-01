@@ -11,7 +11,7 @@ import { ID } from '@/shared/interfaces/types';
 import { BaseCache } from '@/shared/redis/base.cache';
 import { UserCacheService } from '@/user/services/user.cache.service';
 import { UserDocument } from '@/user/models/user.model';
-import { FollowerData } from '@/follower/interfaces/follower.interface';
+import { FollowerDto } from '@/follower/dto/responses/follower.dto';
 
 @Injectable()
 export class FollowerCacheService extends BaseCache {
@@ -27,7 +27,7 @@ export class FollowerCacheService extends BaseCache {
    * @param userId User id
    * @returns Users who passed user is following
    */
-  public async getFollowingUsersFromCache(userId: ID): Promise<FollowerData[]> {
+  public async getFollowingUsersFromCache(userId: ID): Promise<FollowerDto[]> {
     return this.getFollowerUsersFromCache(userId, REDIS_FOLLOWING_COLLECTION);
   }
 
@@ -36,7 +36,7 @@ export class FollowerCacheService extends BaseCache {
    * @param userId User id
    * @returns Users who passed user is following
    */
-  public async getFollowersFromCache(userId: ID): Promise<FollowerData[]> {
+  public async getFollowersFromCache(userId: ID): Promise<FollowerDto[]> {
     return this.getFollowerUsersFromCache(userId, REDIS_FOLLOWERS_COLLECTION);
   }
 
@@ -192,14 +192,14 @@ export class FollowerCacheService extends BaseCache {
   private async getFollowerUsersFromCache(
     userId: ID,
     collection: string,
-  ): Promise<FollowerData[]> {
+  ): Promise<FollowerDto[]> {
     try {
       const response: string[] = await this.client.LRANGE(
         `${collection}:${userId}`,
         0,
         -1,
       );
-      const followingUsers: FollowerData[] = [];
+      const followingUsers: FollowerDto[] = [];
 
       for (const item of response) {
         const user: UserDocument = await this.userCacheService.getUserFromCache(
@@ -210,7 +210,7 @@ export class FollowerCacheService extends BaseCache {
           _id: new mongoose.Types.ObjectId(user._id),
           username: user.username,
           avatarColor: user.avatarColor,
-          postCount: user.postsCount,
+          postsCount: user.postsCount,
           followersCount: user.followersCount,
           followingCount: user.followingCount,
           profilePicture: user.profilePicture,
