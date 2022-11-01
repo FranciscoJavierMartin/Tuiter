@@ -1,7 +1,6 @@
 import { ID } from '@/shared/interfaces/types';
 import { ApiProperty } from '@nestjs/swagger';
 
-// TODO: Needs to add properties
 export class CommentDto {
   @ApiProperty({
     description: 'Comment id',
