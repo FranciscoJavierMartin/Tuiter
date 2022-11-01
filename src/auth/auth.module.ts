@@ -4,7 +4,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { BullModule } from '@nestjs/bull';
-import { DEFAULT_JOB_OPTIONS } from '@/shared/contants';
+import { getQueues } from '@/helpers/utils';
 import { UserModule } from '@/user/user.module';
 import { AuthService } from '@/auth/auth.service';
 import { AuthController } from '@/auth/auth.controller';
@@ -16,20 +16,7 @@ import { AuthRepository } from '@/auth/repositories/auth.repository';
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: AuthUser.name, schema: AuthSchema }]),
-    BullModule.registerQueue(
-      {
-        name: 'auth',
-        defaultJobOptions: DEFAULT_JOB_OPTIONS,
-      },
-      {
-        name: 'user',
-        defaultJobOptions: DEFAULT_JOB_OPTIONS,
-      },
-      {
-        name: 'email',
-        defaultJobOptions: DEFAULT_JOB_OPTIONS,
-      },
-    ),
+    BullModule.registerQueue(...getQueues('auth', 'user', 'email')),
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.registerAsync({
       imports: [ConfigModule],
