@@ -3,7 +3,6 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectQueue } from '@nestjs/bull';
 import { Queue } from 'bull';
 import { FollowerService } from '@/follower/services/follower.service';
-import { FollowerRepository } from '@/follower/repositories/follower.repository';
 import { BlockUserCacheService } from '@/block-user/services/block-user.cache.service';
 import { BlockUserJobData } from '@/block-user/interfaces/block-user.interface';
 
@@ -12,7 +11,6 @@ export class BlockUserService {
   constructor(
     private readonly blockUserCacheService: BlockUserCacheService,
     private readonly followerService: FollowerService,
-    private readonly followerRepository: FollowerRepository,
     @InjectQueue('blockuser')
     private readonly blockUserQueue: Queue<BlockUserJobData>,
   ) {}
@@ -28,7 +26,7 @@ export class BlockUserService {
     }
 
     // TODO: Get from service not repo
-    if (await this.followerRepository.isFollowing(followerId, userId)) {
+    if (await this.followerService.isFollowing(followerId, userId)) {
       this.followerService.unfollow(userId, followerId);
     }
 

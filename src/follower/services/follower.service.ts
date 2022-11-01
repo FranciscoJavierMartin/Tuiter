@@ -111,4 +111,14 @@ export class FollowerService {
 
     return followers;
   }
+
+  /**
+   * Check if user follows the followee user
+   * @param userId User who follows id
+   * @param followeeId User who is being followed id
+   * @returns True if user follows the followee user, false otherwise
+   */
+  public async isFollowing(userId: ID, followeeId: ID): Promise<boolean> {
+    return await this.followerRepository.isFollowing(userId, followeeId);
+  }
 }
