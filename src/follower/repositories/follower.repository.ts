@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, PipelineStage } from 'mongoose';
 import { ObjectId } from 'mongodb';
 import { UserRepository } from '@/user/repositories/user.repository';
 import { Follower } from '@/follower/models/follower.model';
@@ -13,6 +13,12 @@ export class FollowerRepository {
     @InjectModel(Follower.name) private followerModel: Model<Follower>,
   ) {}
 
+  /**
+   * Check if user follows the followee user
+   * @param userId User who follows id
+   * @param followeeId User who is being followed id
+   * @returns True if user follows the followee user, false otherwise
+   */
   public async isFollowing(
     userId: ObjectId,
     followeeId: ObjectId,
@@ -23,6 +29,11 @@ export class FollowerRepository {
     }));
   }
 
+  /**
+   * Save follow in DB and update followers count
+   * @param userId User who follow id
+   * @param followeeId User who is being followed id
+   */
   public async saveFollowerInDB(
     userId: ObjectId,
     followeeId: ObjectId,
@@ -37,6 +48,11 @@ export class FollowerRepository {
     ]);
   }
 
+  /**
+   * Remove follow in DB and update followers count
+   * @param userId User who follow id
+   * @param followeeId User who is being followed id
+   */
   public async removeFollowerFromDB(
     userId: ObjectId,
     followeeId: ObjectId,
@@ -51,6 +67,11 @@ export class FollowerRepository {
     ]);
   }
 
+  /**
+   * Get users who user is following
+   * @param userId User id
+   * @returns Following users
+   */
   public async getFollowingUsers(userId: ObjectId): Promise<FollowerData[]> {
     return this.followerModel.aggregate([
       { $match: { followerId: new ObjectId(userId) } },
@@ -58,6 +79,11 @@ export class FollowerRepository {
     ]);
   }
 
+  /**
+   * Get users who follow passed user
+   * @param userId User id
+   * @returns User followers
+   */
   public async getFollowers(userId: ObjectId): Promise<FollowerData[]> {
     return this.followerModel.aggregate([
       { $match: { followeeId: new ObjectId(userId) } },
@@ -65,7 +91,11 @@ export class FollowerRepository {
     ]);
   }
 
-  private getSchemaDataForFollowers() {
+  /**
+   * Get schema data
+   * @returns Schama data
+   */
+  private getSchemaDataForFollowers(): PipelineStage[] {
     return [
       {
         $lookup: {

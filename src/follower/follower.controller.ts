@@ -7,6 +7,7 @@ import { GetUser } from '@/auth/decorators/get-user.decorator';
 import { CurrentUser } from '@/auth/interfaces/current-user.interface';
 import { FollowerService } from '@/follower/services/follower.service';
 import { NotMySelfGuard } from '@/follower/guards/not-my-self.guard';
+import { FollowerData } from '@/follower/interfaces/follower.interface';
 
 @ApiTags('Follow')
 @Controller('user')
@@ -27,7 +28,7 @@ export class FollowerController {
   public async unfollow(
     @Param('followeeId', ValidateIdPipe) followeeId: ID,
     @GetUser() user: CurrentUser,
-  ) {
+  ): Promise<void> {
     return this.followerService.unfollow(followeeId, user.userId);
   }
 
@@ -35,7 +36,9 @@ export class FollowerController {
   @ApiOkResponse({
     description: 'Users who passed user follows',
   })
-  public async getFollowingUsers(@Param('userId', ValidateIdPipe) userId: ID) {
+  public async getFollowingUsers(
+    @Param('userId', ValidateIdPipe) userId: ID,
+  ): Promise<FollowerData[]> {
     return this.followerService.getFollowingUsers(userId);
   }
 
@@ -43,7 +46,9 @@ export class FollowerController {
   @ApiOkResponse({
     description: 'Users who follow passed user',
   })
-  public async getFollowers(@Param('userId', ValidateIdPipe) userId: ID) {
+  public async getFollowers(
+    @Param('userId', ValidateIdPipe) userId: ID,
+  ): Promise<FollowerData[]> {
     return this.followerService.getFollowers(userId);
   }
 }

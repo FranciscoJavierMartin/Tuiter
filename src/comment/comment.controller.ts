@@ -5,6 +5,7 @@ import {
   ApiBody,
   ApiCreatedResponse,
   ApiOkResponse,
+  ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
 import { ID } from '@/shared/interfaces/types';
@@ -35,6 +36,12 @@ export class CommentController {
   }
 
   @Get(':postId')
+  @ApiParam({
+    name: 'Post Id',
+    description: 'Post id where comments belong',
+    example: '6355a7e4837b68783f4c7af3',
+    required: true,
+  })
   @ApiOkResponse({
     description: 'Comments which belong to post',
     type: [CommentDto],

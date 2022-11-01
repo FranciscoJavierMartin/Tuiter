@@ -5,7 +5,10 @@ import { ID } from '@/shared/interfaces/types';
 import { FollowerCacheService } from '@/follower/services/follower.cache.service';
 import { BlockUserCacheService } from '@/block-user/services/block-user.cache.service';
 import { FollowerRepository } from '@/follower/repositories/follower.repository';
-import { FollowJobData } from '@/follower/interfaces/follower.interface';
+import {
+  FollowerData,
+  FollowJobData,
+} from '@/follower/interfaces/follower.interface';
 
 @Injectable()
 export class FollowerService {
@@ -18,12 +21,10 @@ export class FollowerService {
   ) {}
 
   /**
-   * Check if user is blocked
-   * Check if user is following
-   * Increase following count
-   * Increase followers count
-   * Add to following list
-   * Add to followers list
+   * Stablish a relationship between two user where user follows followee
+   * @param followeeId Followee id
+   * @param userId User id
+   * @param username User name (for notifications)
    */
   public async follow(
     followeeId: ID,
@@ -55,6 +56,11 @@ export class FollowerService {
     });
   }
 
+  /**
+   * Break the relationship between two user where user follows followee
+   * @param followeeId User id who is followed
+   * @param userId User who follow
+   */
   public async unfollow(followeeId: ID, userId: ID): Promise<void> {
     // TODO: Move to decorator
     if (!(await this.followerRepository.isFollowing(userId, followeeId))) {
@@ -74,7 +80,12 @@ export class FollowerService {
     });
   }
 
-  public async getFollowingUsers(userId: ID) {
+  /**
+   * Get users who passed user is following
+   * @param userId User id
+   * @returns Users who passed user is following
+   */
+  public async getFollowingUsers(userId: ID): Promise<FollowerData[]> {
     const cachedFollowingUsers =
       await this.followerCacheService.getFollowingUsersFromCache(userId);
 
@@ -85,7 +96,12 @@ export class FollowerService {
     return followingUsers;
   }
 
-  public async getFollowers(userId: ID) {
+  /**
+   * Get users who follow passed user
+   * @param userId User id
+   * @returns User who follow passed user
+   */
+  public async getFollowers(userId: ID): Promise<FollowerData[]> {
     const cachedFollowers =
       await this.followerCacheService.getFollowersFromCache(userId);
 
