@@ -7,11 +7,15 @@ const queues: BullModuleOptions[] = [
     defaultJobOptions: DEFAULT_JOB_OPTIONS,
   },
   {
-    name: 'user',
+    name: 'blockuser',
     defaultJobOptions: DEFAULT_JOB_OPTIONS,
   },
   {
     name: 'email',
+    defaultJobOptions: DEFAULT_JOB_OPTIONS,
+  },
+  {
+    name: 'user',
     defaultJobOptions: DEFAULT_JOB_OPTIONS,
   },
 ];
