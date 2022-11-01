@@ -61,7 +61,7 @@ export class UploaderService {
 
   /**
    * Remove image from Cloudinary
-   * @param imgId Image Id (Public id)
+   * @param imgId Image id (Public id)
    * @returns Result from remove image
    */
   public async removeImage(imgId: string) {

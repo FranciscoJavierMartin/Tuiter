@@ -17,6 +17,11 @@ export class BlockUserService {
     private readonly blockUserQueue: Queue<BlockUserJobData>,
   ) {}
 
+  /**
+   * Block follower
+   * @param userId User who block id
+   * @param followerId User who will be blocked id
+   */
   public async block(userId: ID, followerId: ID) {
     if (await this.blockUserCacheService.isUserBlockedBy(userId, followerId)) {
       throw new BadRequestException('User is already blocked');
@@ -34,6 +39,11 @@ export class BlockUserService {
     });
   }
 
+  /**
+   * Unblock follower
+   * @param userId User who unblock id
+   * @param followerId User who will be unblocked id
+   */
   public async unblock(userId: ID, followerId: ID) {
     if (
       !(await this.blockUserCacheService.isUserBlockedBy(userId, followerId))
