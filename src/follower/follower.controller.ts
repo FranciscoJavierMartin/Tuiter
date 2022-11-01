@@ -1,5 +1,5 @@
 import { Controller, Get, Param, Put, UseGuards } from '@nestjs/common';
-import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBadRequestResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { ID } from '@/shared/interfaces/types';
 import { ValidateIdPipe } from '@/shared/pipes/validate-id.pipe';
@@ -15,6 +15,12 @@ export class FollowerController {
   constructor(private readonly followerService: FollowerService) {}
 
   @Put('follow/:followeeId')
+  @ApiOkResponse({
+    description: 'User follows followee user',
+  })
+  @ApiBadRequestResponse({
+    description: 'User is blocked by followee user',
+  })
   @UseGuards(AuthGuard(), NotMySelfGuard)
   public async follow(
     @Param('followeeId', ValidateIdPipe) followeeId: ID,
@@ -24,6 +30,12 @@ export class FollowerController {
   }
 
   @Put('unfollow/:followeeId')
+  @ApiOkResponse({
+    description: 'User unfollow',
+  })
+  @ApiBadRequestResponse({
+    description: 'User is not following followee user',
+  })
   @UseGuards(AuthGuard(), NotMySelfGuard)
   public async unfollow(
     @Param('followeeId', ValidateIdPipe) followeeId: ID,
