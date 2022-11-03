@@ -52,6 +52,8 @@ export class FollowerService {
       followeeId,
       userId,
     });
+
+    // TODO: Send notification
   }
 
   /**

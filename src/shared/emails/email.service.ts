@@ -40,7 +40,7 @@ export class EmailService {
         username,
         resetLink,
         image_url:
-          'https://res.cloudinary.com/dyshqk0em/image/upload/v1665310488/chatty-nest/lock-icon-email.png',
+          'https://res.cloudinary.com/dyshqk0em/image/upload/v1667416093/chatty-nest/lock-icon.png',
       },
     );
   }
@@ -68,7 +68,7 @@ export class EmailService {
         ipaddress,
         date,
         image_url:
-          'https://res.cloudinary.com/dyshqk0em/image/upload/v1665310488/chatty-nest/lock-icon-email.png',
+          'https://res.cloudinary.com/dyshqk0em/image/upload/v1667416093/chatty-nest/lock-icon.png',
       },
     );
   }
@@ -85,7 +85,7 @@ export class EmailService {
     subject: string,
     template: Templates,
     variables?: { [key: string]: string },
-  ) {
+  ): Promise<void> {
     try {
       await this.mailerService.sendMail({
         to: receiverEmail,

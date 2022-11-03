@@ -34,6 +34,8 @@ export class ReactionService {
       reaction: reactionData,
       previousFeeling: addReactionDto.previousFeeling,
     });
+
+    // TODO: Send notification
   }
 
   /**
