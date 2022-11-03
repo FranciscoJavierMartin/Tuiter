@@ -12,6 +12,7 @@ import { ReactionModule } from '@/reaction/reaction.module';
 import { CommentModule } from '@/comment/comment.module';
 import { FollowerModule } from '@/follower/follower.module';
 import { BlockUserModule } from '@/block-user/block-user.module';
+import { NotificationModule } from '@/notification/notification.module';
 
 @Module({
   imports: [
@@ -58,6 +59,7 @@ import { BlockUserModule } from '@/block-user/block-user.module';
     CommentModule,
     FollowerModule,
     BlockUserModule,
+    NotificationModule,
   ],
   controllers: [],
   providers: [],
