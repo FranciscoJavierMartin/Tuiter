@@ -2,8 +2,6 @@ import { Global, Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ConfigOptions, v2 } from 'cloudinary';
 import { UploaderService } from '@/shared/services/uploader.service';
-import { EmailService } from '@/shared/emails/email.service';
-import { EmailConsumer } from '@/shared/emails/email.consumer';
 
 @Global()
 @Module({
@@ -21,9 +19,7 @@ import { EmailConsumer } from '@/shared/emails/email.consumer';
       },
     },
     UploaderService,
-    EmailService,
-    EmailConsumer,
   ],
-  exports: [UploaderService, EmailService, EmailConsumer],
+  exports: [UploaderService],
 })
 export class SharedModule {}

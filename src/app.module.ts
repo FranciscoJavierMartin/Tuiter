@@ -13,6 +13,7 @@ import { CommentModule } from '@/comment/comment.module';
 import { FollowerModule } from '@/follower/follower.module';
 import { BlockUserModule } from '@/block-user/block-user.module';
 import { NotificationModule } from '@/notification/notification.module';
+import { EmailModule } from '@/email/email.module';
 
 @Module({
   imports: [
@@ -37,7 +38,8 @@ import { NotificationModule } from '@/notification/notification.module';
           from: `Chatty App <${configService.get('SENDER_EMAIL')}>`,
         },
         template: {
-          dir: __dirname + '/shared/emails/templates',
+          // TODO: Extract CSS
+          dir: __dirname + '/email/templates',
           adapter: new HandlebarsAdapter(),
           options: {
             strict: true,
@@ -60,6 +62,7 @@ import { NotificationModule } from '@/notification/notification.module';
     FollowerModule,
     BlockUserModule,
     NotificationModule,
+    EmailModule,
   ],
   controllers: [],
   providers: [],

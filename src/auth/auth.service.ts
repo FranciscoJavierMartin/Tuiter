@@ -10,10 +10,6 @@ import { ObjectId } from 'mongodb';
 import { Queue } from 'bull';
 import { UploadApiResponse } from 'cloudinary';
 import { generateRandomIntegers } from '@/helpers/utils';
-import {
-  MailForgotPasswordData,
-  MailResetPasswordData,
-} from '@/shared/emails/interfaces/email';
 import { UploaderService } from '@/shared/services/uploader.service';
 import { ID } from '@/shared/interfaces/types';
 import { UserService } from '@/user/services/user.service';
@@ -26,6 +22,7 @@ import { AuthDocument } from '@/auth/models/auth.model';
 import { LoginDto } from '@/auth/dto/requests/login.dto';
 import { UserDto } from '@/auth/dto/responses/user.dto';
 import { AuthRepository } from '@/auth/repositories/auth.repository';
+import { EmailService } from '@/email/services/email.service';
 
 @Injectable()
 export class AuthService {
@@ -36,12 +33,9 @@ export class AuthService {
     private readonly userService: UserService,
     private readonly userRepository: UserRepository,
     private readonly userCacheService: UserCacheService,
+    private readonly emailService: EmailService,
     @InjectQueue('auth') private readonly authQueue: Queue<AuthDocument>,
     @InjectQueue('user') private readonly userQueue: Queue<UserDocument>,
-    @InjectQueue('email')
-    private readonly emailQueue: Queue<
-      MailForgotPasswordData | MailResetPasswordData
-    >,
   ) {}
 
   /**
@@ -199,11 +193,11 @@ export class AuthService {
       randomCharacters,
     );
 
-    this.emailQueue.add('sendForgotPasswordEmail', {
-      receiverEmail: email,
-      username: authUser.username,
-      token: randomCharacters,
-    });
+    this.emailService.sendForgotPasswordEmail(
+      email,
+      authUser.username,
+      randomCharacters,
+    );
   }
 
   /**
@@ -229,15 +223,11 @@ export class AuthService {
     authUser.passwordResetToken = undefined;
     await authUser.save();
 
-    this.emailQueue.add('sendResetPasswordEmail', {
-      username: authUser.username,
-      receiverEmail: authUser.email,
-      ipaddress: ip,
-      date: new Date().toLocaleDateString(undefined, {
-        hour: '2-digit',
-        minute: '2-digit',
-      }),
-    });
+    this.emailService.sendResetPasswordEmail(
+      authUser.username,
+      authUser.email,
+      ip,
+    );
   }
 
   /**

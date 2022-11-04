@@ -12,11 +12,12 @@ import { AuthUser, AuthSchema } from '@/auth/models/auth.model';
 import { JwtStrategy } from '@/auth/strategies/jwt.strategy';
 import { AuthConsumer } from '@/auth/consumers/auth.consumer';
 import { AuthRepository } from '@/auth/repositories/auth.repository';
+import { EmailModule } from '@/email/email.module';
 
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: AuthUser.name, schema: AuthSchema }]),
-    BullModule.registerQueue(...getQueues('auth', 'user', 'email')),
+    BullModule.registerQueue(...getQueues('auth', 'user')),
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.registerAsync({
       imports: [ConfigModule],
@@ -29,6 +30,7 @@ import { AuthRepository } from '@/auth/repositories/auth.repository';
       },
     }),
     UserModule,
+    EmailModule,
   ],
   controllers: [AuthController],
   providers: [JwtStrategy, AuthService, AuthConsumer, AuthRepository],
