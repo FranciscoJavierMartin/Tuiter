@@ -3,6 +3,7 @@ import { DoneCallback, Job } from 'bull';
 import { BaseConsumer } from '@/shared/consumer/base.consumer';
 import { EmailService } from '@/shared/emails/email.service';
 import {
+  MailCommentsNotification,
   MailForgotPasswordData,
   MailResetPasswordData,
 } from '@/shared/emails/interfaces/email';
@@ -55,6 +56,32 @@ export class EmailConsumer extends BaseConsumer {
         username,
         ipaddress,
         date,
+      );
+
+      job.progress(100);
+      done(null, job.data);
+    } catch (error) {
+      this.logger.error(error);
+      done(error as Error);
+    }
+  }
+
+  @Process({
+    name: 'sendCommentsEmail',
+    concurrency: CONSUMER_CONCURRENCY,
+  })
+  public async sendCommentsEmail(
+    job: Job<MailCommentsNotification>,
+    done: DoneCallback,
+  ): Promise<void> {
+    try {
+      const { receiverEmail, username, message, header } = job.data;
+
+      await this.emailService.sendCommentsEmail(
+        receiverEmail,
+        username,
+        message,
+        header,
       );
 
       job.progress(100);

@@ -10,3 +10,10 @@ export interface MailResetPasswordData {
   ipaddress: string;
   date: string;
 }
+
+export interface MailCommentsNotification {
+  receiverEmail: string;
+  username: string;
+  message: string;
+  header: string;
+}

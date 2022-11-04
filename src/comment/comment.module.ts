@@ -17,7 +17,7 @@ import { NotificationModule } from '@/notification/notification.module';
   imports: [
     MongooseModule.forFeature([{ name: Comment.name, schema: CommentSchema }]),
     PassportModule.register({ defaultStrategy: 'jwt' }),
-    BullModule.registerQueue(...getQueues('comment')),
+    BullModule.registerQueue(...getQueues('comment', 'email')),
     PostModule,
     UserModule,
     NotificationModule,

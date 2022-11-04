@@ -3,7 +3,10 @@ import { ConfigService } from '@nestjs/config';
 import { MailerService } from '@nestjs-modules/mailer';
 import * as sendGridMail from '@sendgrid/mail';
 
-type Templates = 'forgot-password-template' | 'reset-password-template';
+type Templates =
+  | 'forgot-password-template'
+  | 'reset-password-template'
+  | 'notification-template';
 
 @Injectable()
 export class EmailService {
@@ -67,6 +70,26 @@ export class EmailService {
         email: receiverEmail,
         ipaddress,
         date,
+        image_url:
+          'https://res.cloudinary.com/dyshqk0em/image/upload/v1667416093/chatty-nest/lock-icon.png',
+      },
+    );
+  }
+
+  public async sendCommentsEmail(
+    receiverEmail: string,
+    username: string,
+    message: string,
+    header: string,
+  ): Promise<void> {
+    await this.sendEmail(
+      receiverEmail,
+      'Post notification',
+      'notification-template',
+      {
+        username,
+        message,
+        header,
         image_url:
           'https://res.cloudinary.com/dyshqk0em/image/upload/v1667416093/chatty-nest/lock-icon.png',
       },
