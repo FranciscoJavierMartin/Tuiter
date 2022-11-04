@@ -10,8 +10,7 @@ import { AddCommentJobData } from '@/comment/interfaces/comment.interface';
 import { Comment } from '@/comment/models/comment.model';
 import { NotificationService } from '@/notification/notification.service';
 import { NotificationType } from '@/notification/interfaces/notification.interface';
-import { InjectQueue } from '@nestjs/bull';
-import { Queue } from 'bull';
+import { EmailService } from '@/email/services/email.service.service';
 
 @Injectable()
 export class CommentRepository {
@@ -20,8 +19,7 @@ export class CommentRepository {
     private readonly postRepository: PostRepository,
     private readonly userRepository: UserRepository,
     private readonly notificationService: NotificationService,
-    @InjectQueue('email')
-    private readonly emailQueue: Queue<any>,
+    private readonly emailService: EmailService,
   ) {}
 
   public async addCommentToDB({
@@ -61,14 +59,14 @@ export class CommentRepository {
 
       // TODO: emit 'insert notification'
 
-      this.emailQueue.add('sendCommentsEmail', {
-        // TODO: Cast properly to get email and username
-        receiverEmail: (response[2] as any).email,
-        username: (response[2] as any).username,
-        message: `${username} commented on your post`,
-        header: 'Comment notification',
-        subject: 'Post notification',
-      });
+      // TODO: Cast properly to get email and username
+      this.emailService.sendCommentsEmail(
+        (response[2] as any).email,
+        (response[2] as any).username,
+        `${username} commented on your post`,
+        'Comment notification',
+        'Post notification',
+      );
     }
   }
 

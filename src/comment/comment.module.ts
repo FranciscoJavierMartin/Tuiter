@@ -12,15 +12,17 @@ import { Comment, CommentSchema } from '@/comment/models/comment.model';
 import { CommentRepository } from '@/comment/repositories/comment.repository';
 import { CommentConsumer } from '@/comment/consumer/comment.consumer';
 import { NotificationModule } from '@/notification/notification.module';
+import { EmailModule } from '@/email/email.module';
 
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: Comment.name, schema: CommentSchema }]),
     PassportModule.register({ defaultStrategy: 'jwt' }),
-    BullModule.registerQueue(...getQueues('comment', 'email')),
+    BullModule.registerQueue(...getQueues('comment')),
     PostModule,
     UserModule,
     NotificationModule,
+    EmailModule,
   ],
   controllers: [CommentController],
   providers: [

@@ -2,6 +2,7 @@ import { InjectQueue } from '@nestjs/bull';
 import { Injectable } from '@nestjs/common';
 import { Queue } from 'bull';
 import {
+  MailCommentsNotification,
   MailForgotPasswordData,
   MailResetPasswordData,
 } from '@/email/interfaces/email.interface';
@@ -13,7 +14,7 @@ export class EmailService {
     private readonly emailSenderService: EmailSenderService,
     @InjectQueue('email')
     private readonly emailQueue: Queue<
-      MailForgotPasswordData | MailResetPasswordData
+      MailForgotPasswordData | MailResetPasswordData | MailCommentsNotification
     >,
   ) {}
 
@@ -42,6 +43,22 @@ export class EmailService {
         hour: '2-digit',
         minute: '2-digit',
       }),
+    });
+  }
+
+  public async sendCommentsEmail(
+    receiverEmail: string,
+    username: string,
+    message: string,
+    header: string,
+    subject: string,
+  ): Promise<void> {
+    this.emailQueue.add('sendCommentsEmail', {
+      receiverEmail,
+      username,
+      message,
+      header,
+      subject,
     });
   }
 }
