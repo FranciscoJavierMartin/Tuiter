@@ -8,6 +8,8 @@ import { User } from '@/user/models/user.model';
 import { UserRepository } from '@/user/repositories/user.repository';
 import { AddCommentJobData } from '@/comment/interfaces/comment.interface';
 import { Comment } from '@/comment/models/comment.model';
+import { NotificationService } from '@/notification/notification.service';
+import { NotificationType } from '@/notification/interfaces/notification.interface';
 
 @Injectable()
 export class CommentRepository {
@@ -15,6 +17,7 @@ export class CommentRepository {
     @InjectModel(Comment.name) private readonly commentModel: Model<Comment>,
     private readonly postRepository: PostRepository,
     private readonly userRepository: UserRepository,
+    private readonly notificationService: NotificationService,
   ) {}
 
   public async addCommentToDB({
@@ -35,6 +38,27 @@ export class CommentRepository {
     ]);
 
     // TODO: Send comments notifications
+    if (response[2].notifications.comments && userFrom !== userTo) {
+      const notifications = await this.notificationService.insertNotification({
+        userFrom,
+        userTo,
+        message: `${username} commented on your post`,
+        notificationType: NotificationType.comments,
+        entityId: postId,
+        createdItemId: response[0]._id,
+        createdAt: new Date(),
+        comment: comment.text,
+        post: response[1].text,
+        imgId: response[1].imgId,
+        imgVersion: response[1].imgVersion,
+        gifUrl: response[1].gifUrl,
+        reaction: '',
+      });
+
+      // TODO: emit 'insert notification'
+
+      
+    }
   }
 
   public async getPostComments(postId: ObjectId): Promise<Comment[]> {

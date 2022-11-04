@@ -11,6 +11,7 @@ import { CommentCacheService } from '@/comment/services/comment.cache.service';
 import { Comment, CommentSchema } from '@/comment/models/comment.model';
 import { CommentRepository } from '@/comment/repositories/comment.repository';
 import { CommentConsumer } from '@/comment/consumer/comment.consumer';
+import { NotificationModule } from '@/notification/notification.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { CommentConsumer } from '@/comment/consumer/comment.consumer';
     BullModule.registerQueue(...getQueues('comment')),
     PostModule,
     UserModule,
+    NotificationModule,
   ],
   controllers: [CommentController],
   providers: [

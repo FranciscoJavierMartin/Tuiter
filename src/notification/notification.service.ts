@@ -11,7 +11,7 @@ export class NotificationService {
 
   public async insertNotification(
     notificationBody: NotificationBody,
-  ): Promise<NotificationDto> {
+  ): Promise<NotificationDto[]> {
     await this.notificationRepository.create(notificationBody);
     return await this.notificationRepository.getNotifications(
       notificationBody.userTo,

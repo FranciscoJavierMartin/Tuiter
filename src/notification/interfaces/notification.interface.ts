@@ -1,7 +1,10 @@
 import { ID } from '@/shared/interfaces/types';
 
 export enum NotificationType {
-  Comment = 'comment',
+  comments = 'comments',
+  follows = 'follows',
+  messages = 'messages',
+  reactions = 'reactions',
 }
 
 export interface NotificationBody {
