@@ -79,6 +79,13 @@ export class EmailSenderService {
     );
   }
 
+  /**
+   * Send email notification about comment in a post
+   * @param receiverEmail Email address to send
+   * @param username User name
+   * @param username Message to be shown in the template
+   * @param header Header text in email
+   */
   public async sendCommentsEmail(
     receiverEmail: string,
     username: string,

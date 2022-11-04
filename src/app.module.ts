@@ -38,7 +38,8 @@ import { EmailModule } from '@/email/email.module';
           from: `Chatty App <${configService.get('SENDER_EMAIL')}>`,
         },
         template: {
-          dir: __dirname + '/shared/emails/templates',
+          // TODO: Extract CSS
+          dir: __dirname + '/email/templates',
           adapter: new HandlebarsAdapter(),
           options: {
             strict: true,

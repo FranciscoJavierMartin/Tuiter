@@ -33,13 +33,14 @@ export class CommentRepository {
     const post: Promise<Post> =
       this.postRepository.incrementCommentsCount(postId);
     const user: Promise<UserDocument> = this.userRepository.getUserById(userTo);
+
+    // TODO: Descructure elements (for better readability)
     const response: [Comment, Post, UserDocument] = await Promise.all([
       comments,
       post,
       user,
     ]);
 
-    // TODO: Send comments notifications
     if (response[2].notifications.comments && userFrom !== userTo) {
       const notifications = await this.notificationService.insertNotification({
         userFrom,
