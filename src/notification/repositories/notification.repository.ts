@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { ObjectId } from 'mongodb';
 import { NotificationBody } from '@/notification/interfaces/notification.interface';
+import { Notification } from '@/notification/models/notification.model';
 
 @Injectable()
 export class NotificationRepository {
@@ -11,12 +12,8 @@ export class NotificationRepository {
     private readonly notificationModel: Model<Notification>,
   ) {}
 
-  public async insertNotification(
-    body: NotificationBody,
-  ): Promise<Notification[]> {
+  public async create(body: NotificationBody): Promise<void> {
     await this.notificationModel.create(body);
-
-    return await this.getNotifications(body.userTo);
   }
 
   public async getNotifications(userId: ObjectId): Promise<Notification[]> {
