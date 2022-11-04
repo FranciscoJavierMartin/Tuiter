@@ -6,12 +6,10 @@ import {
   MailForgotPasswordData,
   MailResetPasswordData,
 } from '@/email/interfaces/email.interface';
-import { EmailSenderService } from '@/email/services/email-sender.service';
 
 @Injectable()
 export class EmailService {
   constructor(
-    private readonly emailSenderService: EmailSenderService,
     @InjectQueue('email')
     private readonly emailQueue: Queue<
       MailForgotPasswordData | MailResetPasswordData | MailCommentsNotification
@@ -51,14 +49,12 @@ export class EmailService {
     username: string,
     message: string,
     header: string,
-    subject: string,
   ): Promise<void> {
     this.emailQueue.add('sendCommentsEmail', {
       receiverEmail,
       username,
       message,
       header,
-      subject,
     });
   }
 }

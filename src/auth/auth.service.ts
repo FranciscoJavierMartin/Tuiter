@@ -10,10 +10,6 @@ import { ObjectId } from 'mongodb';
 import { Queue } from 'bull';
 import { UploadApiResponse } from 'cloudinary';
 import { generateRandomIntegers } from '@/helpers/utils';
-import {
-  MailForgotPasswordData,
-  MailResetPasswordData,
-} from '@/shared/emails/interfaces/email';
 import { UploaderService } from '@/shared/services/uploader.service';
 import { ID } from '@/shared/interfaces/types';
 import { UserService } from '@/user/services/user.service';
@@ -26,7 +22,7 @@ import { AuthDocument } from '@/auth/models/auth.model';
 import { LoginDto } from '@/auth/dto/requests/login.dto';
 import { UserDto } from '@/auth/dto/responses/user.dto';
 import { AuthRepository } from '@/auth/repositories/auth.repository';
-import { EmailService } from '@/email/services/email.service.service';
+import { EmailService } from '@/email/services/email.service';
 
 @Injectable()
 export class AuthService {

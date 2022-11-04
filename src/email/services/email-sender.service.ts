@@ -55,13 +55,12 @@ export class EmailSenderService {
    * @param receiverEmail Email address to send
    * @param username User name
    * @param ipaddress User ip address
-   * @param date Date (now)
+   
    */
   public async sendResetPasswordEmail(
     receiverEmail: string,
     username: string,
     ipaddress: string,
-    date: string,
   ): Promise<void> {
     await this.sendEmail(
       receiverEmail,
@@ -71,7 +70,10 @@ export class EmailSenderService {
         username,
         email: receiverEmail,
         ipaddress,
-        date,
+        date: new Date().toLocaleDateString(undefined, {
+          hour: '2-digit',
+          minute: '2-digit',
+        }),
         image_url: lockImage,
       },
     );

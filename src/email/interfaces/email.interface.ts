@@ -16,5 +16,4 @@ export interface MailCommentsNotification {
   username: string;
   message: string;
   header: string;
-  subject: string;
 }

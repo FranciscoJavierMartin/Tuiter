@@ -10,7 +10,7 @@ import { AddCommentJobData } from '@/comment/interfaces/comment.interface';
 import { Comment } from '@/comment/models/comment.model';
 import { NotificationService } from '@/notification/notification.service';
 import { NotificationType } from '@/notification/interfaces/notification.interface';
-import { EmailService } from '@/email/services/email.service.service';
+import { EmailService } from '@/email/services/email.service';
 
 @Injectable()
 export class CommentRepository {
@@ -65,7 +65,6 @@ export class CommentRepository {
         (response[2] as any).username,
         `${username} commented on your post`,
         'Comment notification',
-        'Post notification',
       );
     }
   }
