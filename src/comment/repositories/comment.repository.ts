@@ -62,6 +62,7 @@ export class CommentRepository {
       // TODO: emit 'insert notification'
 
       this.emailQueue.add('sendCommentsEmail', {
+        // TODO: Cast properly to get email and username
         receiverEmail: (response[2] as any).email,
         username: (response[2] as any).username,
         message: `${username} commented on your post`,
