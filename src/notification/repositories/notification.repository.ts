@@ -4,6 +4,7 @@ import { Model } from 'mongoose';
 import { ObjectId } from 'mongodb';
 import { NotificationBody } from '@/notification/interfaces/notification.interface';
 import { Notification } from '@/notification/models/notification.model';
+import { NotificationDto } from '@/notification/dto/reponses/notification.dto';
 
 @Injectable()
 export class NotificationRepository {
@@ -16,7 +17,7 @@ export class NotificationRepository {
     await this.notificationModel.create(body);
   }
 
-  public async getNotifications(userId: ObjectId): Promise<Notification[]> {
+  public async getNotifications(userId: ObjectId): Promise<NotificationDto[]> {
     return await this.notificationModel.aggregate([
       { $match: { userTo: userId } },
       {
