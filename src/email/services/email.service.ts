@@ -76,4 +76,18 @@ export class EmailService {
       header,
     });
   }
+
+  public async sendFollowersEmail(
+    receiverEmail: string,
+    username: string,
+    message: string,
+    header: string,
+  ): Promise<void> {
+    this.emailQueue.add('sendFollowersEmail', {
+      receiverEmail,
+      username,
+      message,
+      header,
+    });
+  }
 }

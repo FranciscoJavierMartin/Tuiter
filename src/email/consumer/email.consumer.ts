@@ -90,4 +90,31 @@ export class EmailConsumer extends BaseConsumer {
       done(error as Error);
     }
   }
+
+  // TODO: Merge notification consumers in one single
+  @Process({
+    name: 'sendFollowersEmail',
+    concurrency: CONSUMER_CONCURRENCY,
+  })
+  public async sendFollowersEmail(
+    job: Job<MailCommentsNotification>,
+    done: DoneCallback,
+  ): Promise<void> {
+    try {
+      const { receiverEmail, username, message, header } = job.data;
+
+      await this.emailSenderService.sendFollowersEmail(
+        receiverEmail,
+        username,
+        message,
+        header,
+      );
+
+      job.progress(100);
+      done(null, job.data);
+    } catch (error) {
+      this.logger.error(error);
+      done(error as Error);
+    }
+  }
 }

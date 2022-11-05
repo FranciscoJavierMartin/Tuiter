@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { ObjectId } from 'mongodb';
+import { EmailService } from '@/email/services/email.service';
 import { Post } from '@/post/models/post.model';
 import { PostRepository } from '@/post/repositories/post.repository';
 import { UserDocument } from '@/user/models/user.model';
@@ -10,7 +11,6 @@ import { AddCommentJobData } from '@/comment/interfaces/comment.interface';
 import { Comment } from '@/comment/models/comment.model';
 import { NotificationService } from '@/notification/notification.service';
 import { NotificationType } from '@/notification/interfaces/notification.interface';
-import { EmailService } from '@/email/services/email.service';
 
 @Injectable()
 export class CommentRepository {

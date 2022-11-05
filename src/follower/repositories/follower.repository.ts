@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { ObjectId } from 'mongodb';
+import { EmailService } from '@/email/services/email.service';
 import { UserRepository } from '@/user/repositories/user.repository';
 import { Follower } from '@/follower/models/follower.model';
 import { FollowerDto } from '@/follower/dto/responses/follower.dto';
@@ -13,6 +14,7 @@ export class FollowerRepository {
   constructor(
     private readonly userRepository: UserRepository,
     private readonly notificationService: NotificationService,
+    private readonly emailService: EmailService,
     @InjectModel(Follower.name) private followerModel: Model<Follower>,
   ) {}
 
@@ -47,11 +49,10 @@ export class FollowerRepository {
         followeeId,
         followerId: userId,
       }),
-      // TODO: Return updated documents
+      // TODO: Return updated documents (Performance consideration)
       this.userRepository.updateUserFollowersCount(userId, followeeId, 1),
     ]);
 
-    // TODO: Send notification
     const followeeUser = await this.userRepository.getUserById(followeeId);
     const followerUser = await this.userRepository.getUserById(userId);
 
@@ -71,6 +72,13 @@ export class FollowerRepository {
         gifUrl: '',
         reaction: '',
       });
+
+      this.emailService.sendFollowersEmail(
+        followeeUser.email,
+        followerUser.username,
+        `${followerUser.username} commented on your post`,
+        'Follower notification',
+      );
     }
   }
 
