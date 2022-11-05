@@ -4,6 +4,8 @@ import { PassportModule } from '@nestjs/passport';
 import { MongooseModule } from '@nestjs/mongoose';
 import { getQueues } from '@/helpers/utils';
 import { PostModule } from '@/post/post.module';
+import { UserModule } from '@/user/user.module';
+import { EmailModule } from '@/email/email.module';
 import { ReactionConsumer } from '@/reaction/consumer/reaction.consumer';
 import { Reaction, ReactionSchema } from '@/reaction/models/reaction.model';
 import { ReactionsController } from '@/reaction/reaction.controller';
@@ -21,6 +23,8 @@ import { NotificationModule } from '@/notification/notification.module';
     BullModule.registerQueue(...getQueues('reaction')),
     PostModule,
     NotificationModule,
+    UserModule,
+    EmailModule,
   ],
   controllers: [ReactionsController],
   providers: [

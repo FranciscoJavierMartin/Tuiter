@@ -13,6 +13,7 @@ import {
 } from '@/reaction/interfaces/reaction.interface';
 import { ReactionCacheService } from '@/reaction/services/reaction.cache.service';
 import { NotificationType } from '@/notification/interfaces/notification.interface';
+import { EmailService } from '@/email/services/email.service';
 
 @Processor('reaction')
 export class ReactionConsumer extends BaseConsumer {
@@ -22,6 +23,7 @@ export class ReactionConsumer extends BaseConsumer {
     private readonly userRepository: UserRepository,
     private readonly notificationService: NotificationService,
     private readonly reactionCacheService: ReactionCacheService,
+    private readonly emailService: EmailService,
   ) {
     super('ReactionConsumer');
   }
@@ -59,7 +61,7 @@ export class ReactionConsumer extends BaseConsumer {
       const postAuthorId = await this.postRepository.getPostAuthorId(
         job.data.reaction.postId.toString(),
       );
-      const author = await this.userRepository.getUserById(
+      const postAuthor = await this.userRepository.getUserById(
         new ObjectId(postAuthorId),
       );
 
@@ -68,13 +70,13 @@ export class ReactionConsumer extends BaseConsumer {
       );
 
       if (
-        author.notifications.reactions &&
-        author.username !== job.data.reaction.username
+        postAuthor.notifications.reactions &&
+        postAuthor.username !== job.data.reaction.username
       ) {
         const notifications = await this.notificationService.insertNotification(
           {
             userFrom: reactionAuthor._id,
-            userTo: author._id,
+            userTo: postAuthor._id,
             message: `${job.data.reaction.username} has reacted to your post`,
             notificationType: NotificationType.reactions,
             entityId: job.data.reaction.postId,
@@ -91,12 +93,12 @@ export class ReactionConsumer extends BaseConsumer {
 
         // TODO: emit 'insert notification'
 
-        // this.emailService.sendFollowersEmail(
-        //   followeeUser.email,
-        //   followerUser.username,
-        //   `${followerUser.username} commented on your post`,
-        //   'Follower notification',
-        // );
+        this.emailService.sendReactionsEmail(
+          postAuthor.email,
+          job.data.reaction.username,
+          `${job.data.reaction.username} commented on your post`,
+          'Post reaction notification',
+        );
       }
 
       job.progress(100);

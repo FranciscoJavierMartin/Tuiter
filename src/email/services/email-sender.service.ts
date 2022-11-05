@@ -125,6 +125,26 @@ export class EmailSenderService {
     );
   }
 
+  // TODO: Merge notification email methods in one single method
+  public async sendReactionsEmail(
+    receiverEmail: string,
+    username: string,
+    message: string,
+    header: string,
+  ): Promise<void> {
+    await this.sendEmail(
+      receiverEmail,
+      `${username} is now following you`,
+      'notification-template',
+      {
+        username,
+        message,
+        header,
+        image_url: lockImage,
+      },
+    );
+  }
+
   /**
    * Send email
    * @param receiverEmail Destination email

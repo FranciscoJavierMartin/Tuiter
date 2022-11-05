@@ -90,4 +90,18 @@ export class EmailService {
       header,
     });
   }
+
+  public async sendReactionsEmail(
+    receiverEmail: string,
+    username: string,
+    message: string,
+    header: string,
+  ): Promise<void> {
+    this.emailQueue.add('sendReactionsEmail', {
+      receiverEmail,
+      username,
+      message,
+      header,
+    });
+  }
 }
