@@ -81,12 +81,10 @@ export class ReactionConsumer extends BaseConsumer {
             entityId: job.data.reaction.postId,
             createdItemId: reactionInDb.upsertedId,
             createdAt: new Date(),
-            comment: '',
-            post: postUpdated.text,
+            text: postUpdated.text,
             imgId: postUpdated.imgId,
             imgVersion: postUpdated.imgVersion,
             gifUrl: postUpdated.gifUrl,
-            reaction: job.data.reaction.feeling,
           },
         );
 

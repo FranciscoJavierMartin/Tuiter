@@ -45,12 +45,10 @@ export class CommentRepository {
         entityId: postId,
         createdItemId: commentCreated._id,
         createdAt: new Date(),
-        comment: comment.text,
-        post: post.text,
+        text: comment.text,
         imgId: post.imgId,
         imgVersion: post.imgVersion,
         gifUrl: post.gifUrl,
-        reaction: '',
       });
 
       // TODO: emit 'insert notification'

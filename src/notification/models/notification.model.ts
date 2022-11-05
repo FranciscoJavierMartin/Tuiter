@@ -41,21 +41,7 @@ export class Notification {
     type: String,
     default: '',
   })
-  comment: string;
-
-  // TODO: Check if could be merged with "comment" in one single attribute
-  @Prop({
-    type: String,
-    default: '',
-  })
-  post: string;
-
-  // TODO: Check if could use another type
-  @Prop({
-    type: String,
-    default: '',
-  })
-  reaction: string;
+  text: string;
 
   @Prop({
     type: String,

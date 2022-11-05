@@ -15,9 +15,7 @@ export interface NotificationBody {
   entityId: ID;
   createdItemId: ID;
   createdAt: Date;
-  comment: string;
-  reaction: string;
-  post: string;
+  text: string;
   imgId: string;
   imgVersion: string;
   gifUrl: string;

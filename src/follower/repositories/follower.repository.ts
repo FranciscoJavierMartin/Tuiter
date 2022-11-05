@@ -65,12 +65,10 @@ export class FollowerRepository {
         entityId: userId,
         createdItemId: followeeId,
         createdAt: new Date(),
-        comment: '',
-        post: '',
+        text: '',
         imgId: '',
         imgVersion: '',
         gifUrl: '',
-        reaction: '',
       });
 
       this.emailService.sendNotificationEmail(
