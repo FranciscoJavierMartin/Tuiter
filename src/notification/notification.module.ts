@@ -9,12 +9,14 @@ import {
   Notification,
   NotificationSchema,
 } from '@/notification/models/notification.model';
+import { PassportModule } from '@nestjs/passport';
 
 @Module({
   imports: [
     MongooseModule.forFeature([
       { name: Notification.name, schema: NotificationSchema },
     ]),
+    PassportModule.register({ defaultStrategy: 'jwt' }),
     BullModule.registerQueue(...getQueues('email')),
   ],
   controllers: [NotificationController],
