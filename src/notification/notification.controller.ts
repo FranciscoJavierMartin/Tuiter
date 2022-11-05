@@ -1,7 +1,8 @@
 import { Controller, Get, UseGuards } from '@nestjs/common';
-import { NotificationService } from '@/notification/notification.service';
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from '@/auth/decorators/get-user.decorator';
+import { NotificationService } from '@/notification/notification.service';
+import { NotificationDto } from '@/notification/dto/reponses/notification.dto';
 
 @Controller('notification')
 export class NotificationController {
@@ -9,7 +10,9 @@ export class NotificationController {
 
   @Get()
   @UseGuards(AuthGuard())
-  public async getNotifications(@GetUser('userId') [userId]: string) {
-    // return this.notificationService.getNotifications(userId);
+  public async getNotifications(
+    @GetUser('userId') [userId]: string,
+  ): Promise<NotificationDto[]> {
+    return await this.notificationService.getNotifications(userId);
   }
 }
