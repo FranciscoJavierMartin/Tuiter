@@ -57,7 +57,6 @@ export class ReactionConsumer extends BaseConsumer {
 
       job.progress(75);
 
-      // TODO: Send notification
       const postAuthorId = await this.postRepository.getPostAuthorId(
         job.data.reaction.postId.toString(),
       );
