@@ -55,8 +55,16 @@ export class CommentRepository {
 
       // TODO: emit 'insert notification'
 
-      this.emailService.sendCommentsEmail(
+      // this.emailService.sendCommentsEmail(
+      //   user.email,
+      //   user.username,
+      //   `${username} commented on your post`,
+      //   'Comment notification',
+      // );
+
+      this.emailService.sendNotificationEmail(
         user.email,
+        `${username} commented on your post`,
         user.username,
         `${username} commented on your post`,
         'Comment notification',

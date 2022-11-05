@@ -11,8 +11,9 @@ export interface MailResetPasswordData {
   date: string;
 }
 
-export interface MailCommentsNotification {
+export interface MailNotificationData {
   receiverEmail: string;
+  subject: string;
   username: string;
   message: string;
   header: string;

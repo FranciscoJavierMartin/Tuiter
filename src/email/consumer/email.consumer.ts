@@ -4,7 +4,7 @@ import { BaseConsumer } from '@/shared/consumer/base.consumer';
 import { CONSUMER_CONCURRENCY } from '@/shared/contants';
 import { EmailSenderService } from '@/email/services/email-sender.service';
 import {
-  MailCommentsNotification,
+  MailNotificationData,
   MailForgotPasswordData,
   MailResetPasswordData,
 } from '@/email/interfaces/email.interface';
@@ -65,73 +65,74 @@ export class EmailConsumer extends BaseConsumer {
     }
   }
 
+  // // TODO: Merge notification consumers in one single
+  // @Process({
+  //   name: 'sendFollowersEmail',
+  //   concurrency: CONSUMER_CONCURRENCY,
+  // })
+  // public async sendFollowersEmail(
+  //   job: Job<MailCommentsNotification>,
+  //   done: DoneCallback,
+  // ): Promise<void> {
+  //   try {
+  //     const { receiverEmail, username, message, header } = job.data;
+
+  //     await this.emailSenderService.sendFollowersEmail(
+  //       receiverEmail,
+  //       username,
+  //       message,
+  //       header,
+  //     );
+
+  //     job.progress(100);
+  //     done(null, job.data);
+  //   } catch (error) {
+  //     this.logger.error(error);
+  //     done(error as Error);
+  //   }
+  // }
+
+  // // TODO: Merge notification consumers in one single
+  // @Process({
+  //   name: 'sendReactionsEmail',
+  //   concurrency: CONSUMER_CONCURRENCY,
+  // })
+  // public async sendReactionsEmail(
+  //   job: Job<MailCommentsNotification>,
+  //   done: DoneCallback,
+  // ): Promise<void> {
+  //   try {
+  //     const { receiverEmail, username, message, header } = job.data;
+
+  //     await this.emailSenderService.sendReactionsEmail(
+  //       receiverEmail,
+  //       username,
+  //       message,
+  //       header,
+  //     );
+
+  //     job.progress(100);
+  //     done(null, job.data);
+  //   } catch (error) {
+  //     this.logger.error(error);
+  //     done(error as Error);
+  //   }
+  // }
+
   @Process({
-    name: 'sendCommentsEmail',
+    name: 'sendNotificationEmail',
     concurrency: CONSUMER_CONCURRENCY,
   })
-  public async sendCommentsEmail(
-    job: Job<MailCommentsNotification>,
+  public async sendNotificationEmail(
+    job: Job<MailNotificationData>,
     done: DoneCallback,
   ): Promise<void> {
     try {
-      const { receiverEmail, username, message, header } = job.data;
+      const { receiverEmail, subject, username, message, header } = job.data;
 
-      await this.emailSenderService.sendCommentsEmail(
+      await this.emailSenderService.sendNotificationEmail(
         receiverEmail,
-        username,
-        message,
-        header,
-      );
-
-      job.progress(100);
-      done(null, job.data);
-    } catch (error) {
-      this.logger.error(error);
-      done(error as Error);
-    }
-  }
-
-  // TODO: Merge notification consumers in one single
-  @Process({
-    name: 'sendFollowersEmail',
-    concurrency: CONSUMER_CONCURRENCY,
-  })
-  public async sendFollowersEmail(
-    job: Job<MailCommentsNotification>,
-    done: DoneCallback,
-  ): Promise<void> {
-    try {
-      const { receiverEmail, username, message, header } = job.data;
-
-      await this.emailSenderService.sendFollowersEmail(
-        receiverEmail,
-        username,
-        message,
-        header,
-      );
-
-      job.progress(100);
-      done(null, job.data);
-    } catch (error) {
-      this.logger.error(error);
-      done(error as Error);
-    }
-  }
-
-  // TODO: Merge notification consumers in one single
-  @Process({
-    name: 'sendReactionsEmail',
-    concurrency: CONSUMER_CONCURRENCY,
-  })
-  public async sendReactionsEmail(
-    job: Job<MailCommentsNotification>,
-    done: DoneCallback,
-  ): Promise<void> {
-    try {
-      const { receiverEmail, username, message, header } = job.data;
-
-      await this.emailSenderService.sendReactionsEmail(
-        receiverEmail,
+        subject,
         username,
         message,
         header,

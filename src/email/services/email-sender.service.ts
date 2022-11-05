@@ -86,63 +86,78 @@ export class EmailSenderService {
    * @param username Message to be shown in the template
    * @param header Header text in email
    */
-  public async sendCommentsEmail(
-    receiverEmail: string,
-    username: string,
-    message: string,
-    header: string,
-  ): Promise<void> {
-    await this.sendEmail(
-      receiverEmail,
-      'Post notification',
-      'notification-template',
-      {
-        username,
-        message,
-        header,
-        image_url: lockImage,
-      },
-    );
-  }
+  // public async sendCommentsEmail(
+  //   receiverEmail: string,
+  //   username: string,
+  //   message: string,
+  //   header: string,
+  // ): Promise<void> {
+  //   await this.sendEmail(
+  //     receiverEmail,
+  //     'Post notification',
+  //     'notification-template',
+  //     {
+  //       username,
+  //       message,
+  //       header,
+  //       image_url: lockImage,
+  //     },
+  //   );
+  // }
 
   // TODO: Merge notification email methods in one single method
-  public async sendFollowersEmail(
-    receiverEmail: string,
-    username: string,
-    message: string,
-    header: string,
-  ): Promise<void> {
-    await this.sendEmail(
-      receiverEmail,
-      `${username} is now following you`,
-      'notification-template',
-      {
-        username,
-        message,
-        header,
-        image_url: lockImage,
-      },
-    );
-  }
+  // public async sendFollowersEmail(
+  //   receiverEmail: string,
+  //   username: string,
+  //   message: string,
+  //   header: string,
+  // ): Promise<void> {
+  //   await this.sendEmail(
+  //     receiverEmail,
+  //     `${username} is now following you`,
+  //     'notification-template',
+  //     {
+  //       username,
+  //       message,
+  //       header,
+  //       image_url: lockImage,
+  //     },
+  //   );
+  // }
 
   // TODO: Merge notification email methods in one single method
-  public async sendReactionsEmail(
+  // public async sendReactionsEmail(
+  //   receiverEmail: string,
+  //   username: string,
+  //   message: string,
+  //   header: string,
+  // ): Promise<void> {
+  //   await this.sendEmail(
+  //     receiverEmail,
+  //     `${username} is now following you`,
+  //     'notification-template',
+  //     {
+  //       username,
+  //       message,
+  //       header,
+  //       image_url: lockImage,
+  //     },
+  //   );
+  // }
+
+  public async sendNotificationEmail(
     receiverEmail: string,
+    subject: string,
     username: string,
     message: string,
     header: string,
   ): Promise<void> {
-    await this.sendEmail(
-      receiverEmail,
-      `${username} is now following you`,
-      'notification-template',
-      {
-        username,
-        message,
-        header,
-        image_url: lockImage,
-      },
-    );
+    await this.sendEmail(receiverEmail, subject, 'notification-template', {
+      username,
+      message,
+      header,
+      image_url: lockImage,
+    });
   }
 
   /**

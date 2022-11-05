@@ -2,7 +2,7 @@ import { InjectQueue } from '@nestjs/bull';
 import { Injectable } from '@nestjs/common';
 import { Queue } from 'bull';
 import {
-  MailCommentsNotification,
+  MailNotificationData,
   MailForgotPasswordData,
   MailResetPasswordData,
 } from '@/email/interfaces/email.interface';
@@ -12,7 +12,7 @@ export class EmailService {
   constructor(
     @InjectQueue('email')
     private readonly emailQueue: Queue<
-      MailForgotPasswordData | MailResetPasswordData | MailCommentsNotification
+      MailForgotPasswordData | MailResetPasswordData | MailNotificationData
     >,
   ) {}
 
@@ -56,49 +56,66 @@ export class EmailService {
     });
   }
 
+  // public async sendCommentsEmail(
+  //   receiverEmail: string,
+  //   username: string,
+  //   message: string,
+  //   header: string,
+  // ): Promise<void> {
+  //   this.emailQueue.add('sendCommentsEmail', {
+  //     receiverEmail,
+  //     username,
+  //     message,
+  //     header,
+  //   });
+  // }
+
+  // public async sendFollowersEmail(
+  //   receiverEmail: string,
+  //   username: string,
+  //   message: string,
+  //   header: string,
+  // ): Promise<void> {
+  //   this.emailQueue.add('sendFollowersEmail', {
+  //     receiverEmail,
+  //     username,
+  //     message,
+  //     header,
+  //   });
+  // }
+
+  // public async sendReactionsEmail(
+  //   receiverEmail: string,
+  //   username: string,
+  //   message: string,
+  //   header: string,
+  // ): Promise<void> {
+  //   this.emailQueue.add('sendReactionsEmail', {
+  //     receiverEmail,
+  //     username,
+  //     message,
+  //     header,
+  //   });
+  // }
+
   /**
-   * Enqueue notification email about comment in a post
+   * Enqueue notification email
    * @param receiverEmail Email address to send
+   * @param subject Email subject
    * @param username User name
-   * @param username Message to be shown in the template
+   * @param message Message to be shown in the template
    * @param header Header text in email
    */
-  public async sendCommentsEmail(
+  public async sendNotificationEmail(
     receiverEmail: string,
+    subject: string,
     username: string,
     message: string,
     header: string,
   ): Promise<void> {
-    this.emailQueue.add('sendCommentsEmail', {
+    this.emailQueue.add('sendNotificationEmail', {
       receiverEmail,
-      username,
-      message,
-      header,
-    });
-  }
-
-  public async sendFollowersEmail(
-    receiverEmail: string,
-    username: string,
-    message: string,
-    header: string,
-  ): Promise<void> {
-    this.emailQueue.add('sendFollowersEmail', {
-      receiverEmail,
-      username,
-      message,
-      header,
-    });
-  }
-
-  public async sendReactionsEmail(
-    receiverEmail: string,
-    username: string,
-    message: string,
-    header: string,
-  ): Promise<void> {
-    this.emailQueue.add('sendReactionsEmail', {
-      receiverEmail,
+      subject,
       username,
       message,
       header,
