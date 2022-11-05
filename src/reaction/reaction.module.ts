@@ -10,6 +10,7 @@ import { ReactionsController } from '@/reaction/reaction.controller';
 import { ReactionRepository } from '@/reaction/repositories/reaction.repository';
 import { ReactionService } from '@/reaction/services/reaction.service';
 import { ReactionCacheService } from '@/reaction/services/reaction.cache.service';
+import { NotificationModule } from '@/notification/notification.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { ReactionCacheService } from '@/reaction/services/reaction.cache.service
     PassportModule.register({ defaultStrategy: 'jwt' }),
     BullModule.registerQueue(...getQueues('reaction')),
     PostModule,
+    NotificationModule,
   ],
   controllers: [ReactionsController],
   providers: [
