@@ -87,7 +87,7 @@ export class PostController {
 
   @Delete(':postId')
   @ApiParam({
-    name: 'Post id',
+    name: 'postId',
     description: 'Post id to remove',
   })
   @ApiOkResponse({
