@@ -1,15 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, PipelineStage } from 'mongoose';
+import { Model } from 'mongoose';
 import { ObjectId } from 'mongodb';
 import { UserRepository } from '@/user/repositories/user.repository';
 import { Follower } from '@/follower/models/follower.model';
 import { FollowerDto } from '@/follower/dto/responses/follower.dto';
+import { NotificationService } from '@/notification/notification.service';
+import { NotificationType } from '@/notification/interfaces/notification.interface';
 
 @Injectable()
 export class FollowerRepository {
   constructor(
     private readonly userRepository: UserRepository,
+    private readonly notificationService: NotificationService,
     @InjectModel(Follower.name) private followerModel: Model<Follower>,
   ) {}
 
@@ -44,8 +47,31 @@ export class FollowerRepository {
         followeeId,
         followerId: userId,
       }),
+      // TODO: Return updated documents
       this.userRepository.updateUserFollowersCount(userId, followeeId, 1),
     ]);
+
+    // TODO: Send notification
+    const followeeUser = await this.userRepository.getUserById(followeeId);
+    const followerUser = await this.userRepository.getUserById(userId);
+
+    if (followeeUser.notifications.follows && userId !== followeeId) {
+      this.notificationService.insertNotification({
+        userFrom: userId,
+        userTo: followeeId,
+        message: `${followerUser.username} is now following you`,
+        notificationType: NotificationType.follows,
+        entityId: userId,
+        createdItemId: followeeId,
+        createdAt: new Date(),
+        comment: '',
+        post: '',
+        imgId: '',
+        imgVersion: '',
+        gifUrl: '',
+        reaction: '',
+      });
+    }
   }
 
   /**

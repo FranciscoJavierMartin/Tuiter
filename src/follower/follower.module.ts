@@ -12,6 +12,7 @@ import { FollowerCacheService } from '@/follower/services/follower.cache.service
 import { User, UserSchema } from '@/user/models/user.model';
 import { FollowerRepository } from '@/follower/repositories/follower.repository';
 import { FollowerConsumer } from '@/follower/consumers/follower.consumer';
+import { NotificationModule } from '@/notification/notification.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { FollowerConsumer } from '@/follower/consumers/follower.consumer';
     BullModule.registerQueue(...getQueues('follower')),
     UserModule,
     BlockUserModule,
+    NotificationModule,
   ],
   controllers: [FollowerController],
   providers: [

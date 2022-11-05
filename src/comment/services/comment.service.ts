@@ -55,8 +55,6 @@ export class CommentService {
       username: user.username,
       comment: commentData,
     });
-
-    // TODO: Add notification
   }
 
   /**

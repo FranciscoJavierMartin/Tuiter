@@ -4,7 +4,7 @@ import { Model } from 'mongoose';
 import { ObjectId } from 'mongodb';
 import { Post } from '@/post/models/post.model';
 import { PostRepository } from '@/post/repositories/post.repository';
-import { User, UserDocument } from '@/user/models/user.model';
+import { UserDocument } from '@/user/models/user.model';
 import { UserRepository } from '@/user/repositories/user.repository';
 import { AddCommentJobData } from '@/comment/interfaces/comment.interface';
 import { Comment } from '@/comment/models/comment.model';
@@ -29,40 +29,35 @@ export class CommentRepository {
     userTo,
     username,
   }: AddCommentJobData): Promise<void> {
-    const comments: Promise<Comment> = this.commentModel.create(comment);
-    const post: Promise<Post> =
-      this.postRepository.incrementCommentsCount(postId);
-    const user: Promise<UserDocument> = this.userRepository.getUserById(userTo);
+    const [commentCreated, post, user]: [Comment, Post, UserDocument] =
+      await Promise.all([
+        this.commentModel.create(comment),
+        this.postRepository.incrementCommentsCount(postId),
+        this.userRepository.getUserById(userTo),
+      ]);
 
-    // TODO: Descructure elements (for better readability)
-    const response: [Comment, Post, UserDocument] = await Promise.all([
-      comments,
-      post,
-      user,
-    ]);
-
-    if (response[2].notifications.comments && userFrom !== userTo) {
+    if (user.notifications.comments && userFrom !== userTo) {
       const notifications = await this.notificationService.insertNotification({
         userFrom,
         userTo,
         message: `${username} commented on your post`,
         notificationType: NotificationType.comments,
         entityId: postId,
-        createdItemId: response[0]._id,
+        createdItemId: commentCreated._id,
         createdAt: new Date(),
         comment: comment.text,
-        post: response[1].text,
-        imgId: response[1].imgId,
-        imgVersion: response[1].imgVersion,
-        gifUrl: response[1].gifUrl,
+        post: post.text,
+        imgId: post.imgId,
+        imgVersion: post.imgVersion,
+        gifUrl: post.gifUrl,
         reaction: '',
       });
 
       // TODO: emit 'insert notification'
 
       this.emailService.sendCommentsEmail(
-        response[2].email,
-        response[2].username,
+        user.email,
+        user.username,
         `${username} commented on your post`,
         'Comment notification',
       );
