@@ -3,11 +3,11 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { ObjectId } from 'mongodb';
 import { EmailService } from '@/email/services/email.service';
+import { NotificationService } from '@/notification/notification.service';
+import { NotificationType } from '@/notification/interfaces/notification.interface';
 import { UserRepository } from '@/user/repositories/user.repository';
 import { Follower } from '@/follower/models/follower.model';
 import { FollowerDto } from '@/follower/dto/responses/follower.dto';
-import { NotificationService } from '@/notification/notification.service';
-import { NotificationType } from '@/notification/interfaces/notification.interface';
 
 @Injectable()
 export class FollowerRepository {

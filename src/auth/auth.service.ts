@@ -12,6 +12,7 @@ import { UploadApiResponse } from 'cloudinary';
 import { generateRandomIntegers } from '@/helpers/utils';
 import { UploaderService } from '@/shared/services/uploader.service';
 import { ID } from '@/shared/interfaces/types';
+import { EmailService } from '@/email/services/email.service';
 import { UserService } from '@/user/services/user.service';
 import { UserCacheService } from '@/user/services/user.cache.service';
 import { UserDocument } from '@/user/models/user.model';
@@ -22,7 +23,6 @@ import { AuthDocument } from '@/auth/models/auth.model';
 import { LoginDto } from '@/auth/dto/requests/login.dto';
 import { UserDto } from '@/auth/dto/responses/user.dto';
 import { AuthRepository } from '@/auth/repositories/auth.repository';
-import { EmailService } from '@/email/services/email.service';
 
 @Injectable()
 export class AuthService {

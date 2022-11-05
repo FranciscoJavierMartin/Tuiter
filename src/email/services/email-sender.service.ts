@@ -55,7 +55,6 @@ export class EmailSenderService {
    * @param receiverEmail Email address to send
    * @param username User name
    * @param ipaddress User ip address
-   
    */
   public async sendResetPasswordEmail(
     receiverEmail: string,

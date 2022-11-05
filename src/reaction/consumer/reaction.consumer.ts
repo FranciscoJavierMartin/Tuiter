@@ -3,6 +3,8 @@ import { DoneCallback, Job } from 'bull';
 import { ObjectId } from 'mongodb';
 import { BaseConsumer } from '@/shared/consumer/base.consumer';
 import { CONSUMER_CONCURRENCY } from '@/shared/contants';
+import { EmailService } from '@/email/services/email.service';
+import { NotificationType } from '@/notification/interfaces/notification.interface';
 import { PostRepository } from '@/post/repositories/post.repository';
 import { UserRepository } from '@/user/repositories/user.repository';
 import { NotificationService } from '@/notification/notification.service';
@@ -12,8 +14,6 @@ import {
   RemoveReactionJobData,
 } from '@/reaction/interfaces/reaction.interface';
 import { ReactionCacheService } from '@/reaction/services/reaction.cache.service';
-import { NotificationType } from '@/notification/interfaces/notification.interface';
-import { EmailService } from '@/email/services/email.service';
 
 @Processor('reaction')
 export class ReactionConsumer extends BaseConsumer {

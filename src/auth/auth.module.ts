@@ -5,6 +5,7 @@ import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { BullModule } from '@nestjs/bull';
 import { getQueues } from '@/helpers/utils';
+import { EmailModule } from '@/email/email.module';
 import { UserModule } from '@/user/user.module';
 import { AuthService } from '@/auth/auth.service';
 import { AuthController } from '@/auth/auth.controller';
@@ -12,7 +13,6 @@ import { AuthUser, AuthSchema } from '@/auth/models/auth.model';
 import { JwtStrategy } from '@/auth/strategies/jwt.strategy';
 import { AuthConsumer } from '@/auth/consumers/auth.consumer';
 import { AuthRepository } from '@/auth/repositories/auth.repository';
-import { EmailModule } from '@/email/email.module';
 
 @Module({
   imports: [

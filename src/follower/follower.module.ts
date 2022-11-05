@@ -4,6 +4,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { BullModule } from '@nestjs/bull';
 import { getQueues } from '@/helpers/utils';
 import { EmailModule } from '@/email/email.module';
+import { NotificationModule } from '@/notification/notification.module';
 import { UserModule } from '@/user/user.module';
 import { BlockUserModule } from '@/block-user/block-user.module';
 import { FollowerService } from '@/follower/services/follower.service';
@@ -13,7 +14,6 @@ import { FollowerCacheService } from '@/follower/services/follower.cache.service
 import { User, UserSchema } from '@/user/models/user.model';
 import { FollowerRepository } from '@/follower/repositories/follower.repository';
 import { FollowerConsumer } from '@/follower/consumers/follower.consumer';
-import { NotificationModule } from '@/notification/notification.module';
 
 @Module({
   imports: [
