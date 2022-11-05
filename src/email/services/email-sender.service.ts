@@ -80,71 +80,13 @@ export class EmailSenderService {
   }
 
   /**
-   * Send email notification about comment in a post
+   * Send email notification
    * @param receiverEmail Email address to send
+   * @param subject Email subject
    * @param username User name
-   * @param username Message to be shown in the template
+   * @param message Message to be shown in the template
    * @param header Header text in email
    */
-  // public async sendCommentsEmail(
-  //   receiverEmail: string,
-  //   username: string,
-  //   message: string,
-  //   header: string,
-  // ): Promise<void> {
-  //   await this.sendEmail(
-  //     receiverEmail,
-  //     'Post notification',
-  //     'notification-template',
-  //     {
-  //       username,
-  //       message,
-  //       header,
-  //       image_url: lockImage,
-  //     },
-  //   );
-  // }
-
-  // TODO: Merge notification email methods in one single method
-  // public async sendFollowersEmail(
-  //   receiverEmail: string,
-  //   username: string,
-  //   message: string,
-  //   header: string,
-  // ): Promise<void> {
-  //   await this.sendEmail(
-  //     receiverEmail,
-  //     `${username} is now following you`,
-  //     'notification-template',
-  //     {
-  //       username,
-  //       message,
-  //       header,
-  //       image_url: lockImage,
-  //     },
-  //   );
-  // }
-
-  // TODO: Merge notification email methods in one single method
-  // public async sendReactionsEmail(
-  //   receiverEmail: string,
-  //   username: string,
-  //   message: string,
-  //   header: string,
-  // ): Promise<void> {
-  //   await this.sendEmail(
-  //     receiverEmail,
-  //     `${username} is now following you`,
-  //     'notification-template',
-  //     {
-  //       username,
-  //       message,
-  //       header,
-  //       image_url: lockImage,
-  //     },
-  //   );
-  // }
-
   public async sendNotificationEmail(
     receiverEmail: string,
     subject: string,

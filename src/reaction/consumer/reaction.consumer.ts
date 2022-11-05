@@ -92,13 +92,6 @@ export class ReactionConsumer extends BaseConsumer {
 
         // TODO: emit 'insert notification'
 
-        // this.emailService.sendReactionsEmail(
-        //   postAuthor.email,
-        //   job.data.reaction.username,
-        //   `${job.data.reaction.username} commented on your post`,
-        //   'Post reaction notification',
-        // );
-
         this.emailService.sendNotificationEmail(
           postAuthor.email,
           'Post reaction notification',

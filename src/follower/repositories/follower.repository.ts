@@ -73,13 +73,6 @@ export class FollowerRepository {
         reaction: '',
       });
 
-      // this.emailService.sendFollowersEmail(
-      //   followeeUser.email,
-      //   followerUser.username,
-      //   `${followerUser.username} commented on your post`,
-      //   'Follower notification',
-      // );
-
       this.emailService.sendNotificationEmail(
         followeeUser.email,
         `${followerUser.username} is now following you`,

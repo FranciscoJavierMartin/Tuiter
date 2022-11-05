@@ -56,48 +56,6 @@ export class EmailService {
     });
   }
 
-  // public async sendCommentsEmail(
-  //   receiverEmail: string,
-  //   username: string,
-  //   message: string,
-  //   header: string,
-  // ): Promise<void> {
-  //   this.emailQueue.add('sendCommentsEmail', {
-  //     receiverEmail,
-  //     username,
-  //     message,
-  //     header,
-  //   });
-  // }
-
-  // public async sendFollowersEmail(
-  //   receiverEmail: string,
-  //   username: string,
-  //   message: string,
-  //   header: string,
-  // ): Promise<void> {
-  //   this.emailQueue.add('sendFollowersEmail', {
-  //     receiverEmail,
-  //     username,
-  //     message,
-  //     header,
-  //   });
-  // }
-
-  // public async sendReactionsEmail(
-  //   receiverEmail: string,
-  //   username: string,
-  //   message: string,
-  //   header: string,
-  // ): Promise<void> {
-  //   this.emailQueue.add('sendReactionsEmail', {
-  //     receiverEmail,
-  //     username,
-  //     message,
-  //     header,
-  //   });
-  // }
-
   /**
    * Enqueue notification email
    * @param receiverEmail Email address to send
