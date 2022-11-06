@@ -1,4 +1,11 @@
-import { Controller, Get, Param, Patch, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from '@/auth/decorators/get-user.decorator';
 import { NotificationService } from '@/notification/notification.service';
@@ -50,5 +57,26 @@ export class NotificationController {
     @Param('notificationId', ValidateIdPipe) notificationId: ID,
   ): Promise<void> {
     this.notificationService.updateNotification(notificationId);
+  }
+
+  @Delete(':notificationId')
+  @ApiParam({
+    name: 'notificationId',
+    description: 'Notification id to be removed',
+  })
+  @ApiOkResponse({
+    description: 'Remove notification',
+  })
+  @ApiNotFoundResponse({
+    description: 'Notification not found',
+  })
+  @ApiForbiddenResponse({
+    description: 'User is not notification receiver',
+  })
+  @UseGuards(AuthGuard(), IsReceiverGuard)
+  public async removeNotification(
+    @Param('notificationId', ValidateIdPipe) notificationId: ID,
+  ): Promise<void> {
+    // this.notificationService.removeNotification(notificationId);
   }
 }
