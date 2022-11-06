@@ -11,6 +11,7 @@ import { GetUser } from '@/auth/decorators/get-user.decorator';
 import { NotificationService } from '@/notification/notification.service';
 import { NotificationDto } from '@/notification/dto/reponses/notification.dto';
 import {
+  ApiBearerAuth,
   ApiForbiddenResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
@@ -31,6 +32,7 @@ export class NotificationController {
     description: 'Retrieve alll user notifications',
     type: [NotificationDto],
   })
+  @ApiBearerAuth()
   @UseGuards(AuthGuard())
   public async getNotifications(
     @GetUser('userId') [userId]: string,
@@ -52,6 +54,7 @@ export class NotificationController {
   @ApiForbiddenResponse({
     description: 'User is not notification receiver',
   })
+  @ApiBearerAuth()
   @UseGuards(AuthGuard(), IsReceiverGuard)
   public async updateNotification(
     @Param('notificationId', ValidateIdPipe) notificationId: ID,
@@ -73,6 +76,7 @@ export class NotificationController {
   @ApiForbiddenResponse({
     description: 'User is not notification receiver',
   })
+  @ApiBearerAuth()
   @UseGuards(AuthGuard(), IsReceiverGuard)
   public async removeNotification(
     @Param('notificationId', ValidateIdPipe) notificationId: ID,
