@@ -5,6 +5,7 @@ import { NotificationService } from '@/notification/notification.service';
 import { NotificationDto } from '@/notification/dto/reponses/notification.dto';
 import { ApiOkResponse, ApiParam, ApiTags } from '@nestjs/swagger';
 import { ValidateIdPipe } from '@/shared/pipes/validate-id.pipe';
+import { IsReceiverGuard } from './guards/is-receiver.guard';
 
 @ApiTags('Notification')
 @Controller('notification')
@@ -32,7 +33,7 @@ export class NotificationController {
   @ApiOkResponse({
     description: 'Mark notification as read',
   })
-  @UseGuards(AuthGuard())
+  @UseGuards(AuthGuard(), IsReceiverGuard)
   public async updateNotification(
     @Param('notificationId', ValidateIdPipe) notificationId: string,
   ) {

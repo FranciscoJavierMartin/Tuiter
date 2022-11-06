@@ -68,4 +68,10 @@ export class NotificationRepository {
       },
     ]);
   }
+
+  public async getNotificationById(
+    notificationId: ObjectId,
+  ): Promise<Notification> {
+    return await this.notificationModel.findById(notificationId);
+  }
 }
