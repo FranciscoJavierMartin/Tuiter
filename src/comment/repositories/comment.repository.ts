@@ -2,9 +2,12 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { ObjectId } from 'mongodb';
+import { EmailService } from '@/email/services/email.service';
+import { NotificationService } from '@/notification/notification.service';
+import { NotificationType } from '@/notification/interfaces/notification.interface';
 import { Post } from '@/post/models/post.model';
 import { PostRepository } from '@/post/repositories/post.repository';
-import { User } from '@/user/models/user.model';
+import { UserDocument } from '@/user/models/user.model';
 import { UserRepository } from '@/user/repositories/user.repository';
 import { AddCommentJobData } from '@/comment/interfaces/comment.interface';
 import { Comment } from '@/comment/models/comment.model';
@@ -15,6 +18,8 @@ export class CommentRepository {
     @InjectModel(Comment.name) private readonly commentModel: Model<Comment>,
     private readonly postRepository: PostRepository,
     private readonly userRepository: UserRepository,
+    private readonly notificationService: NotificationService,
+    private readonly emailService: EmailService,
   ) {}
 
   public async addCommentToDB({
@@ -24,17 +29,38 @@ export class CommentRepository {
     userTo,
     username,
   }: AddCommentJobData): Promise<void> {
-    const comments: Promise<Comment> = this.commentModel.create(comment);
-    const post: Promise<Post> =
-      this.postRepository.incrementCommentsCount(postId);
-    const user: Promise<User> = this.userRepository.getUserById(userTo);
-    const response: [Comment, Post, User] = await Promise.all([
-      comments,
-      post,
-      user,
-    ]);
+    const [commentCreated, post, user]: [Comment, Post, UserDocument] =
+      await Promise.all([
+        this.commentModel.create(comment),
+        this.postRepository.incrementCommentsCount(postId),
+        this.userRepository.getUserById(userTo),
+      ]);
 
-    // TODO: Send comments notifications
+    if (user.notifications.comments && userFrom !== userTo) {
+      const notifications = await this.notificationService.insertNotification({
+        userFrom,
+        userTo,
+        message: `${username} commented on your post`,
+        notificationType: NotificationType.comments,
+        entityId: postId,
+        createdItemId: commentCreated._id,
+        createdAt: new Date(),
+        text: comment.text,
+        imgId: post.imgId,
+        imgVersion: post.imgVersion,
+        gifUrl: post.gifUrl,
+      });
+
+      // TODO: emit 'insert notification'
+
+      this.emailService.sendNotificationEmail(
+        user.email,
+        `${username} commented on your post`,
+        user.username,
+        `${username} commented on your post`,
+        'Comment notification',
+      );
+    }
   }
 
   public async getPostComments(postId: ObjectId): Promise<Comment[]> {

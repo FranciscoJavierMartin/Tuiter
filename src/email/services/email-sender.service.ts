@@ -3,10 +3,16 @@ import { ConfigService } from '@nestjs/config';
 import { MailerService } from '@nestjs-modules/mailer';
 import * as sendGridMail from '@sendgrid/mail';
 
-type Templates = 'forgot-password-template' | 'reset-password-template';
+type Templates =
+  | 'forgot-password-template'
+  | 'reset-password-template'
+  | 'notification-template';
+
+const lockImage: string =
+  'https://res.cloudinary.com/dyshqk0em/image/upload/v1667416093/chatty-nest/lock-icon.png';
 
 @Injectable()
-export class EmailService {
+export class EmailSenderService {
   private logger: Logger;
 
   constructor(
@@ -39,8 +45,7 @@ export class EmailService {
       {
         username,
         resetLink,
-        image_url:
-          'https://res.cloudinary.com/dyshqk0em/image/upload/v1665310488/chatty-nest/lock-icon-email.png',
+        image_url: lockImage,
       },
     );
   }
@@ -50,13 +55,11 @@ export class EmailService {
    * @param receiverEmail Email address to send
    * @param username User name
    * @param ipaddress User ip address
-   * @param date Date (now)
    */
   public async sendResetPasswordEmail(
     receiverEmail: string,
     username: string,
     ipaddress: string,
-    date: string,
   ): Promise<void> {
     await this.sendEmail(
       receiverEmail,
@@ -66,11 +69,36 @@ export class EmailService {
         username,
         email: receiverEmail,
         ipaddress,
-        date,
-        image_url:
-          'https://res.cloudinary.com/dyshqk0em/image/upload/v1665310488/chatty-nest/lock-icon-email.png',
+        date: new Date().toLocaleDateString(undefined, {
+          hour: '2-digit',
+          minute: '2-digit',
+        }),
+        image_url: lockImage,
       },
     );
+  }
+
+  /**
+   * Send email notification
+   * @param receiverEmail Email address to send
+   * @param subject Email subject
+   * @param username User name
+   * @param message Message to be shown in the template
+   * @param header Header text in email
+   */
+  public async sendNotificationEmail(
+    receiverEmail: string,
+    subject: string,
+    username: string,
+    message: string,
+    header: string,
+  ): Promise<void> {
+    await this.sendEmail(receiverEmail, subject, 'notification-template', {
+      username,
+      message,
+      header,
+      image_url: lockImage,
+    });
   }
 
   /**
@@ -85,7 +113,7 @@ export class EmailService {
     subject: string,
     template: Templates,
     variables?: { [key: string]: string },
-  ) {
+  ): Promise<void> {
     try {
       await this.mailerService.sendMail({
         to: receiverEmail,

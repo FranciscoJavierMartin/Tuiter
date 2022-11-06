@@ -21,6 +21,7 @@ export interface BasicInfo {
   location: string;
 }
 
+// TODO: Refactor to Record type
 export interface SocialLinks {
   facebook: string;
   instagram: string;

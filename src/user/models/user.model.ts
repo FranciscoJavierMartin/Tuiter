@@ -2,6 +2,7 @@ import { Prop, raw, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ObjectId } from 'mongodb';
 import mongoose from 'mongoose';
 import { ID } from '@/shared/interfaces/types';
+import { NotificationType } from '@/notification/interfaces/notification.interface';
 
 @Schema({
   collection: 'User',
@@ -45,7 +46,7 @@ export class User {
       follows: { type: Boolean, default: true },
     }),
   )
-  notifications: Record<string, boolean>;
+  notifications: Record<NotificationType, boolean>;
 
   @Prop(
     raw({

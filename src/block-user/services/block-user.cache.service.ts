@@ -67,7 +67,7 @@ export class BlockUserCacheService extends BaseCache {
     userId: ID,
     followerId: ID,
     prop: 'blocked' | 'blockedBy',
-  ) {
+  ): Promise<void> {
     try {
       const response: string = await this.client.HGET(
         `${REDIS_USERS_COLLECTION}:${userId}`,
@@ -95,7 +95,7 @@ export class BlockUserCacheService extends BaseCache {
     userId: ID,
     followerId: ID,
     prop: 'blocked' | 'blockedBy',
-  ) {
+  ): Promise<void> {
     try {
       const response: string = await this.client.HGET(
         `${REDIS_USERS_COLLECTION}:${userId}`,

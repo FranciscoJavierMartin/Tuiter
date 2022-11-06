@@ -73,6 +73,33 @@ export class UserRepository {
   }
 
   /**
+   * Get user from DB (User collection)
+   * @param username user name
+   * @returns User from DB
+   */
+  public async getUserByUsername(username: string): Promise<UserDocument> {
+    const users: UserDocument[] = await this.userModel.aggregate([
+      { $match: { username } },
+      {
+        $lookup: {
+          from: 'Auth',
+          localField: 'authId',
+          foreignField: '_id',
+          as: 'authId',
+        },
+      },
+      { $unwind: '$authId' },
+      { $project: this.aggregateProject() },
+    ]);
+
+    if (users.length === 0) {
+      throw new NotFoundException('User not found');
+    }
+
+    return users[0];
+  }
+
+  /**
    * Update User in DB
    * @param userId User id
    * @param user User data

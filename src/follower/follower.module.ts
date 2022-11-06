@@ -3,6 +3,8 @@ import { PassportModule } from '@nestjs/passport';
 import { MongooseModule } from '@nestjs/mongoose';
 import { BullModule } from '@nestjs/bull';
 import { getQueues } from '@/helpers/utils';
+import { EmailModule } from '@/email/email.module';
+import { NotificationModule } from '@/notification/notification.module';
 import { UserModule } from '@/user/user.module';
 import { BlockUserModule } from '@/block-user/block-user.module';
 import { FollowerService } from '@/follower/services/follower.service';
@@ -23,6 +25,8 @@ import { FollowerConsumer } from '@/follower/consumers/follower.consumer';
     BullModule.registerQueue(...getQueues('follower')),
     UserModule,
     BlockUserModule,
+    NotificationModule,
+    EmailModule,
   ],
   controllers: [FollowerController],
   providers: [

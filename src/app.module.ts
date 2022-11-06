@@ -12,6 +12,10 @@ import { ReactionModule } from '@/reaction/reaction.module';
 import { CommentModule } from '@/comment/comment.module';
 import { FollowerModule } from '@/follower/follower.module';
 import { BlockUserModule } from '@/block-user/block-user.module';
+import { NotificationModule } from '@/notification/notification.module';
+import { EmailModule } from '@/email/email.module';
+
+// TODO: Refactor @ApiParams to match exact name from route params
 
 @Module({
   imports: [
@@ -36,7 +40,8 @@ import { BlockUserModule } from '@/block-user/block-user.module';
           from: `Chatty App <${configService.get('SENDER_EMAIL')}>`,
         },
         template: {
-          dir: __dirname + '/shared/emails/templates',
+          // TODO: Extract CSS
+          dir: __dirname + '/email/templates',
           adapter: new HandlebarsAdapter(),
           options: {
             strict: true,
@@ -58,6 +63,8 @@ import { BlockUserModule } from '@/block-user/block-user.module';
     CommentModule,
     FollowerModule,
     BlockUserModule,
+    NotificationModule,
+    EmailModule,
   ],
   controllers: [],
   providers: [],

@@ -1,7 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, PipelineStage } from 'mongoose';
+import { Model } from 'mongoose';
 import { ObjectId } from 'mongodb';
+import { EmailService } from '@/email/services/email.service';
+import { NotificationService } from '@/notification/notification.service';
+import { NotificationType } from '@/notification/interfaces/notification.interface';
 import { UserRepository } from '@/user/repositories/user.repository';
 import { Follower } from '@/follower/models/follower.model';
 import { FollowerDto } from '@/follower/dto/responses/follower.dto';
@@ -10,6 +13,8 @@ import { FollowerDto } from '@/follower/dto/responses/follower.dto';
 export class FollowerRepository {
   constructor(
     private readonly userRepository: UserRepository,
+    private readonly notificationService: NotificationService,
+    private readonly emailService: EmailService,
     @InjectModel(Follower.name) private followerModel: Model<Follower>,
   ) {}
 
@@ -44,8 +49,36 @@ export class FollowerRepository {
         followeeId,
         followerId: userId,
       }),
+      // TODO: Return updated documents (Performance consideration)
       this.userRepository.updateUserFollowersCount(userId, followeeId, 1),
     ]);
+
+    const followeeUser = await this.userRepository.getUserById(followeeId);
+    const followerUser = await this.userRepository.getUserById(userId);
+
+    if (followeeUser.notifications.follows && userId !== followeeId) {
+      this.notificationService.insertNotification({
+        userFrom: userId,
+        userTo: followeeId,
+        message: `${followerUser.username} is now following you`,
+        notificationType: NotificationType.follows,
+        entityId: userId,
+        createdItemId: followeeId,
+        createdAt: new Date(),
+        text: '',
+        imgId: '',
+        imgVersion: '',
+        gifUrl: '',
+      });
+
+      this.emailService.sendNotificationEmail(
+        followeeUser.email,
+        `${followerUser.username} is now following you`,
+        followeeUser.username,
+        `${followerUser.username} is now following you`,
+        'Follower notification',
+      );
+    }
   }
 
   /**

@@ -1,16 +1,17 @@
 import { Process, Processor } from '@nestjs/bull';
 import { DoneCallback, Job } from 'bull';
-import { BaseConsumer } from '@/shared/consumer/base.consumer';
-import { EmailService } from '@/shared/emails/email.service';
+import { BaseConsumer } from '@/shared/consumers/base.consumer';
+import { CONSUMER_CONCURRENCY } from '@/shared/contants';
+import { EmailSenderService } from '@/email/services/email-sender.service';
 import {
+  MailNotificationData,
   MailForgotPasswordData,
   MailResetPasswordData,
-} from '@/shared/emails/interfaces/email';
-import { CONSUMER_CONCURRENCY } from '@/shared/contants';
+} from '@/email/interfaces/email.interface';
 
 @Processor('email')
 export class EmailConsumer extends BaseConsumer {
-  constructor(private emailService: EmailService) {
+  constructor(private readonly emailSenderService: EmailSenderService) {
     super('EmailConsumer');
   }
 
@@ -25,7 +26,7 @@ export class EmailConsumer extends BaseConsumer {
     try {
       const { receiverEmail, token, username } = job.data;
 
-      await this.emailService.sendForgotPasswordEmail(
+      await this.emailSenderService.sendForgotPasswordEmail(
         receiverEmail,
         username,
         token,
@@ -48,13 +49,39 @@ export class EmailConsumer extends BaseConsumer {
     done: DoneCallback,
   ): Promise<void> {
     try {
-      const { receiverEmail, date, username, ipaddress } = job.data;
+      const { receiverEmail, username, ipaddress } = job.data;
 
-      await this.emailService.sendResetPasswordEmail(
+      await this.emailSenderService.sendResetPasswordEmail(
         receiverEmail,
         username,
         ipaddress,
-        date,
+      );
+
+      job.progress(100);
+      done(null, job.data);
+    } catch (error) {
+      this.logger.error(error);
+      done(error as Error);
+    }
+  }
+
+  @Process({
+    name: 'sendNotificationEmail',
+    concurrency: CONSUMER_CONCURRENCY,
+  })
+  public async sendNotificationEmail(
+    job: Job<MailNotificationData>,
+    done: DoneCallback,
+  ): Promise<void> {
+    try {
+      const { receiverEmail, subject, username, message, header } = job.data;
+
+      await this.emailSenderService.sendNotificationEmail(
+        receiverEmail,
+        subject,
+        username,
+        message,
+        header,
       );
 
       job.progress(100);

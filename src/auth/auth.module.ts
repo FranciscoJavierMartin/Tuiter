@@ -5,6 +5,7 @@ import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { BullModule } from '@nestjs/bull';
 import { getQueues } from '@/helpers/utils';
+import { EmailModule } from '@/email/email.module';
 import { UserModule } from '@/user/user.module';
 import { AuthService } from '@/auth/auth.service';
 import { AuthController } from '@/auth/auth.controller';
@@ -16,7 +17,7 @@ import { AuthRepository } from '@/auth/repositories/auth.repository';
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: AuthUser.name, schema: AuthSchema }]),
-    BullModule.registerQueue(...getQueues('auth', 'user', 'email')),
+    BullModule.registerQueue(...getQueues('auth', 'user')),
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.registerAsync({
       imports: [ConfigModule],
@@ -29,6 +30,7 @@ import { AuthRepository } from '@/auth/repositories/auth.repository';
       },
     }),
     UserModule,
+    EmailModule,
   ],
   controllers: [AuthController],
   providers: [JwtStrategy, AuthService, AuthConsumer, AuthRepository],

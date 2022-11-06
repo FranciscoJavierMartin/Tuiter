@@ -33,7 +33,7 @@ export class ReactionRepository {
     );
   }
 
-  // TODO: Check if only the feeling could be send
+  // TODO: Check if only the feeling could be retrieve
   /**
    * Remove reaction from DB
    * @param postId Post id asociated to reaction
