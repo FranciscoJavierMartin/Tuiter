@@ -13,10 +13,19 @@ export class NotificationRepository {
     private readonly notificationModel: Model<Notification>,
   ) {}
 
+  /**
+   * Add notification to DB
+   * @param body Notification info to be added
+   */
   public async create(body: NotificationBody): Promise<void> {
     await this.notificationModel.create(body);
   }
 
+  /**
+   * Retrieve all notifications from DB given receiver id
+   * @param userId Receiver id
+   * @returns All notification where receiver id is equals to passed
+   */
   public async getNotifications(userId: ObjectId): Promise<NotificationDto[]> {
     return await this.notificationModel.aggregate([
       { $match: { userTo: userId } },
@@ -69,12 +78,21 @@ export class NotificationRepository {
     ]);
   }
 
+  /**
+   * Retrieve single notification filtering by id from DB
+   * @param notificationId Notification id
+   * @returns Notification
+   */
   public async getNotificationById(
     notificationId: ObjectId,
   ): Promise<Notification> {
     return await this.notificationModel.findById(notificationId);
   }
 
+  /**
+   * Mark as read notifiaction in DB
+   * @param notificationId Notification id
+   */
   public async updateNotification(notificationId: ObjectId): Promise<void> {
     await this.notificationModel
       .findByIdAndUpdate(notificationId, {
@@ -83,6 +101,10 @@ export class NotificationRepository {
       .exec();
   }
 
+  /**
+   * Remove notification from DB
+   * @param notificationId Notification id
+   */
   public async removeNotification(notificationId: ObjectId): Promise<void> {
     await this.notificationModel.findByIdAndRemove(notificationId).exec();
   }

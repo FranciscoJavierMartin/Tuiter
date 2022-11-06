@@ -15,6 +15,8 @@ import { BlockUserModule } from '@/block-user/block-user.module';
 import { NotificationModule } from '@/notification/notification.module';
 import { EmailModule } from '@/email/email.module';
 
+// TODO: Refactor @ApiParams to match exact name from route params
+
 @Module({
   imports: [
     ConfigModule.forRoot({

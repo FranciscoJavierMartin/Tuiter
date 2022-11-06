@@ -11,6 +11,12 @@ export class IsReceiverGuard implements CanActivate {
   constructor(
     private readonly notificationRepository: NotificationRepository,
   ) {}
+
+  /**
+   * Check if user is notification receiver
+   * @param context Execution context
+   * @returns True if user is notification receiver, false otherwise
+   */
   public async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     const notificationId = request.params.notificationId;
