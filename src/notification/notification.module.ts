@@ -10,7 +10,7 @@ import {
   NotificationSchema,
 } from '@/notification/models/notification.model';
 import { PassportModule } from '@nestjs/passport';
-import { NotificationConsumer } from '@/notification/consumer/notification.consumer';
+import { NotificationConsumer } from '@/notification/consumers/notification.consumer';
 
 @Module({
   imports: [

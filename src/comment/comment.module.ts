@@ -12,7 +12,7 @@ import { CommentController } from '@/comment/comment.controller';
 import { CommentCacheService } from '@/comment/services/comment.cache.service';
 import { Comment, CommentSchema } from '@/comment/models/comment.model';
 import { CommentRepository } from '@/comment/repositories/comment.repository';
-import { CommentConsumer } from '@/comment/consumer/comment.consumer';
+import { CommentConsumer } from '@/comment/consumers/comment.consumer';
 
 @Module({
   imports: [

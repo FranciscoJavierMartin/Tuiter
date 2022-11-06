@@ -1,6 +1,6 @@
 import { Process, Processor } from '@nestjs/bull';
 import { DoneCallback, Job } from 'bull';
-import { BaseConsumer } from '@/shared/consumer/base.consumer';
+import { BaseConsumer } from '@/shared/consumers/base.consumer';
 import { CONSUMER_CONCURRENCY } from '@/shared/contants';
 import { AddCommentJobData } from '@/comment/interfaces/comment.interface';
 import { CommentRepository } from '@/comment/repositories/comment.repository';

@@ -8,7 +8,7 @@ import { PostService } from '@/post/services/post.service';
 import { PostController } from '@/post/post.controller';
 import { Post, PostSchema } from '@/post/models/post.model';
 import { PostCacheService } from '@/post/services/post.cache.service';
-import { PostConsumer } from '@/post/consumer/post.consumer';
+import { PostConsumer } from '@/post/consumers/post.consumer';
 import { PostRepository } from '@/post/repositories/post.repository';
 
 @Module({

@@ -7,7 +7,7 @@ import { EmailModule } from '@/email/email.module';
 import { NotificationModule } from '@/notification/notification.module';
 import { PostModule } from '@/post/post.module';
 import { UserModule } from '@/user/user.module';
-import { ReactionConsumer } from '@/reaction/consumer/reaction.consumer';
+import { ReactionConsumer } from '@/reaction/consumers/reaction.consumer';
 import { Reaction, ReactionSchema } from '@/reaction/models/reaction.model';
 import { ReactionsController } from '@/reaction/reaction.controller';
 import { ReactionRepository } from '@/reaction/repositories/reaction.repository';
