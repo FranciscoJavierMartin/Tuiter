@@ -3,7 +3,13 @@ import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from '@/auth/decorators/get-user.decorator';
 import { NotificationService } from '@/notification/notification.service';
 import { NotificationDto } from '@/notification/dto/reponses/notification.dto';
-import { ApiOkResponse, ApiParam, ApiTags } from '@nestjs/swagger';
+import {
+  ApiForbiddenResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiParam,
+  ApiTags,
+} from '@nestjs/swagger';
 import { ValidateIdPipe } from '@/shared/pipes/validate-id.pipe';
 import { ID } from '@/shared/interfaces/types';
 import { IsReceiverGuard } from '@/notification/guards/is-receiver.guard';
@@ -25,7 +31,6 @@ export class NotificationController {
     return await this.notificationService.getNotifications(userId);
   }
 
-  // Add Guard to check that is notification receiver
   @Patch(':notificationId')
   @ApiParam({
     name: 'notificationId',
@@ -33,6 +38,12 @@ export class NotificationController {
   })
   @ApiOkResponse({
     description: 'Mark notification as read',
+  })
+  @ApiNotFoundResponse({
+    description: 'Notification not found',
+  })
+  @ApiForbiddenResponse({
+    description: 'User is not notification receiver',
   })
   @UseGuards(AuthGuard(), IsReceiverGuard)
   public async updateNotification(
