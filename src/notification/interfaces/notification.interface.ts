@@ -20,3 +20,7 @@ export interface NotificationBody {
   imgVersion: string;
   gifUrl: string;
 }
+
+export interface NotificationJobData {
+  id: ID;
+}

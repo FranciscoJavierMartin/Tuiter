@@ -10,6 +10,7 @@ import {
   NotificationSchema,
 } from '@/notification/models/notification.model';
 import { PassportModule } from '@nestjs/passport';
+import { NotificationConsumer } from '@/notification/consumer/notification.consumer';
 
 @Module({
   imports: [
@@ -17,10 +18,14 @@ import { PassportModule } from '@nestjs/passport';
       { name: Notification.name, schema: NotificationSchema },
     ]),
     PassportModule.register({ defaultStrategy: 'jwt' }),
-    BullModule.registerQueue(...getQueues('email')),
+    BullModule.registerQueue(...getQueues('notification', 'email')),
   ],
   controllers: [NotificationController],
-  providers: [NotificationService, NotificationRepository],
+  providers: [
+    NotificationService,
+    NotificationRepository,
+    NotificationConsumer,
+  ],
   exports: [NotificationService],
 })
 export class NotificationModule {}
