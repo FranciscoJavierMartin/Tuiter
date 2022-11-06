@@ -37,7 +37,7 @@ export class CommentController {
 
   @Get(':postId')
   @ApiParam({
-    name: 'Post Id',
+    name: 'postId',
     description: 'Post id where comments belong',
     example: '6355a7e4837b68783f4c7af3',
     required: true,

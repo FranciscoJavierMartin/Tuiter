@@ -72,7 +72,7 @@ export class PostController {
 
   @Get(':page')
   @ApiParam({
-    name: 'Page',
+    name: 'page',
     description: 'Page to retrieve',
   })
   @ApiOkResponse({
@@ -109,7 +109,7 @@ export class PostController {
 
   @Put(':postId')
   @ApiParam({
-    name: 'Post id',
+    name: 'postId',
     description: 'Post id to update',
   })
   @UseInterceptors(FileInterceptor('image'))

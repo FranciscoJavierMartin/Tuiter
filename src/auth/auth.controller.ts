@@ -117,7 +117,7 @@ export class AuthController {
 
   @Post('reset-password/:token')
   @ApiParam({
-    name: 'Token',
+    name: 'token',
     description: 'Auto generated token to change validation',
   })
   @ApiCreatedResponse({
