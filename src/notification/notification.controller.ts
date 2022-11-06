@@ -77,6 +77,6 @@ export class NotificationController {
   public async removeNotification(
     @Param('notificationId', ValidateIdPipe) notificationId: ID,
   ): Promise<void> {
-    // this.notificationService.removeNotification(notificationId);
+    this.notificationService.removeNotification(notificationId);
   }
 }

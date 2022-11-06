@@ -40,4 +40,12 @@ export class NotificationService {
       notificationId,
     });
   }
+
+  public async removeNotification(notificationId: ID): Promise<void> {
+    // TODO: Emit 'remove notification'
+
+    this.notificationQueue.add('removeNotification', {
+      notificationId,
+    });
+  }
 }

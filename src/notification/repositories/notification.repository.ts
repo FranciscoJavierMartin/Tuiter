@@ -82,4 +82,8 @@ export class NotificationRepository {
       })
       .exec();
   }
+
+  public async removeNotification(notificationId: ObjectId): Promise<void> {
+    await this.notificationModel.findByIdAndRemove(notificationId).exec();
+  }
 }
