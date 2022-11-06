@@ -37,7 +37,7 @@ export class NotificationService {
     // TODO: Emit 'update notification'
 
     this.notificationQueue.add('updateNotification', {
-      id: notificationId,
+      notificationId,
     });
   }
 }

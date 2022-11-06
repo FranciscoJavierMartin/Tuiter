@@ -22,5 +22,5 @@ export interface NotificationBody {
 }
 
 export interface NotificationJobData {
-  id: ID;
+  notificationId: ID;
 }

@@ -74,4 +74,12 @@ export class NotificationRepository {
   ): Promise<Notification> {
     return await this.notificationModel.findById(notificationId);
   }
+
+  public async updateNotification(notificationId: ObjectId): Promise<void> {
+    await this.notificationModel
+      .findByIdAndUpdate(notificationId, {
+        $set: { read: true },
+      })
+      .exec();
+  }
 }

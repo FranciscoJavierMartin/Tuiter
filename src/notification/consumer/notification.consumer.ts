@@ -17,6 +17,9 @@ export class NotificationConsumer extends BaseConsumer {
     done: DoneCallback,
   ): Promise<void> {
     try {
+      await this.notificationRepository.updateNotification(
+        job.data.notificationId,
+      );
       job.progress(100);
       done(null, job.data);
     } catch (error) {
