@@ -102,6 +102,25 @@ export class UserCacheService extends BaseCache {
     }
   }
 
+  public async updateUserAttributeInCache(
+    userId: ID,
+    field: string,
+    value: string,
+  ): Promise<UserDocument> {
+    try {
+      await this.client.HSET(`${REDIS_USERS_COLLECTION}:${userId}`, [
+        field,
+        value,
+      ]);
+      return await this.getUserFromCache(userId);
+    } catch (error) {
+      this.logger.error(error);
+      throw new InternalServerErrorException(
+        `Error updating user ${userId} in Redis`,
+      );
+    }
+  }
+
   /**
    * Retrieve user from cache
    * @param userId User key to search
