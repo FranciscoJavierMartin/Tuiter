@@ -9,7 +9,9 @@ import {
 import { ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { AuthGuard } from '@nestjs/passport';
+import { ID } from '@/shared/interfaces/types';
 import { FILE_SIZE_LIMIT } from '@/shared/contants';
+import { GetUser } from '@/auth/decorators/get-user.decorator';
 import { ImageService } from '@/image/image.service';
 
 @ApiTags('Image')
@@ -29,5 +31,9 @@ export class ImageController {
   @UseGuards(AuthGuard())
   public async uploadProfilePicture(
     @UploadedFile(new ParseFilePipe({})) image: Express.Multer.File,
-  ) {}
+    @GetUser('userId') userId: ID,
+  ) {
+    return userId;
+    // await this.imageService.uploadProfilePicture(image, string2ID(userId));
+  }
 }
