@@ -23,6 +23,10 @@ const queues: BullModuleOptions[] = [
     defaultJobOptions: DEFAULT_JOB_OPTIONS,
   },
   {
+    name: 'image',
+    defaultJobOptions: DEFAULT_JOB_OPTIONS,
+  },
+  {
     name: 'notification',
     defaultJobOptions: DEFAULT_JOB_OPTIONS,
   },
