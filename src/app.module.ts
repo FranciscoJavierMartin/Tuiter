@@ -41,7 +41,7 @@ import { EmailModule } from '@/email/email.module';
           },
         },
         defaults: {
-          from: `Chatty App <${configService.get('SENDER_EMAIL')}>`,
+          from: `Tuiter App <${configService.get('SENDER_EMAIL')}>`,
         },
         template: {
           // TODO: Extract CSS
