@@ -32,8 +32,7 @@ export class ImageController {
   public async uploadProfilePicture(
     @UploadedFile(new ParseFilePipe({})) image: Express.Multer.File,
     @GetUser('userId') userId: ID,
-  ) {
-    return userId;
-    // await this.imageService.uploadProfilePicture(image, string2ID(userId));
+  ): Promise<void> {
+    await this.imageService.uploadProfilePicture(image, userId);
   }
 }
