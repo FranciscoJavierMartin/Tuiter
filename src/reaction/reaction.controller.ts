@@ -51,7 +51,7 @@ export class ReactionsController {
   @UseGuards(AuthGuard(), IsNotAuthorGuard)
   public remove(
     @Param('postId', ValidateIdPipe) postId: ID,
-    @GetUser('username') [username]: string,
+    @GetUser('username') username: string,
   ): void {
     return this.reactionService.remove(postId, username);
   }
