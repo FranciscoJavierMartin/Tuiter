@@ -20,8 +20,8 @@ async function bootstrap(): Promise<void> {
   );
 
   const config = new DocumentBuilder()
-    .setTitle('Chatty')
-    .setDescription('API for Chatty app')
+    .setTitle('Tuiter')
+    .setDescription('API for Tuiter app')
     .setVersion('1.0')
     .addBearerAuth()
     .build();
