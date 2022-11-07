@@ -3,12 +3,14 @@ import {
   ParseFilePipe,
   Patch,
   UploadedFile,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { ImageService } from '@/image/image.service';
 import { ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { AuthGuard } from '@nestjs/passport';
 import { FILE_SIZE_LIMIT } from '@/shared/contants';
+import { ImageService } from '@/image/image.service';
 
 @ApiTags('Image')
 @Controller('image')
@@ -24,9 +26,8 @@ export class ImageController {
     }),
   )
   @ApiConsumes('multipart/form-data')
+  @UseGuards(AuthGuard())
   public async uploadProfilePicture(
     @UploadedFile(new ParseFilePipe({})) image: Express.Multer.File,
-  ) {
-    
-  }
+  ) {}
 }
