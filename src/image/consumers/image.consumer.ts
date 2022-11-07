@@ -20,7 +20,12 @@ export class ImageConsumer extends BaseConsumer {
     done: DoneCallback,
   ): Promise<void> {
     try {
-      // await this.imageRepository.addUserProfileImageToDB()
+      await this.imageRepository.addUserProfilePictureToDB(
+        job.data.userId,
+        job.data.profilePictureUrl,
+        job.data.imgId,
+        job.data.imgVersion,
+      );
       job.progress(100);
       done(null, job.data);
     } catch (error) {
