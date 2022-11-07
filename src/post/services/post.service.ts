@@ -97,6 +97,8 @@ export class PostService {
     );
 
     this.postQueue.add('addPostToDB', post);
+
+    // TODO: Enqueue image to add to DB
   }
 
   /**
@@ -205,5 +207,7 @@ export class PostService {
     this.socket.emit('update post', updatedPost, 'posts');
 
     this.postQueue.add('updatePostInDB', { postId, post: updatedPost });
+
+    // TODO: Enqueue image to add to DB
   }
 }
