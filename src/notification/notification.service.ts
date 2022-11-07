@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { InjectQueue } from '@nestjs/bull';
-import { ObjectId } from 'mongodb';
 import { Queue } from 'bull';
 import { ID } from '@/shared/interfaces/types';
 import { NotificationRepository } from '@/notification/repositories/notification.repository';
@@ -27,7 +26,7 @@ export class NotificationService {
     notificationBody: NotificationBody,
   ): Promise<NotificationDto[]> {
     await this.notificationRepository.create(notificationBody);
-    return await this.getNotifications(notificationBody.userTo.toString());
+    return await this.getNotifications(notificationBody.userTo);
   }
 
   /**
@@ -35,10 +34,8 @@ export class NotificationService {
    * @param userId Receiver id
    * @returns All notifications from receiver id
    */
-  public async getNotifications(userId: string): Promise<NotificationDto[]> {
-    return await this.notificationRepository.getNotifications(
-      new ObjectId(userId),
-    );
+  public async getNotifications(userId: ID): Promise<NotificationDto[]> {
+    return await this.notificationRepository.getNotifications(userId);
   }
 
   /**

@@ -35,7 +35,7 @@ export class NotificationController {
   @ApiBearerAuth()
   @UseGuards(AuthGuard())
   public async getNotifications(
-    @GetUser('userId') [userId]: string,
+    @GetUser('userId') userId: ID,
   ): Promise<NotificationDto[]> {
     return await this.notificationService.getNotifications(userId);
   }
