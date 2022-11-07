@@ -6,6 +6,7 @@ import { UserModule } from '@/user/user.module';
 import { ImageService } from '@/image/image.service';
 import { ImageController } from '@/image/image.controller';
 import { ImageConsumer } from '@/image/consumers/image.consumer';
+import { ImageRepository } from '@/image/repositories/image.repository.service';
 
 @Module({
   imports: [
@@ -14,6 +15,6 @@ import { ImageConsumer } from '@/image/consumers/image.consumer';
     UserModule,
   ],
   controllers: [ImageController],
-  providers: [ImageService, ImageConsumer],
+  providers: [ImageService, ImageConsumer, ImageRepository],
 })
 export class ImageModule {}
