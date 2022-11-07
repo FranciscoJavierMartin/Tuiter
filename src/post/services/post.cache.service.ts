@@ -160,7 +160,7 @@ export class PostCacheService extends BaseCache {
    */
   public async deletePostFromCache(
     postId: string,
-    authorId: string,
+    authorId: ID,
   ): Promise<void> {
     try {
       const postCount: string[] = await this.client.HMGET(

@@ -31,9 +31,9 @@ export class BlockUserController {
   @UseGuards(AuthGuard(), NotMySelfGuard)
   public async block(
     @Param('followerId', ValidateIdPipe) followerId: ID,
-    @GetUser('userId') [userId]: string,
+    @GetUser('userId') userId: ID,
   ): Promise<void> {
-    await this.blockUserService.block(userId as unknown as ID, followerId);
+    await this.blockUserService.block(userId, followerId);
   }
 
   @Patch('unblock/:followerId')
@@ -50,8 +50,8 @@ export class BlockUserController {
   @UseGuards(AuthGuard(), NotMySelfGuard)
   public async unblock(
     @Param('followerId', ValidateIdPipe) followerId: ID,
-    @GetUser('userId') [userId]: string,
+    @GetUser('userId') userId: ID,
   ): Promise<void> {
-    await this.blockUserService.unblock(userId as unknown as ID, followerId);
+    await this.blockUserService.unblock(userId, followerId);
   }
 }
