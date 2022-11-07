@@ -8,8 +8,7 @@ type Templates =
   | 'reset-password-template'
   | 'notification-template';
 
-const lockImage: string =
-  'https://res.cloudinary.com/dyshqk0em/image/upload/v1667416093/chatty-nest/lock-icon.png';
+const lockImage: string = `https://res.cloudinary.com/${process.env.CLOUDINARY_CLOUD_NAME}/image/upload/v1667416093/${process.env.CLOUDINARY_FOLDER}/lock-icon.png`;
 
 @Injectable()
 export class EmailSenderService {
