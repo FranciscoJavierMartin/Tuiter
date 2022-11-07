@@ -28,6 +28,7 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ValidateIdPipe } from '@/shared/pipes/validate-id.pipe';
 import { FILE_SIZE_LIMIT_MB } from '@/shared/contants';
+import { ID } from '@/shared/interfaces/types';
 import { CurrentUser } from '@/auth/interfaces/current-user.interface';
 import { GetUser } from '@/auth/decorators/get-user.decorator';
 import { PostService } from '@/post/services/post.service';
@@ -102,7 +103,7 @@ export class PostController {
   @UseGuards(AuthGuard(), IsAuthorGuard)
   public async remove(
     @Param('postId', ValidateIdPipe) postId: string,
-    @GetUser('userId') [userId]: string,
+    @GetUser('userId') userId: ID,
   ): Promise<void> {
     return this.postService.remove(postId, userId);
   }

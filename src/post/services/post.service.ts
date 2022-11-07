@@ -11,6 +11,7 @@ import { Server } from 'socket.io';
 import { Queue } from 'bull';
 import { UploadApiResponse } from 'cloudinary';
 import { UploaderService } from '@/shared/services/uploader.service';
+import { ID } from '@/shared/interfaces/types';
 import { CurrentUser } from '@/auth/interfaces/current-user.interface';
 import { CreatePostDto } from '@/post/dto/requests/create-post.dto';
 import { Post } from '@/post/models/post.model';
@@ -139,7 +140,7 @@ export class PostService {
    * @param postId Post id
    * @param authorId Post's author id
    */
-  public async remove(postId: string, authorId: string): Promise<void> {
+  public async remove(postId: string, authorId: ID): Promise<void> {
     this.socket.emit('delete post', postId);
 
     const post = await this.postRespository.getPostById(postId);

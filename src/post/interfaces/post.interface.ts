@@ -15,7 +15,7 @@ export interface GetPostsQuery {
 
 export interface DeletePostParams {
   postId: string;
-  authorId: string;
+  authorId: ID;
 }
 
 export interface UpdatePostParams {
