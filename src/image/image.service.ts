@@ -1,11 +1,11 @@
 import { BadGatewayException, Injectable } from '@nestjs/common';
-import { UploaderService } from '@/shared/services/uploader.service';
-import { ID } from '@/shared/interfaces/types';
-import { UploadApiResponse } from 'cloudinary';
-import { UserCacheService } from '@/user/services/user.cache.service';
-import { Queue } from 'bull';
-import { ImageJobData } from '@/image/interfaces/image.interface';
 import { InjectQueue } from '@nestjs/bull';
+import { Queue } from 'bull';
+import { UploadApiResponse } from 'cloudinary';
+import { ID } from '@/shared/interfaces/types';
+import { UploaderService } from '@/shared/services/uploader.service';
+import { UserCacheService } from '@/user/services/user.cache.service';
+import { ImageJobData } from '@/image/interfaces/image.interface';
 
 @Injectable()
 export class ImageService {
@@ -50,4 +50,9 @@ export class ImageService {
       imgVersion: result.version.toString(),
     });
   }
+
+  public async uploadBackgroundImage(
+    image: Express.Multer.File,
+    userId: ID,
+  ): Promise<void> {}
 }
