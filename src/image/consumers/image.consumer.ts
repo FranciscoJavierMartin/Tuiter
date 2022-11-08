@@ -5,6 +5,7 @@ import { CONSUMER_CONCURRENCY } from '@/shared/contants';
 import {
   AddBackgroundImageJobData,
   AddUserProfilePictureJobData,
+  RemoveImageJobData,
 } from '@/image/interfaces/image.interface';
 import { ImageRepository } from '@/image/repositories/image.repository';
 
@@ -51,6 +52,24 @@ export class ImageConsumer extends BaseConsumer {
         job.data.imgId,
         job.data.imgVersion,
       );
+      job.progress(100);
+      done(null, job.data);
+    } catch (error) {
+      this.logger.error(error);
+      done(error as Error);
+    }
+  }
+
+  @Process({
+    name: 'removeImage',
+    concurrency: CONSUMER_CONCURRENCY,
+  })
+  public async removeImage(
+    job: Job<RemoveImageJobData>,
+    done: DoneCallback,
+  ): Promise<void> {
+    try {
+      await this.imageRepository.removeImageFromDB(job.data.imageId);
       job.progress(100);
       done(null, job.data);
     } catch (error) {

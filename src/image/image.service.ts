@@ -93,6 +93,8 @@ export class ImageService {
   }
 
   public async removeImage(imageId: ID): Promise<void> {
-    throw new Error('Method not implemented.');
+    // TODO: Emit 'delete image'
+
+    this.imageQueue.add('removeImage', { imageId });
   }
 }
