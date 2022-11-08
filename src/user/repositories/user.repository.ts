@@ -104,7 +104,8 @@ export class UserRepository {
    * @param userId User id
    * @param user User data
    */
-  public async updateUser(userId: string, user: User): Promise<void> {
+  // TODO: Replace userId type by ObjectId
+  public async updateUser(userId: string, user: Partial<User>): Promise<void> {
     await this.userModel.updateOne({ _id: userId }, { $set: user });
   }
 

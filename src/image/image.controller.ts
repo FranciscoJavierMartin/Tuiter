@@ -72,6 +72,15 @@ export class ImageController {
     return await this.imageService.getImages(userId);
   }
 
+  @Delete('background')
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard())
+  public async removeBackgroundImage(
+    @GetUser('userId') userId: ID,
+  ): Promise<void> {
+    await this.imageService.removeBackgroundImage(userId);
+  }
+
   @Delete(':imageId')
   @ApiParam({
     name: 'imageId',
@@ -79,7 +88,9 @@ export class ImageController {
   })
   @ApiBearerAuth()
   @UseGuards(AuthGuard(), IsOwnerGuard)
-  public async removeImage(@Param('imageId', ValidateIdPipe) imageId: ID) {
+  public async removeImage(
+    @Param('imageId', ValidateIdPipe) imageId: ID,
+  ): Promise<void> {
     await this.imageService.removeImage(imageId);
   }
 }

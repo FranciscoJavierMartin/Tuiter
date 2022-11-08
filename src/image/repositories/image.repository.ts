@@ -20,6 +20,7 @@ export class ImageRepository {
     imgId: string,
     imgVersion: string,
   ): Promise<void> {
+    // TODO: Remove folder from imgId
     await Promise.all([
       await this.userModel.findByIdAndUpdate(userId, {
         $set: { profilePicture: url },
@@ -33,6 +34,7 @@ export class ImageRepository {
     imgId: string,
     imgVersion: string,
   ): Promise<void> {
+    // TODO: Remove folder from imgId
     await Promise.all([
       await this.userModel.findByIdAndUpdate(userId, {
         $set: { bgImageId: imgId, bgImageVersion: imgVersion },
@@ -61,6 +63,10 @@ export class ImageRepository {
 
   public async getImageById(imageId: ObjectId): Promise<Image> {
     return await this.imageModel.findById(imageId);
+  }
+
+  public async getImageByImgId(imgId: string): Promise<Image> {
+    return await this.imageModel.findOne({ imgId });
   }
 
   public async removeImageFromDB(imageId: ObjectId): Promise<Image> {

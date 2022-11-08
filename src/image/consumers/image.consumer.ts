@@ -76,7 +76,9 @@ export class ImageConsumer extends BaseConsumer {
       const imageDeleted = await this.imageRepository.removeImageFromDB(
         job.data.imageId,
       );
-      this.uploaderService.removeImage(imageDeleted.imgId);
+      job.progress(50);
+
+      await this.uploaderService.removeImage(imageDeleted.imgId);
       job.progress(100);
       done(null, job.data);
     } catch (error) {
