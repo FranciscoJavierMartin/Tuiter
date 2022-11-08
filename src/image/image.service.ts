@@ -54,5 +54,28 @@ export class ImageService {
   public async uploadBackgroundImage(
     image: Express.Multer.File,
     userId: ID,
-  ): Promise<void> {}
+  ): Promise<void> {
+    const result: UploadApiResponse = await this.uploaderService.uploadImage(
+      image,
+    );
+
+    if (!result.public_id) {
+      throw new BadGatewayException('External server error');
+    }
+
+    await Promise.all([
+      this.userCacheService.updateUserAttributeInCache(
+        userId,
+        'bgImageId',
+        result.public_id,
+      ),
+      this.userCacheService.updateUserAttributeInCache(
+        userId,
+        'bgImageVersion',
+        result.version.toString(),
+      ),
+    ]);
+
+    // TODO: Emit 'update user'
+  }
 }

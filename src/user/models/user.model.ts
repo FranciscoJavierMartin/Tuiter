@@ -86,13 +86,13 @@ export class User {
     type: String,
     default: '',
   })
-  bgImageVersion: string;
+  bgImageId: string;
 
   @Prop({
     type: String,
     default: '',
   })
-  bgImageId: string;
+  bgImageVersion: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
