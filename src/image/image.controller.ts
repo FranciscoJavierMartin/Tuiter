@@ -80,6 +80,6 @@ export class ImageController {
   @ApiBearerAuth()
   @UseGuards(AuthGuard(), IsOwnerGuard)
   public async removeImage(@Param('imageId', ValidateIdPipe) imageId: ID) {
-    return imageId;
+    await this.imageService.removeImage(imageId);
   }
 }

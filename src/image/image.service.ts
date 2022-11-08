@@ -91,4 +91,8 @@ export class ImageService {
   public async getImages(userId: ID): Promise<ImageDto[]> {
     return await this.imageRepository.getImages(userId);
   }
+
+  public async removeImage(imageId: ID): Promise<void> {
+    throw new Error('Method not implemented.');
+  }
 }
