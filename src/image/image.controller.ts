@@ -16,6 +16,7 @@ import { FILE_SIZE_LIMIT } from '@/shared/contants';
 import { GetUser } from '@/auth/decorators/get-user.decorator';
 import { ImageService } from '@/image/image.service';
 import { ValidateIdPipe } from '@/shared/pipes/validate-id.pipe';
+import { ImageDto } from '@/image/dto/responses/image.dto';
 
 @ApiTags('Image')
 @Controller('image')
@@ -62,7 +63,9 @@ export class ImageController {
     name: 'userId',
     description: 'User id to get images',
   })
-  public async getImages(@Param('userId', ValidateIdPipe) userId: ID) {
-    return userId;
+  public async getImages(
+    @Param('userId', ValidateIdPipe) userId: ID,
+  ): Promise<ImageDto[]> {
+    return await this.imageService.getImages(userId);
   }
 }

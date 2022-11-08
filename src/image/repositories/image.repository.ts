@@ -52,4 +52,10 @@ export class ImageRepository {
       imgVersion,
     });
   }
+
+  public async getImages(userId: ObjectId): Promise<Image[]> {
+    return await this.imageModel.find({
+      userId,
+    });
+  }
 }

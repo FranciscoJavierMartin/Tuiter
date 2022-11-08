@@ -6,12 +6,15 @@ import { ID } from '@/shared/interfaces/types';
 import { UploaderService } from '@/shared/services/uploader.service';
 import { UserCacheService } from '@/user/services/user.cache.service';
 import { ImageJobData } from '@/image/interfaces/image.interface';
+import { ImageRepository } from '@/image/repositories/image.repository';
+import { ImageDto } from '@/image/dto/responses/image.dto';
 
 @Injectable()
 export class ImageService {
   constructor(
     private readonly uploaderService: UploaderService,
     private readonly userCacheService: UserCacheService,
+    private readonly imageRepository: ImageRepository,
     @InjectQueue('image') private readonly imageQueue: Queue<ImageJobData>,
   ) {}
 
@@ -83,5 +86,9 @@ export class ImageService {
       imgId: result.public_id,
       imgVersion: result.version.toString(),
     });
+  }
+
+  public async getImages(userId: ID): Promise<ImageDto[]> {
+    return await this.imageRepository.getImages(userId);
   }
 }
