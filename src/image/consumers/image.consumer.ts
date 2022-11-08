@@ -3,7 +3,7 @@ import { DoneCallback, Job } from 'bull';
 import { BaseConsumer } from '@/shared/consumers/base.consumer';
 import { CONSUMER_CONCURRENCY } from '@/shared/contants';
 import {
-  AddBackgroundImageJobData,
+  AddImageJobData,
   AddUserProfilePictureJobData,
   RemoveImageJobData,
 } from '@/image/interfaces/image.interface';
@@ -47,11 +47,33 @@ export class ImageConsumer extends BaseConsumer {
     concurrency: CONSUMER_CONCURRENCY,
   })
   public async addBackgroundImageToDB(
-    job: Job<AddBackgroundImageJobData>,
+    job: Job<AddImageJobData>,
     done: DoneCallback,
   ): Promise<void> {
     try {
       await this.imageRepository.addBackgroundImageToDB(
+        job.data.userId,
+        job.data.imgId,
+        job.data.imgVersion,
+      );
+      job.progress(100);
+      done(null, job.data);
+    } catch (error) {
+      this.logger.error(error);
+      done(error as Error);
+    }
+  }
+
+  @Process({
+    name: 'addImageToDb',
+    concurrency: CONSUMER_CONCURRENCY,
+  })
+  public async addImageToDb(
+    job: Job<AddImageJobData>,
+    done: DoneCallback,
+  ): Promise<void> {
+    try {
+      await this.imageRepository.addImage(
         job.data.userId,
         job.data.imgId,
         job.data.imgVersion,

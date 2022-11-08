@@ -2,7 +2,7 @@ import { ID } from '@/shared/interfaces/types';
 
 export type ImageJobData =
   | AddUserProfilePictureJobData
-  | AddBackgroundImageJobData
+  | AddImageJobData
   | RemoveImageJobData;
 
 export interface AddUserProfilePictureJobData {
@@ -12,7 +12,7 @@ export interface AddUserProfilePictureJobData {
   imgVersion: string;
 }
 
-export interface AddBackgroundImageJobData {
+export interface AddImageJobData {
   userId: ID;
   imgId: string;
   imgVersion: string;

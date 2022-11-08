@@ -12,6 +12,7 @@ import { Queue } from 'bull';
 import { UploadApiResponse } from 'cloudinary';
 import { UploaderService } from '@/shared/services/uploader.service';
 import { ID } from '@/shared/interfaces/types';
+import { ImageJobData } from '@/image/interfaces/image.interface';
 import { CurrentUser } from '@/auth/interfaces/current-user.interface';
 import { CreatePostDto } from '@/post/dto/requests/create-post.dto';
 import { Post } from '@/post/models/post.model';
@@ -39,6 +40,8 @@ export class PostService {
     private readonly postQueue: Queue<
       Post | DeletePostParams | UpdatePostParams
     >,
+    @InjectQueue('image')
+    private readonly imageQueue: Queue<ImageJobData>,
   ) {}
 
   /**
@@ -99,7 +102,13 @@ export class PostService {
 
     this.postQueue.add('addPostToDB', post);
 
-    // TODO: Enqueue image to add to DB
+    if (image) {
+      this.imageQueue.add('addImageToDb', {
+        userId: user.userId,
+        imgId: post.imgId,
+        imgVersion: post.imgVersion,
+      });
+    }
   }
 
   /**

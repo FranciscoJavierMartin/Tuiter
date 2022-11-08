@@ -15,7 +15,7 @@ import { PostRepository } from '@/post/repositories/post.repository';
   imports: [
     MongooseModule.forFeature([{ name: Post.name, schema: PostSchema }]),
     PassportModule.register({ defaultStrategy: 'jwt' }),
-    BullModule.registerQueue(...getQueues('post')),
+    BullModule.registerQueue(...getQueues('post', 'image')),
     UserModule,
   ],
   controllers: [PostController],
