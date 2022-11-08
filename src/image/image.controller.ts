@@ -1,5 +1,6 @@
 import {
   Controller,
+  Delete,
   Get,
   Param,
   ParseFilePipe,
@@ -17,6 +18,7 @@ import { GetUser } from '@/auth/decorators/get-user.decorator';
 import { ImageService } from '@/image/image.service';
 import { ValidateIdPipe } from '@/shared/pipes/validate-id.pipe';
 import { ImageDto } from '@/image/dto/responses/image.dto';
+import { IsOwnerGuard } from './guards/is-owner.guard';
 
 @ApiTags('Image')
 @Controller('image')
@@ -50,6 +52,7 @@ export class ImageController {
     }),
   )
   @ApiConsumes('multipart/form-data')
+  @ApiBearerAuth()
   @UseGuards(AuthGuard())
   public async uploadBackgroundImage(
     @UploadedFile(new ParseFilePipe({})) image: Express.Multer.File,
@@ -67,5 +70,16 @@ export class ImageController {
     @Param('userId', ValidateIdPipe) userId: ID,
   ): Promise<ImageDto[]> {
     return await this.imageService.getImages(userId);
+  }
+
+  @Delete(':imageId')
+  @ApiParam({
+    name: 'imageId',
+    description: 'Image id',
+  })
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard(), IsOwnerGuard)
+  public async removeImage(@Param('imageId', ValidateIdPipe) imageId: ID) {
+    return imageId;
   }
 }
