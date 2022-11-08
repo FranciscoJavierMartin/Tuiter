@@ -8,7 +8,7 @@ import { UserModule } from '@/user/user.module';
 import { ImageService } from '@/image/image.service';
 import { ImageController } from '@/image/image.controller';
 import { ImageConsumer } from '@/image/consumers/image.consumer';
-import { ImageRepository } from '@/image/repositories/image.repository.service';
+import { ImageRepository } from '@/image/repositories/image.repository';
 import { Image, ImageSchema } from '@/image/models/image.model';
 
 @Module({

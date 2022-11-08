@@ -77,5 +77,11 @@ export class ImageService {
     ]);
 
     // TODO: Emit 'update user'
+
+    this.imageQueue.add('addBackgroundImageToDB', {
+      userId,
+      imgId: result.public_id,
+      imgVersion: result.version.toString(),
+    });
   }
 }

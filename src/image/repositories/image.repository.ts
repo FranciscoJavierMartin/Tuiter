@@ -20,10 +20,25 @@ export class ImageRepository {
     imgId: string,
     imgVersion: string,
   ): Promise<void> {
-    await this.userModel.findByIdAndUpdate(userId, {
-      $set: { profilePicture: url },
-    });
-    await this.addImage(userId, imgId, imgVersion);
+    await Promise.all([
+      await this.userModel.findByIdAndUpdate(userId, {
+        $set: { profilePicture: url },
+      }),
+      await this.addImage(userId, imgId, imgVersion),
+    ]);
+  }
+
+  public async addBackgroundImageToDB(
+    userId: ObjectId,
+    imgId: string,
+    imgVersion: string,
+  ): Promise<void> {
+    await Promise.all([
+      await this.userModel.findByIdAndUpdate(userId, {
+        $set: { bgImageId: imgId, bgImageVersion: imgVersion },
+      }),
+      await this.addImage(userId, imgId, imgVersion),
+    ]);
   }
 
   public async addImage(
