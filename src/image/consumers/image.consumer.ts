@@ -8,10 +8,14 @@ import {
   RemoveImageJobData,
 } from '@/image/interfaces/image.interface';
 import { ImageRepository } from '@/image/repositories/image.repository';
+import { UploaderService } from '@/shared/services/uploader.service';
 
 @Processor('image')
 export class ImageConsumer extends BaseConsumer {
-  constructor(private readonly imageRepository: ImageRepository) {
+  constructor(
+    private readonly uploaderService: UploaderService,
+    private readonly imageRepository: ImageRepository,
+  ) {
     super('ImageConsumer');
   }
 
@@ -69,7 +73,10 @@ export class ImageConsumer extends BaseConsumer {
     done: DoneCallback,
   ): Promise<void> {
     try {
-      await this.imageRepository.removeImageFromDB(job.data.imageId);
+      const imageDeleted = await this.imageRepository.removeImageFromDB(
+        job.data.imageId,
+      );
+      this.uploaderService.removeImage(imageDeleted.imgId);
       job.progress(100);
       done(null, job.data);
     } catch (error) {

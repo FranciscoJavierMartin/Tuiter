@@ -63,7 +63,7 @@ export class ImageRepository {
     return await this.imageModel.findById(imageId);
   }
 
-  public async removeImageFromDB(imageId: ObjectId): Promise<void> {
-    await this.imageModel.findByIdAndRemove(imageId);
+  public async removeImageFromDB(imageId: ObjectId): Promise<Image> {
+    return await this.imageModel.findByIdAndDelete(imageId);
   }
 }
