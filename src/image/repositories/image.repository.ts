@@ -14,6 +14,13 @@ export class ImageRepository {
     private readonly imageModel: Model<Image>,
   ) {}
 
+  /**
+   * Add profile picture to user
+   * @param ownerId User id
+   * @param url picture url
+   * @param imgId Image id (Cloudinary)
+   * @param imgVersion Image version (Cloudinary)
+   */
   public async addUserProfilePictureToDB(
     ownerId: ObjectId,
     url: string,
@@ -29,6 +36,12 @@ export class ImageRepository {
     ]);
   }
 
+  /**
+   * Add background image to user
+   * @param ownerId User id
+   * @param imgId Image id (Cloudinary)
+   * @param imgVersion Image version (Cloudinary)
+   */
   public async addBackgroundImageToDB(
     ownerId: ObjectId,
     imgId: string,
@@ -43,6 +56,12 @@ export class ImageRepository {
     ]);
   }
 
+  /**
+   * Add image to db
+   * @param ownerId User id
+   * @param imgId Image id (Cloudinary)
+   * @param imgVersion Image version (Cloudinary)
+   */
   public async addImage(
     ownerId: ObjectId,
     imgId: string,
@@ -55,24 +74,45 @@ export class ImageRepository {
     });
   }
 
+  /**
+   * Update image
+   * @param imgId Image id (Cloudinary)
+   * @param imgVersion Image version (Cloudinary)
+   */
   public async updateImage(imgId: string, imgVersion: string): Promise<void> {
     await this.imageModel.findOneAndUpdate({ imgId }, { $set: { imgVersion } });
   }
 
+  /**
+   * Get all images by owner
+   * @param ownerId User id
+   */
   public async getImages(ownerId: ObjectId): Promise<Image[]> {
     return await this.imageModel.find({
       ownerId,
     });
   }
 
+  /**
+   * Get image by id
+   * @param imageId Image id
+   */
   public async getImageById(imageId: ObjectId): Promise<Image> {
     return await this.imageModel.findById(imageId);
   }
 
+  /**
+   * Get image by imgId
+   * @param imgId Image id (Cloudinary)
+   */
   public async getImageByImgId(imgId: string): Promise<Image> {
     return await this.imageModel.findOne({ imgId });
   }
 
+  /**
+   * Remove image by id
+   * @param imageId Image id
+   */
   public async removeImageFromDB(imageId: ObjectId): Promise<Image> {
     return await this.imageModel.findByIdAndDelete(imageId);
   }

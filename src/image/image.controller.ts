@@ -34,6 +34,7 @@ import { IsOwnerGuard } from './guards/is-owner.guard';
 export class ImageController {
   constructor(private readonly imageService: ImageService) {}
 
+  // TODO: Check if should be included in user controller
   @Patch('profile')
   @UseInterceptors(
     FileInterceptor('image', {
@@ -58,6 +59,7 @@ export class ImageController {
     await this.imageService.uploadProfilePicture(image, userId);
   }
 
+  // TODO: Check if should be included in user controller
   @Patch('background')
   @UseInterceptors(
     FileInterceptor('image', {
@@ -93,6 +95,7 @@ export class ImageController {
     return await this.imageService.getImages(userId);
   }
 
+  // TODO: Check if should be included in user controller
   @Delete('background')
   @ApiUnauthorizedResponse({
     description: 'Unauthorized',
