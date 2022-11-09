@@ -21,6 +21,11 @@ export class ImageService {
     @InjectQueue('image') private readonly imageQueue: Queue<ImageJobData>,
   ) {}
 
+  /**
+   * Upload profile picture
+   * @param image Image to upload
+   * @param userId User id to be updated
+   */
   public async uploadProfilePicture(
     image: Express.Multer.File,
     userId: ID,
@@ -57,6 +62,11 @@ export class ImageService {
     });
   }
 
+  /**
+   * Upload background image to user
+   * @param image Image to be uploaded
+   * @param ownerId User id to be updated
+   */
   public async uploadBackgroundImage(
     image: Express.Multer.File,
     ownerId: ID,
@@ -91,16 +101,29 @@ export class ImageService {
     });
   }
 
+  /**
+   * Get all images from user
+   * @param ownerId User id
+   * @returns Images from user
+   */
   public async getImages(ownerId: ID): Promise<ImageDto[]> {
     return await this.imageRepository.getImages(ownerId);
   }
 
+  /**
+   * Remove image by id
+   * @param imageId Image id
+   */
   public async removeImage(imageId: ID): Promise<void> {
     // TODO: Emit 'delete image'
 
     this.imageQueue.add('removeImage', { imageId });
   }
 
+  /**
+   * Remove user background image
+   * @param userId User id
+   */
   public async removeBackgroundImage(userId: ID): Promise<void> {
     const user = await this.userCacheService.getUserFromCache(userId);
 
@@ -121,6 +144,10 @@ export class ImageService {
     ]);
   }
 
+  /**
+   * Remove image by imgId
+   * @param imgId image id (Cloudinary)
+   */
   public async removeImageByImgId(imgId: string): Promise<void> {
     const image = await this.imageRepository.getImageByImgId(imgId);
     await this.removeImage(image._id);
