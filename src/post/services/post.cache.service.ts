@@ -242,7 +242,7 @@ export class PostCacheService extends BaseCache {
     } catch (error) {
       this.logger.error(error);
       throw new InternalServerErrorException(
-        `Error deleting post ${postId} from Redis`,
+        `Error updating post ${postId} from Redis`,
       );
     }
   }

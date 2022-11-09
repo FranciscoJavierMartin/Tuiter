@@ -10,6 +10,7 @@ import { Post, PostSchema } from '@/post/models/post.model';
 import { PostCacheService } from '@/post/services/post.cache.service';
 import { PostConsumer } from '@/post/consumers/post.consumer';
 import { PostRepository } from '@/post/repositories/post.repository';
+import { ImageModule } from '@/image/image.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { PostRepository } from '@/post/repositories/post.repository';
     PassportModule.register({ defaultStrategy: 'jwt' }),
     BullModule.registerQueue(...getQueues('post', 'image')),
     UserModule,
+    ImageModule,
   ],
   controllers: [PostController],
   providers: [PostService, PostCacheService, PostConsumer, PostRepository],
