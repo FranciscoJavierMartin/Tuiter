@@ -136,7 +136,7 @@ export class ImageService {
         'bgImageVersion',
         '',
       ),
-      this.userRepository.updateUser(userId.toString(), {
+      this.userRepository.updateUser(userId, {
         bgImageId: '',
         bgImageVersion: '',
       } as User),
