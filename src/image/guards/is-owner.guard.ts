@@ -22,6 +22,6 @@ export class IsOwnerGuard implements CanActivate {
       );
     }
 
-    return request.user.userId === image.userId.toString();
+    return request.user.userId === image.ownerId.toString();
   }
 }

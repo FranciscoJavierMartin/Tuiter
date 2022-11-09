@@ -14,7 +14,7 @@ export class ImageDto {
     type: String,
     required: true,
   })
-  userId: ID;
+  ownerId: ID;
 
   @ApiProperty({
     description: 'image id (Cloudinary)',

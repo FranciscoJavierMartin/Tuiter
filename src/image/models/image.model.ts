@@ -13,7 +13,7 @@ export class Image {
     ref: 'User',
     index: true,
   })
-  userId: mongoose.Types.ObjectId;
+  ownerId: mongoose.Types.ObjectId;
 
   @Prop({
     type: String,

@@ -50,7 +50,7 @@ export class ImageService {
     // TODO: Emit 'update user'
 
     this.imageQueue.add('addUserProfilePictureToDB', {
-      userId,
+      ownerId: userId,
       profilePictureUrl,
       imgId: result.public_id,
       imgVersion: result.version.toString(),
@@ -59,7 +59,7 @@ export class ImageService {
 
   public async uploadBackgroundImage(
     image: Express.Multer.File,
-    userId: ID,
+    ownerId: ID,
   ): Promise<void> {
     const result: UploadApiResponse = await this.uploaderService.uploadImage(
       image,
@@ -71,12 +71,12 @@ export class ImageService {
 
     await Promise.all([
       this.userCacheService.updateUserAttributeInCache(
-        userId,
+        ownerId,
         'bgImageId',
         result.public_id,
       ),
       this.userCacheService.updateUserAttributeInCache(
-        userId,
+        ownerId,
         'bgImageVersion',
         result.version.toString(),
       ),
@@ -85,14 +85,14 @@ export class ImageService {
     // TODO: Emit 'update user'
 
     this.imageQueue.add('addBackgroundImageToDB', {
-      userId,
+      ownerId,
       imgId: result.public_id,
       imgVersion: result.version.toString(),
     });
   }
 
-  public async getImages(userId: ID): Promise<ImageDto[]> {
-    return await this.imageRepository.getImages(userId);
+  public async getImages(ownerId: ID): Promise<ImageDto[]> {
+    return await this.imageRepository.getImages(ownerId);
   }
 
   public async removeImage(imageId: ID): Promise<void> {

@@ -7,14 +7,14 @@ export type ImageJobData =
   | UpdateImageJobData;
 
 export interface AddUserProfilePictureJobData {
-  userId: ID;
+  ownerId: ID;
   profilePictureUrl: string;
   imgId: string;
   imgVersion: string;
 }
 
 export interface AddImageJobData {
-  userId: ID;
+  ownerId: ID;
   imgId: string;
   imgVersion: string;
 }

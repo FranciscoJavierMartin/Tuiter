@@ -104,7 +104,7 @@ export class PostService {
 
     if (image) {
       this.imageQueue.add('addImageToDb', {
-        userId: user.userId,
+        ownerId: user.userId,
         imgId: post.imgId,
         imgVersion: post.imgVersion,
       });
@@ -176,11 +176,13 @@ export class PostService {
    * Update post
    * @param postId Post id
    * @param updatePostDto Post data to be updated
+   * @param authorId Author id
    * @param image (Optional) Image to add or update
    */
   public async update(
     postId: string,
     updatePostDto: UpdatePostDto,
+    authorId: ID,
     image?: Express.Multer.File,
   ): Promise<void> {
     let result: UploadApiResponse;
@@ -198,7 +200,6 @@ export class PostService {
             true,
           );
 
-          // TODO: Update image in DB
           this.imageQueue.add('updateImageInDb', {
             imgId: result.public_id,
             imgVersion: result.version.toString(),
@@ -207,7 +208,11 @@ export class PostService {
           // Add new image
           result = await this.uploaderService.uploadImage(image);
 
-          // TODO: Insert image in DB
+          this.imageQueue.add('addImageToDb', {
+            ownerId: authorId,
+            imgId: result.public_id,
+            imgVersion: result.version.toString(),
+          });
         }
       } catch (error) {
         throw new BadGatewayException('External server error');

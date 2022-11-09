@@ -30,7 +30,7 @@ export class ImageConsumer extends BaseConsumer {
   ): Promise<void> {
     try {
       await this.imageRepository.addUserProfilePictureToDB(
-        job.data.userId,
+        job.data.ownerId,
         job.data.profilePictureUrl,
         job.data.imgId,
         job.data.imgVersion,
@@ -53,7 +53,7 @@ export class ImageConsumer extends BaseConsumer {
   ): Promise<void> {
     try {
       await this.imageRepository.addBackgroundImageToDB(
-        job.data.userId,
+        job.data.ownerId,
         job.data.imgId,
         job.data.imgVersion,
       );
@@ -75,7 +75,7 @@ export class ImageConsumer extends BaseConsumer {
   ): Promise<void> {
     try {
       await this.imageRepository.addImage(
-        job.data.userId,
+        job.data.ownerId,
         job.data.imgId,
         job.data.imgVersion,
       );

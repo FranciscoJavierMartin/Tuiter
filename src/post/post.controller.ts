@@ -128,6 +128,7 @@ export class PostController {
   public async update(
     @Param('postId', ValidateIdPipe) postId: string,
     @Body() updatePostDto: UpdatePostDto,
+    @GetUser('userId') authorId: ID,
     @UploadedFile(
       new ParseFilePipe({
         fileIsRequired: false,
@@ -136,6 +137,6 @@ export class PostController {
     )
     image?: Express.Multer.File,
   ): Promise<void> {
-    return this.postService.update(postId, updatePostDto, image);
+    return this.postService.update(postId, updatePostDto, authorId, image);
   }
 }

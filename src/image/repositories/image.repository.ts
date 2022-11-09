@@ -15,41 +15,41 @@ export class ImageRepository {
   ) {}
 
   public async addUserProfilePictureToDB(
-    userId: ObjectId,
+    ownerId: ObjectId,
     url: string,
     imgId: string,
     imgVersion: string,
   ): Promise<void> {
     // TODO: Remove folder from imgId
     await Promise.all([
-      await this.userModel.findByIdAndUpdate(userId, {
+      await this.userModel.findByIdAndUpdate(ownerId, {
         $set: { profilePicture: url },
       }),
-      await this.addImage(userId, imgId, imgVersion),
+      await this.addImage(ownerId, imgId, imgVersion),
     ]);
   }
 
   public async addBackgroundImageToDB(
-    userId: ObjectId,
+    ownerId: ObjectId,
     imgId: string,
     imgVersion: string,
   ): Promise<void> {
     // TODO: Remove folder from imgId
     await Promise.all([
-      await this.userModel.findByIdAndUpdate(userId, {
+      await this.userModel.findByIdAndUpdate(ownerId, {
         $set: { bgImageId: imgId, bgImageVersion: imgVersion },
       }),
-      await this.addImage(userId, imgId, imgVersion),
+      await this.addImage(ownerId, imgId, imgVersion),
     ]);
   }
 
   public async addImage(
-    userId: ObjectId,
+    ownerId: ObjectId,
     imgId: string,
     imgVersion: string,
   ): Promise<void> {
     await this.imageModel.create({
-      userId,
+      ownerId,
       imgId,
       imgVersion,
     });
@@ -59,9 +59,9 @@ export class ImageRepository {
     await this.imageModel.findOneAndUpdate({ imgId }, { $set: { imgVersion } });
   }
 
-  public async getImages(userId: ObjectId): Promise<Image[]> {
+  public async getImages(ownerId: ObjectId): Promise<Image[]> {
     return await this.imageModel.find({
-      userId,
+      ownerId,
     });
   }
 
