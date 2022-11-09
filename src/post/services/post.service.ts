@@ -13,6 +13,7 @@ import { UploadApiResponse } from 'cloudinary';
 import { UploaderService } from '@/shared/services/uploader.service';
 import { ID } from '@/shared/interfaces/types';
 import { ImageJobData } from '@/image/interfaces/image.interface';
+import { ImageService } from '@/image/image.service';
 import { CurrentUser } from '@/auth/interfaces/current-user.interface';
 import { CreatePostDto } from '@/post/dto/requests/create-post.dto';
 import { Post } from '@/post/models/post.model';
@@ -36,6 +37,7 @@ export class PostService {
     private readonly postCacheService: PostCacheService,
     private readonly uploaderService: UploaderService,
     private readonly postRespository: PostRepository,
+    private readonly imageService: ImageService,
     @InjectQueue('post')
     private readonly postQueue: Queue<
       Post | DeletePostParams | UpdatePostParams
@@ -159,9 +161,7 @@ export class PostService {
     if (post.imgId) {
       try {
         await this.uploaderService.removeImage(post.imgId);
-        this.imageQueue.add('removeImage', {
-          imgId: post.imgId,
-        });
+        this.imageService.removeImageByImgId(post.imgId);
       } catch (error) {
         throw new BadGatewayException('External server error');
       }

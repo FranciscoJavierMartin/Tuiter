@@ -118,19 +118,9 @@ export class ImageConsumer extends BaseConsumer {
     done: DoneCallback,
   ): Promise<void> {
     try {
-      let imageDeleted: Image;
-
-      if (job.data.imageId) {
-        imageDeleted = await this.imageRepository.removeImageFromDB(
-          job.data.imageId,
-        );
-      } else if (job.data.imgId) {
-        const image = await this.imageRepository.getImageByImgId(
-          job.data.imgId,
-        );
-        imageDeleted = await this.imageRepository.removeImageFromDB(image._id);
-      }
-
+      const imageDeleted: Image = await this.imageRepository.removeImageFromDB(
+        job.data.imageId,
+      );
       job.progress(50);
 
       await this.uploaderService.removeImage(imageDeleted.imgId);

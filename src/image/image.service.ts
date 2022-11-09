@@ -117,10 +117,12 @@ export class ImageService {
         bgImageId: '',
         bgImageVersion: '',
       } as User),
+      this.removeImageByImgId(user.bgImageId),
     ]);
+  }
 
-    const image = await this.imageRepository.getImageByImgId(user.bgImageId);
-
-    this.imageQueue.add('removeImage', { imageId: image._id });
+  public async removeImageByImgId(imgId: string): Promise<void> {
+    const image = await this.imageRepository.getImageByImgId(imgId);
+    await this.removeImage(image._id);
   }
 }

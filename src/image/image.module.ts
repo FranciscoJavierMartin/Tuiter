@@ -23,5 +23,6 @@ import { Image, ImageSchema } from '@/image/models/image.model';
   ],
   controllers: [ImageController],
   providers: [ImageService, ImageConsumer, ImageRepository],
+  exports: [ImageService],
 })
 export class ImageModule {}

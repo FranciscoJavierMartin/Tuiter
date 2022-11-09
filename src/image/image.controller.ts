@@ -10,6 +10,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import {
+  ApiBadGatewayResponse,
   ApiBearerAuth,
   ApiConsumes,
   ApiForbiddenResponse,
@@ -44,6 +45,9 @@ export class ImageController {
   @ApiUnauthorizedResponse({
     description: 'Unauthorized',
   })
+  @ApiBadGatewayResponse({
+    description: 'External server error',
+  })
   @ApiBearerAuth()
   @UseGuards(AuthGuard())
   public async uploadProfilePicture(
@@ -64,6 +68,9 @@ export class ImageController {
   @ApiConsumes('multipart/form-data')
   @ApiUnauthorizedResponse({
     description: 'Unauthorized',
+  })
+  @ApiBadGatewayResponse({
+    description: 'External server error',
   })
   @ApiBearerAuth()
   @UseGuards(AuthGuard())
