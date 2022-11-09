@@ -102,6 +102,13 @@ export class UserCacheService extends BaseCache {
     }
   }
 
+  /**
+   * Update user attribute in cache
+   * @param userId User id
+   * @param field Attribute name to be updated
+   * @param value New value
+   * @returns Updated user
+   */
   public async updateUserAttributeInCache(
     userId: ID,
     field: string,
