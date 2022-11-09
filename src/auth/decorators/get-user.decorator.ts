@@ -7,8 +7,8 @@ import { ObjectId } from 'mongodb';
 import { ID } from '@/shared/interfaces/types';
 import { CurrentUser } from '@/auth/interfaces/current-user.interface';
 
-// Get user (or user prop) from JWT
-export const GetUser = createParamDecorator((prop, ctx: ExecutionContext) => {
+// Get user (or user field) from JWT
+export const GetUser = createParamDecorator((field, ctx: ExecutionContext) => {
   const req = ctx.switchToHttp().getRequest();
   const user = req.user;
   let res: string | ID | CurrentUser;
@@ -17,10 +17,10 @@ export const GetUser = createParamDecorator((prop, ctx: ExecutionContext) => {
     throw new InternalServerErrorException('User not found (request)');
   }
 
-  if (prop === 'userId') {
-    res = new ObjectId(user[prop]);
-  } else if (prop) {
-    res = user[prop];
+  if (field === 'userId') {
+    res = new ObjectId(user[field]);
+  } else if (field) {
+    res = user[field];
   } else {
     res = user;
   }
