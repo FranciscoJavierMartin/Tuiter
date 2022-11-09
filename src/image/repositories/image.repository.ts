@@ -55,6 +55,10 @@ export class ImageRepository {
     });
   }
 
+  public async updateImage(imgId: string, imgVersion: string): Promise<void> {
+    await this.imageModel.findOneAndUpdate({ imgId }, { $set: { imgVersion } });
+  }
+
   public async getImages(userId: ObjectId): Promise<Image[]> {
     return await this.imageModel.find({
       userId,

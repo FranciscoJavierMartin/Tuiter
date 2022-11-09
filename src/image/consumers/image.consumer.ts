@@ -6,6 +6,7 @@ import {
   AddImageJobData,
   AddUserProfilePictureJobData,
   RemoveImageJobData,
+  UpdateImageJobData,
 } from '@/image/interfaces/image.interface';
 import { ImageRepository } from '@/image/repositories/image.repository';
 import { UploaderService } from '@/shared/services/uploader.service';
@@ -75,6 +76,27 @@ export class ImageConsumer extends BaseConsumer {
     try {
       await this.imageRepository.addImage(
         job.data.userId,
+        job.data.imgId,
+        job.data.imgVersion,
+      );
+      job.progress(100);
+      done(null, job.data);
+    } catch (error) {
+      this.logger.error(error);
+      done(error as Error);
+    }
+  }
+
+  @Process({
+    name: 'updateImageInDb',
+    concurrency: CONSUMER_CONCURRENCY,
+  })
+  public async updateImageInDb(
+    job: Job<UpdateImageJobData>,
+    done: DoneCallback,
+  ): Promise<void> {
+    try {
+      await this.imageRepository.updateImage(
         job.data.imgId,
         job.data.imgVersion,
       );

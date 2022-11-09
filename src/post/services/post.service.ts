@@ -161,6 +161,7 @@ export class PostService {
     if (post.imgId) {
       try {
         await this.uploaderService.removeImage(post.imgId);
+        // TODO: Remove image from DB
       } catch (error) {
         throw new BadGatewayException('External server error');
       }
@@ -196,9 +197,17 @@ export class PostService {
             true,
             true,
           );
+
+          // TODO: Update image in DB
+          this.imageQueue.add('updateImageInDb', {
+            imgId: result.public_id,
+            imgVersion: result.version.toString(),
+          });
         } else {
           // Add new image
           result = await this.uploaderService.uploadImage(image);
+
+          // TODO: Insert image in DB
         }
       } catch (error) {
         throw new BadGatewayException('External server error');
@@ -217,7 +226,5 @@ export class PostService {
     this.socket.emit('update post', updatedPost, 'posts');
 
     this.postQueue.add('updatePostInDB', { postId, post: updatedPost });
-
-    // TODO: Enqueue image to add to DB
   }
 }
