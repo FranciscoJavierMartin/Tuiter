@@ -86,6 +86,12 @@ export class PostService {
           await this.uploaderService.uploadImage(image);
         post.imgVersion = imageUploaded.version.toString();
         post.imgId = imageUploaded.public_id;
+
+        this.imageQueue.add('addImageToDb', {
+          ownerId: user.userId,
+          imgId: post.imgId,
+          imgVersion: post.imgVersion,
+        });
       } catch (error) {
         throw new BadGatewayException('External server error');
       }
@@ -101,14 +107,6 @@ export class PostService {
     );
 
     this.postQueue.add('addPostToDB', post);
-
-    if (image) {
-      this.imageQueue.add('addImageToDb', {
-        ownerId: user.userId,
-        imgId: post.imgId,
-        imgVersion: post.imgVersion,
-      });
-    }
   }
 
   /**
