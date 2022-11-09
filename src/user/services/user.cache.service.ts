@@ -103,6 +103,32 @@ export class UserCacheService extends BaseCache {
   }
 
   /**
+   * Update user attribute in cache
+   * @param userId User id
+   * @param field Attribute name to be updated
+   * @param value New value
+   * @returns Updated user
+   */
+  public async updateUserAttributeInCache(
+    userId: ID,
+    field: string,
+    value: string,
+  ): Promise<UserDocument> {
+    try {
+      await this.client.HSET(`${REDIS_USERS_COLLECTION}:${userId}`, [
+        field,
+        value,
+      ]);
+      return await this.getUserFromCache(userId);
+    } catch (error) {
+      this.logger.error(error);
+      throw new InternalServerErrorException(
+        `Error updating user ${userId} in Redis`,
+      );
+    }
+  }
+
+  /**
    * Retrieve user from cache
    * @param userId User key to search
    * @returns
@@ -113,14 +139,18 @@ export class UserCacheService extends BaseCache {
         `users:${userId}`,
       )) as unknown as UserDocument;
 
+      // TODO: Cast notifications and social
       response.createdAt = new Date(parseJson(`${response.createdAt}`));
-      response.postsCount = parseJson(`${response.postsCount}`);
-      response.blocked = parseJson(`${response.blocked}`);
-      response.blockedBy = parseJson(`${response.blockedBy}`);
+      response.postsCount = parseJson<number>(`${response.postsCount}`);
+      response.blocked = parseJson<string[]>(`${response.blocked}`);
+      response.blockedBy = parseJson<string[]>(`${response.blockedBy}`);
       response.notifications = parseJson(`${response.notifications}`);
       response.social = parseJson(`${response.social}`);
       response.followersCount = parseJson<number>(`${response.followersCount}`);
       response.followingCount = parseJson<number>(`${response.followingCount}`);
+      response.profilePicture = parseJson<string>(`${response.profilePicture}`);
+      response.bgImageId = parseJson<string>(`${response.bgImageId}`);
+      response.bgImageVersion = parseJson<string>(`${response.bgImageVersion}`);
 
       return response;
     } catch (error) {

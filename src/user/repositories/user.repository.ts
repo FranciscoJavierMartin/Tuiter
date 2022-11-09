@@ -104,7 +104,10 @@ export class UserRepository {
    * @param userId User id
    * @param user User data
    */
-  public async updateUser(userId: string, user: User): Promise<void> {
+  public async updateUser(
+    userId: ObjectId,
+    user: Partial<User>,
+  ): Promise<void> {
     await this.userModel.updateOne({ _id: userId }, { $set: user });
   }
 
@@ -113,7 +116,7 @@ export class UserRepository {
    * Decrement (in one) user post count
    * @param userId User id
    */
-  public async decrementUserPostsCount(userId: string): Promise<void> {
+  public async decrementUserPostsCount(userId: ID): Promise<void> {
     await this.userModel
       .findByIdAndUpdate(userId, {
         $inc: { postsCount: -1 },

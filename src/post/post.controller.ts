@@ -21,13 +21,16 @@ import {
   ApiBody,
   ApiConsumes,
   ApiCreatedResponse,
+  ApiForbiddenResponse,
   ApiOkResponse,
   ApiParam,
   ApiTags,
+  ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ValidateIdPipe } from '@/shared/pipes/validate-id.pipe';
 import { FILE_SIZE_LIMIT_MB } from '@/shared/contants';
+import { ID } from '@/shared/interfaces/types';
 import { CurrentUser } from '@/auth/interfaces/current-user.interface';
 import { GetUser } from '@/auth/decorators/get-user.decorator';
 import { PostService } from '@/post/services/post.service';
@@ -51,6 +54,9 @@ export class PostController {
   })
   @ApiBadRequestResponse({
     description: 'Bad request',
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Unauthorized',
   })
   @ApiBadGatewayResponse({
     description: 'Error on internal request',
@@ -96,13 +102,19 @@ export class PostController {
   @ApiBadRequestResponse({
     description: 'Post not found',
   })
+  @ApiUnauthorizedResponse({
+    description: 'Unauthorized',
+  })
+  @ApiForbiddenResponse({
+    description: 'User is not post author',
+  })
   @ApiBadGatewayResponse({
     description: 'Error on internal request',
   })
   @UseGuards(AuthGuard(), IsAuthorGuard)
   public async remove(
     @Param('postId', ValidateIdPipe) postId: string,
-    @GetUser('userId') [userId]: string,
+    @GetUser('userId') userId: ID,
   ): Promise<void> {
     return this.postService.remove(postId, userId);
   }
@@ -120,6 +132,12 @@ export class PostController {
   @ApiBadRequestResponse({
     description: 'Post not found',
   })
+  @ApiUnauthorizedResponse({
+    description: 'Unauthorized',
+  })
+  @ApiForbiddenResponse({
+    description: 'User is not post author',
+  })
   @ApiBadGatewayResponse({
     description: 'Error on internal request',
   })
@@ -127,6 +145,7 @@ export class PostController {
   public async update(
     @Param('postId', ValidateIdPipe) postId: string,
     @Body() updatePostDto: UpdatePostDto,
+    @GetUser('userId') authorId: ID,
     @UploadedFile(
       new ParseFilePipe({
         fileIsRequired: false,
@@ -135,6 +154,6 @@ export class PostController {
     )
     image?: Express.Multer.File,
   ): Promise<void> {
-    return this.postService.update(postId, updatePostDto, image);
+    return this.postService.update(postId, updatePostDto, authorId, image);
   }
 }

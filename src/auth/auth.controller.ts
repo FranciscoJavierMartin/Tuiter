@@ -21,6 +21,7 @@ import {
   ApiOkResponse,
   ApiParam,
   ApiTags,
+  ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { AuthGuard } from '@nestjs/passport';
@@ -89,6 +90,9 @@ export class AuthController {
   @ApiOkResponse({
     description: 'User info',
     type: UserDto,
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Unauthorized',
   })
   @ApiNotFoundResponse({
     description: 'User not found in DB',

@@ -14,8 +14,13 @@ import { FollowerModule } from '@/follower/follower.module';
 import { BlockUserModule } from '@/block-user/block-user.module';
 import { NotificationModule } from '@/notification/notification.module';
 import { EmailModule } from '@/email/email.module';
+import { ImageModule } from '@/image/image.module';
 
-// TODO: Refactor @ApiParam to match exact name from route params
+// TODO: Move cache services to repositories folder
+// TODO: Use interfaces to access to repository services (just for DB services)
+// TODO: Setup tests
+// TODO: Setup Github Actions for CI/CD
+// TODO: Setup SMTP server in docker-compose
 
 @Module({
   imports: [
@@ -65,6 +70,7 @@ import { EmailModule } from '@/email/email.module';
     BlockUserModule,
     NotificationModule,
     EmailModule,
+    ImageModule,
   ],
   controllers: [],
   providers: [],

@@ -11,6 +11,9 @@ import { Server } from 'socket.io';
 import { Queue } from 'bull';
 import { UploadApiResponse } from 'cloudinary';
 import { UploaderService } from '@/shared/services/uploader.service';
+import { ID } from '@/shared/interfaces/types';
+import { ImageJobData } from '@/image/interfaces/image.interface';
+import { ImageService } from '@/image/image.service';
 import { CurrentUser } from '@/auth/interfaces/current-user.interface';
 import { CreatePostDto } from '@/post/dto/requests/create-post.dto';
 import { Post } from '@/post/models/post.model';
@@ -34,10 +37,13 @@ export class PostService {
     private readonly postCacheService: PostCacheService,
     private readonly uploaderService: UploaderService,
     private readonly postRespository: PostRepository,
+    private readonly imageService: ImageService,
     @InjectQueue('post')
     private readonly postQueue: Queue<
       Post | DeletePostParams | UpdatePostParams
     >,
+    @InjectQueue('image')
+    private readonly imageQueue: Queue<ImageJobData>,
   ) {}
 
   /**
@@ -82,6 +88,12 @@ export class PostService {
           await this.uploaderService.uploadImage(image);
         post.imgVersion = imageUploaded.version.toString();
         post.imgId = imageUploaded.public_id;
+
+        this.imageQueue.add('addImageToDb', {
+          ownerId: user.userId,
+          imgId: post.imgId,
+          imgVersion: post.imgVersion,
+        });
       } catch (error) {
         throw new BadGatewayException('External server error');
       }
@@ -137,7 +149,7 @@ export class PostService {
    * @param postId Post id
    * @param authorId Post's author id
    */
-  public async remove(postId: string, authorId: string): Promise<void> {
+  public async remove(postId: string, authorId: ID): Promise<void> {
     this.socket.emit('delete post', postId);
 
     const post = await this.postRespository.getPostById(postId);
@@ -149,6 +161,7 @@ export class PostService {
     if (post.imgId) {
       try {
         await this.uploaderService.removeImage(post.imgId);
+        this.imageService.removeImageByImgId(post.imgId);
       } catch (error) {
         throw new BadGatewayException('External server error');
       }
@@ -163,11 +176,13 @@ export class PostService {
    * Update post
    * @param postId Post id
    * @param updatePostDto Post data to be updated
+   * @param authorId Author id
    * @param image (Optional) Image to add or update
    */
   public async update(
     postId: string,
     updatePostDto: UpdatePostDto,
+    authorId: ID,
     image?: Express.Multer.File,
   ): Promise<void> {
     let result: UploadApiResponse;
@@ -184,9 +199,20 @@ export class PostService {
             true,
             true,
           );
+
+          this.imageQueue.add('updateImageInDb', {
+            imgId: result.public_id,
+            imgVersion: result.version.toString(),
+          });
         } else {
           // Add new image
           result = await this.uploaderService.uploadImage(image);
+
+          this.imageQueue.add('addImageToDb', {
+            ownerId: authorId,
+            imgId: result.public_id,
+            imgVersion: result.version.toString(),
+          });
         }
       } catch (error) {
         throw new BadGatewayException('External server error');

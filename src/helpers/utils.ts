@@ -1,5 +1,5 @@
-import { DEFAULT_JOB_OPTIONS } from '@/shared/contants';
 import { BullModuleOptions } from '@nestjs/bull';
+import { DEFAULT_JOB_OPTIONS } from '@/shared/contants';
 
 const queues: BullModuleOptions[] = [
   {
@@ -20,6 +20,10 @@ const queues: BullModuleOptions[] = [
   },
   {
     name: 'follower',
+    defaultJobOptions: DEFAULT_JOB_OPTIONS,
+  },
+  {
+    name: 'image',
     defaultJobOptions: DEFAULT_JOB_OPTIONS,
   },
   {

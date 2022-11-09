@@ -2,8 +2,10 @@ import { Controller, Param, Patch, UseGuards } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
+  ApiForbiddenResponse,
   ApiParam,
   ApiTags,
+  ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { ValidateIdPipe } from '@/shared/pipes/validate-id.pipe';
@@ -28,12 +30,18 @@ export class BlockUserController {
   @ApiBadRequestResponse({
     description: 'User is already blocked',
   })
+  @ApiUnauthorizedResponse({
+    description: 'Unauthorized',
+  })
+  @ApiForbiddenResponse({
+    description: 'You cannot block yourself',
+  })
   @UseGuards(AuthGuard(), NotMySelfGuard)
   public async block(
     @Param('followerId', ValidateIdPipe) followerId: ID,
-    @GetUser('userId') [userId]: string,
+    @GetUser('userId') userId: ID,
   ): Promise<void> {
-    await this.blockUserService.block(userId as unknown as ID, followerId);
+    await this.blockUserService.block(userId, followerId);
   }
 
   @Patch('unblock/:followerId')
@@ -47,11 +55,17 @@ export class BlockUserController {
   @ApiBadRequestResponse({
     description: 'User is not blocked',
   })
+  @ApiUnauthorizedResponse({
+    description: 'Unauthorized',
+  })
+  @ApiForbiddenResponse({
+    description: 'You cannot unblock yourself',
+  })
   @UseGuards(AuthGuard(), NotMySelfGuard)
   public async unblock(
     @Param('followerId', ValidateIdPipe) followerId: ID,
-    @GetUser('userId') [userId]: string,
+    @GetUser('userId') userId: ID,
   ): Promise<void> {
-    await this.blockUserService.unblock(userId as unknown as ID, followerId);
+    await this.blockUserService.unblock(userId, followerId);
   }
 }

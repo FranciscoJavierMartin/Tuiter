@@ -10,8 +10,10 @@ import {
   ApiBadRequestResponse,
   ApiBearerAuth,
   ApiCreatedResponse,
+  ApiForbiddenResponse,
   ApiOkResponse,
   ApiTags,
+  ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { ValidateIdPipe } from '@/shared/pipes/validate-id.pipe';
@@ -35,6 +37,12 @@ export class ReactionsController {
   @ApiBadRequestResponse({
     description: 'Post not found',
   })
+  @ApiUnauthorizedResponse({
+    description: 'Unauthorized',
+  })
+  @ApiForbiddenResponse({
+    description: 'You cannot react to your own posts',
+  })
   @UseGuards(AuthGuard(), IsNotAuthorGuard)
   public add(
     @Body() addReactionDto: AddReactionDto,
@@ -48,10 +56,16 @@ export class ReactionsController {
   @ApiOkResponse({
     description: 'Reaction removed',
   })
+  @ApiUnauthorizedResponse({
+    description: 'Unauthorized',
+  })
+  @ApiForbiddenResponse({
+    description: 'You cannot react to your own posts',
+  })
   @UseGuards(AuthGuard(), IsNotAuthorGuard)
   public remove(
     @Param('postId', ValidateIdPipe) postId: ID,
-    @GetUser('username') [username]: string,
+    @GetUser('username') username: string,
   ): void {
     return this.reactionService.remove(postId, username);
   }
