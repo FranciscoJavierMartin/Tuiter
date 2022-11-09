@@ -21,6 +21,7 @@ import {
   ApiBody,
   ApiConsumes,
   ApiCreatedResponse,
+  ApiForbiddenResponse,
   ApiOkResponse,
   ApiParam,
   ApiTags,
@@ -98,11 +99,14 @@ export class PostController {
   @ApiOkResponse({
     description: 'Remove post. Only for author',
   })
+  @ApiBadRequestResponse({
+    description: 'Post not found',
+  })
   @ApiUnauthorizedResponse({
     description: 'Unauthorized',
   })
-  @ApiBadRequestResponse({
-    description: 'Post not found',
+  @ApiForbiddenResponse({
+    description: 'User is not post author',
   })
   @ApiBadGatewayResponse({
     description: 'Error on internal request',
@@ -130,6 +134,9 @@ export class PostController {
   })
   @ApiUnauthorizedResponse({
     description: 'Unauthorized',
+  })
+  @ApiForbiddenResponse({
+    description: 'User is not post author',
   })
   @ApiBadGatewayResponse({
     description: 'Error on internal request',

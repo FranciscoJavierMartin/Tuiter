@@ -2,6 +2,7 @@ import { Controller, Param, Patch, UseGuards } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
+  ApiForbiddenResponse,
   ApiParam,
   ApiTags,
   ApiUnauthorizedResponse,
@@ -32,6 +33,9 @@ export class BlockUserController {
   @ApiUnauthorizedResponse({
     description: 'Unauthorized',
   })
+  @ApiForbiddenResponse({
+    description: 'You cannot block yourself',
+  })
   @UseGuards(AuthGuard(), NotMySelfGuard)
   public async block(
     @Param('followerId', ValidateIdPipe) followerId: ID,
@@ -53,6 +57,9 @@ export class BlockUserController {
   })
   @ApiUnauthorizedResponse({
     description: 'Unauthorized',
+  })
+  @ApiForbiddenResponse({
+    description: 'You cannot unblock yourself',
   })
   @UseGuards(AuthGuard(), NotMySelfGuard)
   public async unblock(

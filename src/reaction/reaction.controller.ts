@@ -10,6 +10,7 @@ import {
   ApiBadRequestResponse,
   ApiBearerAuth,
   ApiCreatedResponse,
+  ApiForbiddenResponse,
   ApiOkResponse,
   ApiTags,
   ApiUnauthorizedResponse,
@@ -39,6 +40,9 @@ export class ReactionsController {
   @ApiUnauthorizedResponse({
     description: 'Unauthorized',
   })
+  @ApiForbiddenResponse({
+    description: 'You cannot react to your own posts',
+  })
   @UseGuards(AuthGuard(), IsNotAuthorGuard)
   public add(
     @Body() addReactionDto: AddReactionDto,
@@ -54,6 +58,9 @@ export class ReactionsController {
   })
   @ApiUnauthorizedResponse({
     description: 'Unauthorized',
+  })
+  @ApiForbiddenResponse({
+    description: 'You cannot react to your own posts',
   })
   @UseGuards(AuthGuard(), IsNotAuthorGuard)
   public remove(

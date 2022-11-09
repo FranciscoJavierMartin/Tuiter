@@ -1,6 +1,7 @@
 import { Controller, Get, Param, Put, UseGuards } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
+  ApiForbiddenResponse,
   ApiOkResponse,
   ApiTags,
   ApiUnauthorizedResponse,
@@ -29,6 +30,9 @@ export class FollowerController {
   @ApiUnauthorizedResponse({
     description: 'Unauthorized',
   })
+  @ApiForbiddenResponse({
+    description: 'You cannot follow yourself',
+  })
   @UseGuards(AuthGuard(), NotMySelfGuard)
   public async follow(
     @Param('followeeId', ValidateIdPipe) followeeId: ID,
@@ -46,6 +50,9 @@ export class FollowerController {
   })
   @ApiUnauthorizedResponse({
     description: 'Unauthorized',
+  })
+  @ApiForbiddenResponse({
+    description: 'You cannot follow yourself',
   })
   @UseGuards(AuthGuard(), NotMySelfGuard)
   public async unfollow(

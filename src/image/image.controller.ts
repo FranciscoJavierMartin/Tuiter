@@ -12,6 +12,7 @@ import {
 import {
   ApiBearerAuth,
   ApiConsumes,
+  ApiForbiddenResponse,
   ApiParam,
   ApiTags,
   ApiUnauthorizedResponse,
@@ -103,6 +104,9 @@ export class ImageController {
   })
   @ApiUnauthorizedResponse({
     description: 'Unauthorized',
+  })
+  @ApiForbiddenResponse({
+    description: 'User is not image owner',
   })
   @ApiBearerAuth()
   @UseGuards(AuthGuard(), IsOwnerGuard)
