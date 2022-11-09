@@ -9,7 +9,13 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiConsumes, ApiParam, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiConsumes,
+  ApiParam,
+  ApiTags,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { AuthGuard } from '@nestjs/passport';
 import { ID } from '@/shared/interfaces/types';
@@ -34,6 +40,9 @@ export class ImageController {
     }),
   )
   @ApiConsumes('multipart/form-data')
+  @ApiUnauthorizedResponse({
+    description: 'Unauthorized',
+  })
   @ApiBearerAuth()
   @UseGuards(AuthGuard())
   public async uploadProfilePicture(
@@ -52,6 +61,9 @@ export class ImageController {
     }),
   )
   @ApiConsumes('multipart/form-data')
+  @ApiUnauthorizedResponse({
+    description: 'Unauthorized',
+  })
   @ApiBearerAuth()
   @UseGuards(AuthGuard())
   public async uploadBackgroundImage(
@@ -73,6 +85,9 @@ export class ImageController {
   }
 
   @Delete('background')
+  @ApiUnauthorizedResponse({
+    description: 'Unauthorized',
+  })
   @ApiBearerAuth()
   @UseGuards(AuthGuard())
   public async removeBackgroundImage(
@@ -85,6 +100,9 @@ export class ImageController {
   @ApiParam({
     name: 'imageId',
     description: 'Image id',
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Unauthorized',
   })
   @ApiBearerAuth()
   @UseGuards(AuthGuard(), IsOwnerGuard)

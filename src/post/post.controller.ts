@@ -24,6 +24,7 @@ import {
   ApiOkResponse,
   ApiParam,
   ApiTags,
+  ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ValidateIdPipe } from '@/shared/pipes/validate-id.pipe';
@@ -52,6 +53,9 @@ export class PostController {
   })
   @ApiBadRequestResponse({
     description: 'Bad request',
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Unauthorized',
   })
   @ApiBadGatewayResponse({
     description: 'Error on internal request',
@@ -94,6 +98,9 @@ export class PostController {
   @ApiOkResponse({
     description: 'Remove post. Only for author',
   })
+  @ApiUnauthorizedResponse({
+    description: 'Unauthorized',
+  })
   @ApiBadRequestResponse({
     description: 'Post not found',
   })
@@ -120,6 +127,9 @@ export class PostController {
   })
   @ApiBadRequestResponse({
     description: 'Post not found',
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Unauthorized',
   })
   @ApiBadGatewayResponse({
     description: 'Error on internal request',

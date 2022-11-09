@@ -7,6 +7,7 @@ import {
   ApiOkResponse,
   ApiParam,
   ApiTags,
+  ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { ID } from '@/shared/interfaces/types';
 import { ValidateIdPipe } from '@/shared/pipes/validate-id.pipe';
@@ -27,6 +28,9 @@ export class CommentController {
   @ApiBearerAuth()
   @ApiCreatedResponse({
     description: 'Comment created',
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Unauthorized',
   })
   public async create(
     @Body() createCommentDto: CreateCommentDto,

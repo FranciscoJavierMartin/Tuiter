@@ -12,6 +12,7 @@ import {
   ApiCreatedResponse,
   ApiOkResponse,
   ApiTags,
+  ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { ValidateIdPipe } from '@/shared/pipes/validate-id.pipe';
@@ -35,6 +36,9 @@ export class ReactionsController {
   @ApiBadRequestResponse({
     description: 'Post not found',
   })
+  @ApiUnauthorizedResponse({
+    description: 'Unauthorized',
+  })
   @UseGuards(AuthGuard(), IsNotAuthorGuard)
   public add(
     @Body() addReactionDto: AddReactionDto,
@@ -47,6 +51,9 @@ export class ReactionsController {
   @ApiBearerAuth()
   @ApiOkResponse({
     description: 'Reaction removed',
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Unauthorized',
   })
   @UseGuards(AuthGuard(), IsNotAuthorGuard)
   public remove(

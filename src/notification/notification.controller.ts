@@ -17,6 +17,7 @@ import {
   ApiOkResponse,
   ApiParam,
   ApiTags,
+  ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { ValidateIdPipe } from '@/shared/pipes/validate-id.pipe';
 import { ID } from '@/shared/interfaces/types';
@@ -31,6 +32,9 @@ export class NotificationController {
   @ApiOkResponse({
     description: 'Retrieve alll user notifications',
     type: [NotificationDto],
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Unauthorized',
   })
   @ApiBearerAuth()
   @UseGuards(AuthGuard())
@@ -48,11 +52,14 @@ export class NotificationController {
   @ApiOkResponse({
     description: 'Mark notification as read',
   })
-  @ApiNotFoundResponse({
-    description: 'Notification not found',
+  @ApiUnauthorizedResponse({
+    description: 'Unauthorized',
   })
   @ApiForbiddenResponse({
     description: 'User is not notification receiver',
+  })
+  @ApiNotFoundResponse({
+    description: 'Notification not found',
   })
   @ApiBearerAuth()
   @UseGuards(AuthGuard(), IsReceiverGuard)
@@ -70,11 +77,14 @@ export class NotificationController {
   @ApiOkResponse({
     description: 'Remove notification',
   })
-  @ApiNotFoundResponse({
-    description: 'Notification not found',
+  @ApiUnauthorizedResponse({
+    description: 'Unauthorized',
   })
   @ApiForbiddenResponse({
     description: 'User is not notification receiver',
+  })
+  @ApiNotFoundResponse({
+    description: 'Notification not found',
   })
   @ApiBearerAuth()
   @UseGuards(AuthGuard(), IsReceiverGuard)

@@ -4,6 +4,7 @@ import {
   ApiBearerAuth,
   ApiParam,
   ApiTags,
+  ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { ValidateIdPipe } from '@/shared/pipes/validate-id.pipe';
@@ -28,6 +29,9 @@ export class BlockUserController {
   @ApiBadRequestResponse({
     description: 'User is already blocked',
   })
+  @ApiUnauthorizedResponse({
+    description: 'Unauthorized',
+  })
   @UseGuards(AuthGuard(), NotMySelfGuard)
   public async block(
     @Param('followerId', ValidateIdPipe) followerId: ID,
@@ -46,6 +50,9 @@ export class BlockUserController {
   @ApiBearerAuth()
   @ApiBadRequestResponse({
     description: 'User is not blocked',
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Unauthorized',
   })
   @UseGuards(AuthGuard(), NotMySelfGuard)
   public async unblock(
