@@ -161,7 +161,9 @@ export class PostService {
     if (post.imgId) {
       try {
         await this.uploaderService.removeImage(post.imgId);
-        // TODO: Remove image from DB
+        this.imageQueue.add('removeImage', {
+          imgId: post.imgId,
+        });
       } catch (error) {
         throw new BadGatewayException('External server error');
       }

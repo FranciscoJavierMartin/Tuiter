@@ -25,5 +25,6 @@ export interface UpdateImageJobData {
 }
 
 export interface RemoveImageJobData {
-  imageId: ID;
+  imageId?: ID;
+  imgId?: string;
 }

@@ -2,6 +2,7 @@ import { Process, Processor } from '@nestjs/bull';
 import { DoneCallback, Job } from 'bull';
 import { BaseConsumer } from '@/shared/consumers/base.consumer';
 import { CONSUMER_CONCURRENCY } from '@/shared/contants';
+import { UploaderService } from '@/shared/services/uploader.service';
 import {
   AddImageJobData,
   AddUserProfilePictureJobData,
@@ -9,7 +10,7 @@ import {
   UpdateImageJobData,
 } from '@/image/interfaces/image.interface';
 import { ImageRepository } from '@/image/repositories/image.repository';
-import { UploaderService } from '@/shared/services/uploader.service';
+import { Image } from '@/image/models/image.model';
 
 @Processor('image')
 export class ImageConsumer extends BaseConsumer {
@@ -117,9 +118,19 @@ export class ImageConsumer extends BaseConsumer {
     done: DoneCallback,
   ): Promise<void> {
     try {
-      const imageDeleted = await this.imageRepository.removeImageFromDB(
-        job.data.imageId,
-      );
+      let imageDeleted: Image;
+
+      if (job.data.imageId) {
+        imageDeleted = await this.imageRepository.removeImageFromDB(
+          job.data.imageId,
+        );
+      } else if (job.data.imgId) {
+        const image = await this.imageRepository.getImageByImgId(
+          job.data.imgId,
+        );
+        imageDeleted = await this.imageRepository.removeImageFromDB(image._id);
+      }
+
       job.progress(50);
 
       await this.uploaderService.removeImage(imageDeleted.imgId);
