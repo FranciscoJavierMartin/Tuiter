@@ -14,6 +14,7 @@ import {
   ApiBearerAuth,
   ApiConsumes,
   ApiForbiddenResponse,
+  ApiNotFoundResponse,
   ApiParam,
   ApiTags,
   ApiUnauthorizedResponse,
@@ -114,6 +115,9 @@ export class ImageController {
   })
   @ApiForbiddenResponse({
     description: 'User is not image owner',
+  })
+  @ApiNotFoundResponse({
+    description: 'Image not found',
   })
   @ApiBearerAuth()
   @UseGuards(AuthGuard(), IsOwnerGuard)
