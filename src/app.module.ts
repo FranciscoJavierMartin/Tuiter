@@ -16,6 +16,7 @@ import { NotificationModule } from '@/notification/notification.module';
 import { EmailModule } from '@/email/email.module';
 import { ImageModule } from '@/image/image.module';
 
+// TODO: Move to fastify instead of express
 // TODO: Move cache services to repositories folder
 // TODO: Use interfaces to access to repository services (just for DB services)
 // TODO: Setup tests

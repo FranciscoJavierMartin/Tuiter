@@ -136,7 +136,7 @@ export class UserCacheService extends BaseCache {
   public async getUserFromCache(userId: ID): Promise<UserDocument | null> {
     try {
       const response: UserDocument = (await this.client.HGETALL(
-        `users:${userId}`,
+        `${REDIS_USERS_COLLECTION}:${userId}`,
       )) as unknown as UserDocument;
 
       // TODO: Cast notifications and social
