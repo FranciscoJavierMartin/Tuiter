@@ -11,9 +11,9 @@ export class ChatService {
     currentUser: CurrentUser,
   ) {
     // TODO: Add upload image feature
-    const messageData: MessageData = {
-      _id: new ObjectId(),
+    // const messageData: MessageData = {
+    //   _id: new ObjectId(),
       
-    };
+    // };
   }
 }
