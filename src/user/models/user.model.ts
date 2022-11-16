@@ -2,7 +2,10 @@ import { Prop, raw, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ObjectId } from 'mongodb';
 import mongoose from 'mongoose';
 import { ID } from '@/shared/interfaces/types';
-import { NotificationType } from '@/notification/interfaces/notification.interface';
+import {
+  NotificationSettings,
+  SocialLinks,
+} from '@/user/interfaces/user.interface';
 
 @Schema({
   collection: 'User',
@@ -33,10 +36,10 @@ export class User {
   followingCount: number;
 
   @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }] })
-  blocked: string[];
+  blocked: ObjectId[];
 
   @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }] })
-  blockedBy: string[];
+  blockedBy: ObjectId[];
 
   @Prop(
     raw({
@@ -46,7 +49,7 @@ export class User {
       follows: { type: Boolean, default: true },
     }),
   )
-  notifications: Record<NotificationType, boolean>;
+  notifications: NotificationSettings;
 
   @Prop(
     raw({
@@ -56,7 +59,7 @@ export class User {
       youtube: { type: String, default: '' },
     }),
   )
-  social: Record<string, string>;
+  social: SocialLinks;
 
   @Prop({
     type: String,

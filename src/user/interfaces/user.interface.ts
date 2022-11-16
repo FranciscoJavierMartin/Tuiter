@@ -1,4 +1,15 @@
+import { NotificationType } from '@/notification/interfaces/notification.interface';
 import { UserDocument } from '@/user/models/user.model';
+
+export enum SocialLinksType {
+  facebook = 'facebook',
+  instagram = 'instagram',
+  twitter = 'twitter',
+  youtube = 'youtube',
+}
+
+export type NotificationSettings = Record<NotificationType, boolean>;
+export type SocialLinks = Record<SocialLinksType, string>;
 
 export interface ResetPasswordParams {
   username: string;
@@ -7,26 +18,11 @@ export interface ResetPasswordParams {
   date: string;
 }
 
-export interface NotificationSettings {
-  messages: boolean;
-  reactions: boolean;
-  comments: boolean;
-  follows: boolean;
-}
-
 export interface BasicInfo {
   quote: string;
   work: string;
   school: string;
   location: string;
-}
-
-// TODO: Refactor to Record type
-export interface SocialLinks {
-  facebook: string;
-  instagram: string;
-  twitter: string;
-  youtube: string;
 }
 
 export interface SearchUser {
@@ -48,7 +44,7 @@ export interface Login {
 
 export interface UserJobInfo {
   key?: string;
-  value?: string | SocialLinks;
+  value?: string | SocialLinksType;
 }
 
 export interface UserJob {
