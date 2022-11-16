@@ -5,6 +5,10 @@ import { BaseCache } from '@/shared/redis/base.cache';
 import { REDIS_USERS_COLLECTION } from '@/shared/contants';
 import { ID } from '@/shared/interfaces/types';
 import { UserDocument } from '@/user/models/user.model';
+import {
+  NotificationSettings,
+  SocialLinks,
+} from '@/user/interfaces/user.interface';
 
 @Injectable()
 export class UserCacheService extends BaseCache {
@@ -142,10 +146,12 @@ export class UserCacheService extends BaseCache {
       // TODO: Cast notifications and social
       response.createdAt = new Date(parseJson(`${response.createdAt}`));
       response.postsCount = parseJson<number>(`${response.postsCount}`);
-      response.blocked = parseJson<string[]>(`${response.blocked}`);
-      response.blockedBy = parseJson<string[]>(`${response.blockedBy}`);
-      response.notifications = parseJson(`${response.notifications}`);
-      response.social = parseJson(`${response.social}`);
+      response.blocked = parseJson<ID[]>(`${response.blocked}`);
+      response.blockedBy = parseJson<ID[]>(`${response.blockedBy}`);
+      response.notifications = parseJson<NotificationSettings>(
+        `${response.notifications}`,
+      );
+      response.social = parseJson<SocialLinks>(`${response.social}`);
       response.followersCount = parseJson<number>(`${response.followersCount}`);
       response.followingCount = parseJson<number>(`${response.followingCount}`);
       response.profilePicture = parseJson<string>(`${response.profilePicture}`);
