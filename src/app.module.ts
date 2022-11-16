@@ -15,6 +15,7 @@ import { BlockUserModule } from '@/block-user/block-user.module';
 import { NotificationModule } from '@/notification/notification.module';
 import { EmailModule } from '@/email/email.module';
 import { ImageModule } from '@/image/image.module';
+import { ChatModule } from '@/chat/chat.module';
 
 // TODO: Move to fastify instead of express
 // TODO: Move cache services to repositories folder
@@ -72,6 +73,7 @@ import { ImageModule } from '@/image/image.module';
     NotificationModule,
     EmailModule,
     ImageModule,
+    ChatModule,
   ],
   controllers: [],
   providers: [],
