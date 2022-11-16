@@ -1,6 +1,12 @@
 import { ID } from '@/shared/interfaces/types';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsMongoId, IsOptional, IsString } from 'class-validator';
+import {
+  IsMongoId,
+  IsOptional,
+  IsString,
+  IsUrl,
+  ValidateIf,
+} from 'class-validator';
 
 export class AddMessageDto {
   @ApiProperty({
@@ -25,8 +31,21 @@ export class AddMessageDto {
     description: 'Text message',
     example: 'Hello world',
     required: false,
+    default: '',
   })
   @IsString()
   @IsOptional()
-  text: string;
+  text: string = '';
+
+  @ApiProperty({
+    description: 'Gif Url',
+    default: '',
+    nullable: true,
+    required: false,
+  })
+  @ValidateIf((o) => !!o.gifUrl)
+  @IsString()
+  @IsUrl()
+  @IsOptional()
+  gifUrl: string = '';
 }
