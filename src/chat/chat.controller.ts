@@ -16,6 +16,7 @@ export class ChatController {
   @Post('message')
   @UseGuards(NotMySelfGuard, NotBlockedGuard)
   public async addMessage(@Body() addMessage: AddMessageDto) {
+    // TODO: Get chat from sender and receiver
     return addMessage;
   }
 }

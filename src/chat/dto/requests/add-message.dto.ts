@@ -1,6 +1,6 @@
 import { ID } from '@/shared/interfaces/types';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsMongoId, IsOptional } from 'class-validator';
+import { IsMongoId, IsOptional, IsString } from 'class-validator';
 
 export class AddMessageDto {
   @ApiProperty({
@@ -20,4 +20,13 @@ export class AddMessageDto {
   @IsMongoId()
   @IsOptional()
   chatId: ID;
+
+  @ApiProperty({
+    description: 'Text message',
+    example: 'Hello world',
+    required: false,
+  })
+  @IsString()
+  @IsOptional()
+  text: string;
 }
