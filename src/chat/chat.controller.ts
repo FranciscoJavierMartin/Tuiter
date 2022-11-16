@@ -5,6 +5,8 @@ import { ChatService } from '@/chat/chat.service';
 import { AddMessageDto } from '@/chat/dto/requests/add-message.dto';
 import { NotMySelfGuard } from '@/chat/guards/not-my-self.guard';
 import { NotBlockedGuard } from '@/chat/guards/not-blocked.guard';
+import { GetUser } from '@/auth/decorators/get-user.decorator';
+import { CurrentUser } from '@/auth/interfaces/current-user.interface';
 
 @ApiTags('Chat')
 @ApiBearerAuth()
@@ -15,8 +17,10 @@ export class ChatController {
 
   @Post('message')
   @UseGuards(NotMySelfGuard, NotBlockedGuard)
-  public async addMessage(@Body() addMessage: AddMessageDto) {
+  public async addMessage(
+    @Body() addMessageDto: AddMessageDto,
+    @GetUser() currentUser: CurrentUser,
+  ) {
     // TODO: Get chat from sender and receiver
-    return addMessage;
   }
 }
