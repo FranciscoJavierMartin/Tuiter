@@ -22,5 +22,6 @@ export class ChatController {
     @GetUser() currentUser: CurrentUser,
   ) {
     // TODO: Get chat from sender and receiver
+    return this.chatService.addMessage(addMessageDto, currentUser);
   }
 }
