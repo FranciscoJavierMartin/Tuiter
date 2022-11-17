@@ -1,11 +1,15 @@
-import { Injectable } from '@nestjs/common';
+import { BadGatewayException, Injectable } from '@nestjs/common';
+import { InjectQueue } from '@nestjs/bull';
 import { ObjectId } from 'mongodb';
-import { CurrentUser } from '@/auth/interfaces/current-user.interface';
-import { AddMessageDto } from '@/chat/dto/requests/add-message.dto';
-import { MessageDocument } from '@/chat/interfaces/chat.interface';
+import { UploadApiResponse } from 'cloudinary';
+import { Queue } from 'bull';
 import { ID } from '@/shared/interfaces/types';
 import { UploaderService } from '@/shared/services/uploader.service';
+import { ImageJobData } from '@/image/interfaces/image.interface';
+import { CurrentUser } from '@/auth/interfaces/current-user.interface';
 import { UserCacheService } from '@/user/services/user.cache.service';
+import { AddMessageDto } from '@/chat/dto/requests/add-message.dto';
+import { MessageDocument } from '@/chat/interfaces/chat.interface';
 import { ChatCacheService } from '@/chat/repositories/chat.cache.service';
 
 @Injectable()
@@ -14,6 +18,8 @@ export class ChatService {
     private readonly uploaderService: UploaderService,
     private readonly userCacheService: UserCacheService,
     private readonly chatCacheService: ChatCacheService,
+    @InjectQueue('image')
+    private readonly imageQueue: Queue<ImageJobData>,
   ) {}
 
   public async addMessage(
@@ -22,18 +28,12 @@ export class ChatService {
     currentUser: CurrentUser,
     image?: Express.Multer.File,
   ): Promise<void> {
-    // TODO: Upload image
-
-    // const chatId = new ObjectId();
     const chatId: ID = new ObjectId(
       (await this.chatCacheService.getUserChat(currentUser.userId, receiverId))
         ?.chatId ?? new ObjectId(),
     );
 
-    const [sender, receiver] = await Promise.all([
-      await this.userCacheService.getUserFromCache(currentUser.userId),
-      await this.userCacheService.getUserFromCache(receiverId),
-    ]);
+    const receiver = await this.userCacheService.getUserFromCache(receiverId);
 
     const message: MessageDocument = {
       _id: new ObjectId(),
@@ -42,6 +42,7 @@ export class ChatService {
       deleteForEveryone: false,
       deleteForMe: false,
       gifUrl: addMessageDto.gifUrl,
+      imageUrl: '',
       isRead: false,
       receiverAvatarColor: receiver.avatarColor,
       receiverId,
@@ -54,7 +55,26 @@ export class ChatService {
       text: addMessageDto.text,
     };
 
-    // TODO: Pass proper data
+    if (image) {
+      try {
+        const imageUploaded: UploadApiResponse =
+          await this.uploaderService.uploadImage(image);
+
+        message.imageUrl = this.uploaderService.getImageUrl(
+          imageUploaded.version,
+          imageUploaded.public_id,
+        );
+
+        this.imageQueue.add('addImageToDb', {
+          ownerId: currentUser.userId,
+          imgId: imageUploaded.public_id,
+          imgVersion: imageUploaded.version.toString(),
+        });
+      } catch (error) {
+        throw new BadGatewayException('External server error');
+      }
+    }
+
     this.emitSocketIOEvent(message);
 
     await Promise.all([

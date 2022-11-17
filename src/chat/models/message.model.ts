@@ -1,4 +1,4 @@
-import { Prop, Schema } from '@nestjs/mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ObjectId } from 'mongodb';
 import mongoose from 'mongoose';
 
@@ -40,6 +40,12 @@ export class Message {
   gifUrl: string = '';
 
   @Prop({
+    type: String,
+    default: '',
+  })
+  imageUrl: string = '';
+
+  @Prop({
     type: Boolean,
     default: false,
   })
@@ -63,3 +69,5 @@ export class Message {
   })
   createdAt: Date = new Date();
 }
+
+export const MessageSchema = SchemaFactory.createForClass(Message);
