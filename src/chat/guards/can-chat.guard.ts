@@ -2,22 +2,17 @@ import { BlockUserCacheService } from '@/block-user/services/block-user.cache.se
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 
 @Injectable()
-export class NotBlockedGuard implements CanActivate {
+export class CanChatGuard implements CanActivate {
   constructor(private readonly blockUserCacheService: BlockUserCacheService) {}
 
-  public async canActivate(context: ExecutionContext) {
+  public async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     const receiverId = request.params.receiverId;
-    console.log('ReceiverId', request);
     const userId = request.user.userId;
 
-    // const isBlockedBy = await this.blockUserCacheService.isUserBlockedBy(
-    //   receiverId,
-    //   userId,
-    // );
-
-    // return !isBlockedBy;
-
-    return true;
+    return [
+      await this.blockUserCacheService.isUserBlockedBy(receiverId, userId),
+      await this.blockUserCacheService.isUserBlockedBy(userId, receiverId),
+    ].some((isBlocked) => !isBlocked);
   }
 }
