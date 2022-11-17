@@ -1,6 +1,7 @@
 import { Message } from '@/chat/models/message.model';
 
-// TODO: Add selectedImage
+export type MessageJobData = MessageDocument;
+
 export type MessageDocument = Message & {
   receiverUsername: string;
   receiverAvatarColor: string;

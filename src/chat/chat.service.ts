@@ -9,7 +9,10 @@ import { ImageJobData } from '@/image/interfaces/image.interface';
 import { CurrentUser } from '@/auth/interfaces/current-user.interface';
 import { UserCacheService } from '@/user/services/user.cache.service';
 import { AddMessageDto } from '@/chat/dto/requests/add-message.dto';
-import { MessageDocument } from '@/chat/interfaces/chat.interface';
+import {
+  MessageDocument,
+  MessageJobData,
+} from '@/chat/interfaces/chat.interface';
 import { ChatCacheService } from '@/chat/repositories/chat.cache.service';
 
 @Injectable()
@@ -18,6 +21,8 @@ export class ChatService {
     private readonly uploaderService: UploaderService,
     private readonly userCacheService: UserCacheService,
     private readonly chatCacheService: ChatCacheService,
+    @InjectQueue('chat')
+    private readonly chatQueue: Queue<MessageJobData>,
     @InjectQueue('image')
     private readonly imageQueue: Queue<ImageJobData>,
   ) {}
@@ -90,6 +95,8 @@ export class ChatService {
       ),
       await this.chatCacheService.addMessageToCache(chatId, message),
     ]);
+
+    this.chatQueue.add('addMessageToDB', message);
   }
 
   private emitSocketIOEvent(data: MessageDocument): void {
