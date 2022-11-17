@@ -113,6 +113,7 @@ export class PostController {
   })
   @UseGuards(AuthGuard(), IsAuthorGuard)
   public async remove(
+    // TODO: Replace string by ID
     @Param('postId', ValidateIdPipe) postId: string,
     @GetUser('userId') userId: ID,
   ): Promise<void> {

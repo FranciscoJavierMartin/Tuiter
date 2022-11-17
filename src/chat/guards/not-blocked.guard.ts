@@ -7,14 +7,17 @@ export class NotBlockedGuard implements CanActivate {
 
   public async canActivate(context: ExecutionContext) {
     const request = context.switchToHttp().getRequest();
-    const receiverId = request.body.receiverId;
+    const receiverId = request.params.receiverId;
+    console.log('ReceiverId', request);
     const userId = request.user.userId;
 
-    const isBlockedBy = await this.blockUserCacheService.isUserBlockedBy(
-      userId,
-      receiverId,
-    );
+    // const isBlockedBy = await this.blockUserCacheService.isUserBlockedBy(
+    //   receiverId,
+    //   userId,
+    // );
 
-    return !isBlockedBy;
+    // return !isBlockedBy;
+
+    return true;
   }
 }
