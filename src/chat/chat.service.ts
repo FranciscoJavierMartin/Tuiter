@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ObjectId } from 'mongodb';
 import { CurrentUser } from '@/auth/interfaces/current-user.interface';
 import { AddMessageDto } from '@/chat/dto/requests/add-message.dto';
-import { MessageData } from '@/chat/interfaces/chat.interface';
+import { MessageDocument } from '@/chat/interfaces/chat.interface';
 import { ID } from '@/shared/interfaces/types';
 import { UploaderService } from '@/shared/services/uploader.service';
 import { UserCacheService } from '@/user/services/user.cache.service';
@@ -24,16 +24,38 @@ export class ChatService {
   ): Promise<void> {
     // TODO: Upload image
 
-    // TODO: Search if chat exists between two users
-    const chatId = new ObjectId();
+    // const chatId = new ObjectId();
+    const chatId: ID = new ObjectId(
+      (await this.chatCacheService.getUserChat(currentUser.userId, receiverId))
+        ?.chatId ?? new ObjectId(),
+    );
 
     const [sender, receiver] = await Promise.all([
       await this.userCacheService.getUserFromCache(currentUser.userId),
       await this.userCacheService.getUserFromCache(receiverId),
     ]);
 
+    const message: MessageDocument = {
+      _id: new ObjectId(),
+      chatId,
+      createdAt: new Date(),
+      deleteForEveryone: false,
+      deleteForMe: false,
+      gifUrl: addMessageDto.gifUrl,
+      isRead: false,
+      receiverAvatarColor: receiver.avatarColor,
+      receiverId,
+      receiverProfilePicture: receiver.profilePicture,
+      receiverUsername: receiver.username,
+      senderAvatarColor: currentUser.avatarColor,
+      senderId: currentUser.userId,
+      senderProfilePicture: currentUser.profilePicture,
+      senderUsername: currentUser.username,
+      text: addMessageDto.text,
+    };
+
     // TODO: Pass proper data
-    this.emitSocketIOEvent(undefined);
+    this.emitSocketIOEvent(message);
 
     await Promise.all([
       await this.chatCacheService.addChatToCache(
@@ -50,7 +72,7 @@ export class ChatService {
     ]);
   }
 
-  private emitSocketIOEvent(data: any): void {
+  private emitSocketIOEvent(data: MessageDocument): void {
     // TODO: Emit 'message received' and 'chat list'
   }
 }

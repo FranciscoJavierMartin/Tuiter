@@ -1,22 +1,11 @@
-import { ID } from '@/shared/interfaces/types';
+import { Message } from '@/chat/models/message.model';
 
 // TODO: Add selectedImage
-export interface MessageData {
-  _id: ID;
-  chatId: ID;
-  receiverId: ID;
+export type MessageDocument = Message & {
   receiverUsername: string;
   receiverAvatarColor: string;
   receiverProfilePicture: string;
-  senderId: ID;
   senderUsername: string;
   senderAvatarColor: string;
   senderProfilePicture: string;
-  text: string;
-  isRead: boolean;
-  gifUrl: string;
-  reaction: string;
-  createdAt: Date;
-  deleteForMe: boolean;
-  deleteForEveryone: boolean;
-}
+};
