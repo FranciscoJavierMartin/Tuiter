@@ -17,7 +17,7 @@ export class PostConsumer extends BaseConsumer {
     done: DoneCallback,
   ): Promise<void> {
     try {
-      // this.postRepository.savePostToDb(job.data);
+      this.chatRepository.saveMessageToDB(job.data);
       job.progress(100);
       done(null, job.data);
     } catch (error) {
