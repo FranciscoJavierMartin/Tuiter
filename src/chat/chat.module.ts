@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
-import { ChatService } from '@/chat/chat.service';
-import { ChatController } from '@/chat/chat.controller';
 import { PassportModule } from '@nestjs/passport';
 import { BlockUserModule } from '@/block-user/block-user.module';
 import { UserModule } from '@/user/user.module';
+import { ChatController } from '@/chat/chat.controller';
+import { ChatService } from '@/chat/chat.service';
+import { ChatCacheService } from '@/chat/repositories/chat.cache.service';
 
 @Module({
   imports: [
@@ -12,6 +13,6 @@ import { UserModule } from '@/user/user.module';
     UserModule,
   ],
   controllers: [ChatController],
-  providers: [ChatService],
+  providers: [ChatService, ChatCacheService],
 })
 export class ChatModule {}
