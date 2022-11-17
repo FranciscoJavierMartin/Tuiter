@@ -40,6 +40,7 @@ export class ChatService {
 
     const receiver = await this.userCacheService.getUserFromCache(receiverId);
 
+    // TODO: Check if should be added first to DB to avoid create ID first
     const message: MessageDocument = {
       _id: new ObjectId(),
       chatId,

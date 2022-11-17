@@ -13,6 +13,26 @@ export class ChatRepository {
   ) {}
 
   public async saveMessageToDB(data: MessageDocument): Promise<void> {
-    if(await)
+    if (!(await this.chatModel.exists({ _id: data.chatId }))) {
+      await this.chatModel.create({
+        _id: data.chatId,
+        senderId: data.senderId,
+        receiverId: data.receiverId,
+      });
+    }
+
+    await this.messageModel.create({
+      _id: data._id,
+      chatId: data.chatId,
+      createdAt: data.createdAt,
+      deleteForEveryone: data.deleteForEveryone,
+      deleteForMe: data.deleteForMe,
+      gifUrl: data.gifUrl,
+      imageUrl: data.imageUrl,
+      isRead: data.isRead,
+      receiverId: data.receiverId,
+      senderId: data.senderId,
+      text: data.text,
+    });
   }
 }
