@@ -13,7 +13,6 @@ export class ChatService {
     // TODO: Add upload image feature
     // const messageData: MessageData = {
     //   _id: new ObjectId(),
-      
     // };
   }
 }
