@@ -38,6 +38,7 @@ export class ChatController {
   public async addMessage(
     @Param('receiverId', ValidateIdPipe) receiverId: ID,
     @Body() addMessageDto: AddMessageDto,
+    @GetUser() currentUser: CurrentUser,
     @UploadedFile(
       new ParseFilePipe({
         fileIsRequired: false,
@@ -45,11 +46,12 @@ export class ChatController {
       }),
     )
     image?: Express.Multer.File,
-  ) {
-    return {
+  ): Promise<void> {
+    await this.chatService.addMessage(
       receiverId,
       addMessageDto,
-      field: image?.fieldname ?? 'No file',
-    };
+      currentUser,
+      image,
+    );
   }
 }
