@@ -3,7 +3,11 @@ import { ConfigService } from '@nestjs/config';
 import { parseJson } from '@/helpers/utils';
 import { BaseCache } from '@/shared/redis/base.cache';
 import { ID } from '@/shared/interfaces/types';
-import { REDIS_CHAT_LIST_COLLECTION } from '@/shared/contants';
+import {
+  REDIS_CHAT_LIST_COLLECTION,
+  REDIS_MESSAGES_COLLECTION,
+} from '@/shared/contants';
+import { MessageDocument } from '@/chat/interfaces/chat.interface';
 
 @Injectable()
 export class ChatCacheService extends BaseCache {
@@ -39,8 +43,19 @@ export class ChatCacheService extends BaseCache {
     }
   }
 
-  public async addMessageToCache(chatId: ID): Promise<void> {
-    console.log(chatId);
+  public async addMessageToCache(
+    chatId: ID,
+    message: MessageDocument,
+  ): Promise<void> {
+    try {
+      await this.client.RPUSH(
+        `${REDIS_MESSAGES_COLLECTION}:${chatId}`,
+        JSON.stringify(message),
+      );
+    } catch (error) {
+      this.logger.error(error);
+      throw new InternalServerErrorException();
+    }
   }
 
   public async getUserChat(

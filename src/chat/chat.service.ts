@@ -68,7 +68,7 @@ export class ChatService {
         currentUser.userId,
         chatId,
       ),
-      await this.chatCacheService.addMessageToCache(chatId),
+      await this.chatCacheService.addMessageToCache(chatId, message),
     ]);
   }
 
