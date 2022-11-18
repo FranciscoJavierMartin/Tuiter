@@ -4,6 +4,7 @@ import {
   MaxFileSizeValidator,
   Param,
   ParseFilePipe,
+  Patch,
   Post,
   UploadedFile,
   UseGuards,
@@ -13,14 +14,15 @@ import { AuthGuard } from '@nestjs/passport';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { FILE_SIZE_LIMIT_MB } from '@/shared/contants';
+import { ValidateIdPipe } from '@/shared/pipes/validate-id.pipe';
+import { ID } from '@/shared/interfaces/types';
 import { GetUser } from '@/auth/decorators/get-user.decorator';
 import { CurrentUser } from '@/auth/interfaces/current-user.interface';
 import { ChatService } from '@/chat/chat.service';
 import { AddMessageDto } from '@/chat/dto/requests/add-message.dto';
+import { AddReactionDto } from '@/chat/dto/requests/add-reaction.dto';
 import { NotMySelfGuard } from '@/chat/guards/not-my-self.guard';
 import { CanChatGuard } from '@/chat/guards/can-chat.guard';
-import { ValidateIdPipe } from '@/shared/pipes/validate-id.pipe';
-import { ID } from '@/shared/interfaces/types';
 
 @ApiTags('Chat')
 @ApiBearerAuth()
@@ -53,5 +55,13 @@ export class ChatController {
       currentUser,
       image,
     );
+  }
+
+  @Patch('message/reaction')
+  @ApiBearerAuth()
+  @ApiBody({ type: AddMessageDto })
+  @UseGuards(AuthGuard())
+  public async addReaction(@Body() addReactionDto: AddReactionDto) {
+    return addReactionDto;
   }
 }
