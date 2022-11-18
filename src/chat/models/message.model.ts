@@ -1,8 +1,8 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ObjectId } from 'mongodb';
 import mongoose from 'mongoose';
+import { Feelings } from '@/reaction/interfaces/reaction.interface';
 
-// TODO: Add reaction
 @Schema({
   collection: 'Message',
 })
@@ -62,6 +62,9 @@ export class Message {
     default: false,
   })
   deleteForEveryone: boolean = false;
+
+  @Prop({ type: String, enum: Feelings })
+  reaction?: Feelings;
 
   @Prop({
     type: Date,

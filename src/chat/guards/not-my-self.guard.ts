@@ -10,7 +10,7 @@ export class NotMySelfGuard implements CanActivate {
    */
   public canActivate(context: ExecutionContext): boolean {
     const request = context.switchToHttp().getRequest();
-    const receiverId = request.body.receiverId;
+    const receiverId = request.params.receiverId;
     const userId = request.user.userId;
 
     return receiverId !== userId;
