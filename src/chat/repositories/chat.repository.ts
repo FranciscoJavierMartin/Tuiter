@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { ObjectId } from 'mongodb';
 import { Chat } from '@/chat/models/chat.model';
 import { Message } from '@/chat/models/message.model';
 import { MessageDocument } from '@/chat/interfaces/chat.interface';
@@ -34,5 +35,12 @@ export class ChatRepository {
       senderId: data.senderId,
       text: data.text,
     });
+  }
+
+  public async isMessageSender(
+    messageId: ObjectId,
+    senderId: ObjectId,
+  ): Promise<boolean> {
+    return !!(await this.messageModel.exists({ _id: messageId, senderId }));
   }
 }

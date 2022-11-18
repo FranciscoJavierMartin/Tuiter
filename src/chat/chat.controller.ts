@@ -23,6 +23,7 @@ import { AddMessageDto } from '@/chat/dto/requests/add-message.dto';
 import { AddReactionDto } from '@/chat/dto/requests/add-reaction.dto';
 import { NotMySelfGuard } from '@/chat/guards/not-my-self.guard';
 import { CanChatGuard } from '@/chat/guards/can-chat.guard';
+import { NotAuthorGuard } from '@/chat/guards/not-author.guard';
 
 @ApiTags('Chat')
 @ApiBearerAuth()
@@ -60,7 +61,7 @@ export class ChatController {
   @Patch('message/reaction')
   @ApiBearerAuth()
   @ApiBody({ type: AddMessageDto })
-  @UseGuards(AuthGuard())
+  @UseGuards(AuthGuard(), NotAuthorGuard)
   public async addReaction(@Body() addReactionDto: AddReactionDto) {
     return addReactionDto;
   }
