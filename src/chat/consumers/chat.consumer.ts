@@ -6,13 +6,13 @@ import { ChatRepository } from '@/chat/repositories/chat.repository';
 import { MessageDocument } from '@/chat/interfaces/chat.interface';
 
 @Processor('chat')
-export class PostConsumer extends BaseConsumer {
+export class ChatConsumer extends BaseConsumer {
   constructor(private readonly chatRepository: ChatRepository) {
     super('ChatConsumer');
   }
 
   @Process({ name: 'addMessageToDB', concurrency: CONSUMER_CONCURRENCY })
-  public async addPostToDB(
+  public async addMessageToDB(
     job: Job<MessageDocument>,
     done: DoneCallback,
   ): Promise<void> {

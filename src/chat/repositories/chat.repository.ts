@@ -9,7 +9,7 @@ import { MessageDocument } from '@/chat/interfaces/chat.interface';
 export class ChatRepository {
   constructor(
     @InjectModel(Chat.name) private chatModel: Model<Chat>,
-    @InjectModel(Chat.name) private messageModel: Model<Message>,
+    @InjectModel(Message.name) private messageModel: Model<Message>,
   ) {}
 
   public async saveMessageToDB(data: MessageDocument): Promise<void> {

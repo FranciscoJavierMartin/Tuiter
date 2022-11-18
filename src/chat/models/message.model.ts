@@ -2,7 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ObjectId } from 'mongodb';
 import mongoose from 'mongoose';
 
-// TODO: Add image, reaction
+// TODO: Add reaction
 @Schema({
   collection: 'Message',
 })
