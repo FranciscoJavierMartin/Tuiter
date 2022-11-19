@@ -16,6 +16,7 @@ import {
 import { ChatCacheService } from '@/chat/repositories/chat.cache.service';
 import { AddReactionDto } from '@/chat/dto/requests/add-reaction.dto';
 import { RemoveReactionDto } from '@/chat/dto/requests/remove-reaction.dto';
+import { MarkAsReadDto } from '@/chat/dto/requests/mark-as-read.dto';
 
 @Injectable()
 export class ChatService {
@@ -128,6 +129,8 @@ export class ChatService {
       removeReactionDto.messageId,
     );
   }
+
+  public async markAsRead(markAsReadDto: MarkAsReadDto): Promise<void> {}
 
   private emitSocketIOEvent(data: MessageDocument): void {
     // TODO: Emit 'message received' and 'chat list'

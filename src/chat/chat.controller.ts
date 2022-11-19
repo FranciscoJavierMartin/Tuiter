@@ -26,6 +26,7 @@ import { CanChatGuard } from '@/chat/guards/can-chat.guard';
 import { NotAuthorGuard } from '@/chat/guards/not-author.guard';
 import { WithReactionGuard } from '@/chat/guards/with-reaction.guard';
 import { RemoveReactionDto } from '@/chat/dto/requests/remove-reaction.dto';
+import { MarkAsReadDto } from '@/chat/dto/requests/mark-as-read.dto';
 
 @ApiTags('Chat')
 @ApiBearerAuth()
@@ -78,5 +79,16 @@ export class ChatController {
     @Body() removeReactionDto: RemoveReactionDto,
   ): Promise<void> {
     await this.chatService.removeReaction(removeReactionDto);
+  }
+
+  @Patch('message/mark-as-read')
+  @ApiBearerAuth()
+  @ApiBody({ type: MarkAsReadDto })
+  @UseGuards(AuthGuard(), NotAuthorGuard)
+  public async markAsRead(
+    @Body() markAsReadDto: MarkAsReadDto,
+    @GetUser('userId') userId: ID,
+  ): Promise<void> {
+    await this.chatService.markAsRead(markAsReadDto);
   }
 }
