@@ -62,7 +62,9 @@ export class ChatController {
   @ApiBearerAuth()
   @ApiBody({ type: AddMessageDto })
   @UseGuards(AuthGuard(), NotAuthorGuard)
-  public async addReaction(@Body() addReactionDto: AddReactionDto) {
-    return addReactionDto;
+  public async addReaction(
+    @Body() addReactionDto: AddReactionDto,
+  ): Promise<void> {
+    await this.chatService.addReaction(addReactionDto);
   }
 }

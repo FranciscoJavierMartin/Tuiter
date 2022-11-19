@@ -14,6 +14,15 @@ export class AddReactionDto {
   messageId: ID;
 
   @ApiProperty({
+    description: 'Chat id',
+    nullable: false,
+    example: '6352eb20e5f1c6d76008deec',
+    required: true,
+  })
+  @IsMongoId()
+  chatId: ID;
+
+  @ApiProperty({
     description: 'Post reaction',
     example: Feelings.happy,
     nullable: false,

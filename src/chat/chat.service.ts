@@ -14,6 +14,7 @@ import {
   MessageJobData,
 } from '@/chat/interfaces/chat.interface';
 import { ChatCacheService } from '@/chat/repositories/chat.cache.service';
+import { AddReactionDto } from '@/chat/dto/requests/add-reaction.dto';
 
 @Injectable()
 export class ChatService {
@@ -98,6 +99,14 @@ export class ChatService {
     ]);
 
     this.chatQueue.add('addMessageToDB', message);
+  }
+
+  public async addReaction(addReactionDto: AddReactionDto): Promise<void> {
+    await this.chatCacheService.addReactionToCache(
+      addReactionDto.chatId,
+      addReactionDto.messageId,
+      addReactionDto.feeling,
+    );
   }
 
   private emitSocketIOEvent(data: MessageDocument): void {
