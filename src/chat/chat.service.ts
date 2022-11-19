@@ -15,6 +15,7 @@ import {
 } from '@/chat/interfaces/chat.interface';
 import { ChatCacheService } from '@/chat/repositories/chat.cache.service';
 import { AddReactionDto } from '@/chat/dto/requests/add-reaction.dto';
+import { RemoveReactionDto } from '@/chat/dto/requests/remove-reaction.dto';
 
 @Injectable()
 export class ChatService {
@@ -112,6 +113,20 @@ export class ChatService {
       messageId: addReactionDto.messageId,
       feeling: addReactionDto.feeling,
     });
+  }
+
+  public async removeReaction(
+    removeReactionDto: RemoveReactionDto,
+  ): Promise<void> {
+    await this.chatCacheService.removeReactionFromCache(
+      removeReactionDto.chatId,
+      removeReactionDto.messageId,
+    );
+
+    this.chatQueue.add(
+      'removeReactionFromMessage',
+      removeReactionDto.messageId,
+    );
   }
 
   private emitSocketIOEvent(data: MessageDocument): void {

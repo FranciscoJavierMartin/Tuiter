@@ -47,10 +47,23 @@ export class ChatRepository {
     });
   }
 
+  public async removeReactionFromMessage(messageId: ObjectId): Promise<void> {
+    await this.messageModel.findByIdAndUpdate(messageId, {
+      $unset: { reaction: 1 },
+    });
+  }
+
   public async isMessageSender(
     messageId: ObjectId,
     senderId: ObjectId,
   ): Promise<boolean> {
     return !!(await this.messageModel.exists({ _id: messageId, senderId }));
+  }
+
+  public async isMessageReacted(messageId: ObjectId): Promise<boolean> {
+    return !!(await this.messageModel.exists({
+      _id: messageId,
+      reaction: { $exists: true },
+    }));
   }
 }

@@ -24,6 +24,8 @@ import { AddReactionDto } from '@/chat/dto/requests/add-reaction.dto';
 import { NotMySelfGuard } from '@/chat/guards/not-my-self.guard';
 import { CanChatGuard } from '@/chat/guards/can-chat.guard';
 import { NotAuthorGuard } from '@/chat/guards/not-author.guard';
+import { WithReactionGuard } from '@/chat/guards/with-reaction.guard';
+import { RemoveReactionDto } from '@/chat/dto/requests/remove-reaction.dto';
 
 @ApiTags('Chat')
 @ApiBearerAuth()
@@ -58,7 +60,7 @@ export class ChatController {
     );
   }
 
-  @Patch('message/reaction')
+  @Patch('message/add-reaction')
   @ApiBearerAuth()
   @ApiBody({ type: AddMessageDto })
   @UseGuards(AuthGuard(), NotAuthorGuard)
@@ -66,5 +68,15 @@ export class ChatController {
     @Body() addReactionDto: AddReactionDto,
   ): Promise<void> {
     await this.chatService.addReaction(addReactionDto);
+  }
+
+  @Patch('message/remove-reaction')
+  @ApiBearerAuth()
+  @ApiBody({ type: RemoveReactionDto })
+  @UseGuards(AuthGuard(), NotAuthorGuard, WithReactionGuard)
+  public async removeReaction(
+    @Body() removeReactionDto: RemoveReactionDto,
+  ): Promise<void> {
+    await this.chatService.removeReaction(removeReactionDto);
   }
 }

@@ -2,7 +2,7 @@ import { ID } from '@/shared/interfaces/types';
 import { Feelings } from '@/reaction/interfaces/reaction.interface';
 import { Message } from '@/chat/models/message.model';
 
-export type MessageJobData = MessageDocument | AddReactionToMessageJobData;
+export type MessageJobData = MessageDocument | AddReactionToMessageJobData | ID;
 
 export type MessageDocument = Message & {
   receiverUsername: string;

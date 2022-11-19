@@ -108,6 +108,29 @@ export class ChatCacheService extends BaseCache {
     }
   }
 
+  public async removeReactionFromCache(
+    chatId: ID,
+    messageId: ID,
+  ): Promise<void> {
+    try {
+      const { message, index } = await this.getMessageFromCache(
+        chatId,
+        messageId,
+      );
+
+      delete message.reaction;
+
+      await this.client.LSET(
+        `${REDIS_MESSAGES_COLLECTION}:${chatId}`,
+        index,
+        JSON.stringify(message),
+      );
+    } catch (error) {
+      this.logger.error(error);
+      throw new InternalServerErrorException();
+    }
+  }
+
   public async getMessageFromCache(
     chatId: ID,
     messageId: ID,

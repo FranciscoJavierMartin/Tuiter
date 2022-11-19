@@ -17,6 +17,7 @@ import { EmailModule } from '@/email/email.module';
 import { ImageModule } from '@/image/image.module';
 import { ChatModule } from '@/chat/chat.module';
 
+// TODO: Check if guards has sense with always return a 403 error
 // TODO: Move to fastify instead of express
 // TODO: Move cache services to repositories folder
 // TODO: Use interfaces to access to repository services (just for DB services)

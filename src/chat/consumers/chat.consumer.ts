@@ -2,6 +2,7 @@ import { Process, Processor } from '@nestjs/bull';
 import { DoneCallback, Job } from 'bull';
 import { BaseConsumer } from '@/shared/consumers/base.consumer';
 import { CONSUMER_CONCURRENCY } from '@/shared/contants';
+import { ID } from '@/shared/interfaces/types';
 import { ChatRepository } from '@/chat/repositories/chat.repository';
 import {
   AddReactionToMessageJobData,
@@ -39,6 +40,24 @@ export class ChatConsumer extends BaseConsumer {
         job.data.messageId,
         job.data.feeling,
       );
+      job.progress(100);
+      done(null, job.data);
+    } catch (error) {
+      this.logger.error(error);
+      done(error as Error);
+    }
+  }
+
+  @Process({
+    name: 'removeReactionFromMessage',
+    concurrency: CONSUMER_CONCURRENCY,
+  })
+  public async removeReactionFromMessage(
+    job: Job<ID>,
+    done: DoneCallback,
+  ): Promise<void> {
+    try {
+      this.chatRepository.removeReactionFromMessage(job.data);
       job.progress(100);
       done(null, job.data);
     } catch (error) {
