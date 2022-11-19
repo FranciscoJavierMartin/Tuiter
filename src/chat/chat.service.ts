@@ -107,6 +107,11 @@ export class ChatService {
       addReactionDto.messageId,
       addReactionDto.feeling,
     );
+
+    this.chatQueue.add('addReactionToMessage', {
+      messageId: addReactionDto.messageId,
+      feeling: addReactionDto.feeling,
+    });
   }
 
   private emitSocketIOEvent(data: MessageDocument): void {

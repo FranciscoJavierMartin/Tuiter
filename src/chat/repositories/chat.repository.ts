@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { ObjectId } from 'mongodb';
+import { Feelings } from '@/reaction/interfaces/reaction.interface';
 import { Chat } from '@/chat/models/chat.model';
 import { Message } from '@/chat/models/message.model';
 import { MessageDocument } from '@/chat/interfaces/chat.interface';
@@ -34,6 +35,15 @@ export class ChatRepository {
       receiverId: data.receiverId,
       senderId: data.senderId,
       text: data.text,
+    });
+  }
+
+  public async addReactionToMessage(
+    messageId: ObjectId,
+    feeling: Feelings,
+  ): Promise<void> {
+    await this.messageModel.findByIdAndUpdate(messageId, {
+      $set: { reaction: feeling },
     });
   }
 
