@@ -66,4 +66,11 @@ export class ChatRepository {
       reaction: { $exists: true },
     }));
   }
+
+  public async markAsRead(chatId: ObjectId): Promise<void> {
+    await this.messageModel.updateMany(
+      { chatId, isRead: false },
+      { $set: { isRead: true } },
+    );
+  }
 }

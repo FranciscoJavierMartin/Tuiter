@@ -81,6 +81,7 @@ export class ChatController {
     await this.chatService.removeReaction(removeReactionDto);
   }
 
+  // TODO: Check params and guards are the corrects
   @Patch('message/mark-as-read')
   @ApiBearerAuth()
   @ApiBody({ type: MarkAsReadDto })

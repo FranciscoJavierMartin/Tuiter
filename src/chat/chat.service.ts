@@ -135,7 +135,7 @@ export class ChatService {
     // await this.chatCacheService.markMessagesAsRead()
     // TODO: Emit 'message read'
     // TODO: Emit 'chat list'
-    // this.chatQueue.add('')
+    // this.chatQueue.add('markAsRead')
   }
 
   private emitSocketIOEvent(data: MessageDocument): void {
