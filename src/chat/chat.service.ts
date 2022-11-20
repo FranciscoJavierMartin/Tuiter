@@ -130,7 +130,13 @@ export class ChatService {
     );
   }
 
-  public async markAsRead(markAsReadDto: MarkAsReadDto): Promise<void> {}
+  public async markAsRead(markAsReadDto: MarkAsReadDto): Promise<void> {
+    // TODO: Needs chatId
+    // await this.chatCacheService.markMessagesAsRead()
+    // TODO: Emit 'message read'
+    // TODO: Emit 'chat list'
+    // this.chatQueue.add('')
+  }
 
   private emitSocketIOEvent(data: MessageDocument): void {
     // TODO: Emit 'message received' and 'chat list'

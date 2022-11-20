@@ -167,4 +167,36 @@ export class ChatCacheService extends BaseCache {
       throw new InternalServerErrorException();
     }
   }
+
+  public async markMessagesAsRead(chatId: ID): Promise<void> {
+    try {
+      const messages: MessageDocument[] = (
+        await this.client.LRANGE(
+          `${REDIS_MESSAGES_COLLECTION}:${chatId}`,
+          0,
+          -1,
+        )
+      ).map<MessageDocument>((message) => parseJson<MessageDocument>(message));
+
+      const nonReadMessagesIndex: number[] = messages
+        .map<number>((message: MessageDocument, index: number) =>
+          message.isRead ? -1 : index,
+        )
+        .filter((index) => index !== -1);
+
+      nonReadMessagesIndex.forEach(async (index: number) => {
+        const message = messages[index];
+        message.isRead = true;
+
+        await this.client.LSET(
+          `${REDIS_MESSAGES_COLLECTION}:${chatId}`,
+          index,
+          JSON.stringify(message),
+        );
+      });
+    } catch (error) {
+      this.logger.error(error);
+      throw new InternalServerErrorException();
+    }
+  }
 }
