@@ -60,6 +60,16 @@ export class ChatRepository {
     return !!(await this.messageModel.exists({ _id: messageId, senderId }));
   }
 
+  public async isMessageFromChatMember(
+    messageId: ObjectId,
+    userId: ObjectId,
+  ): Promise<boolean> {
+    return !!(await this.messageModel.exists({
+      _id: messageId,
+      $or: [{ senderId: userId }, { receiverId: userId }],
+    }));
+  }
+
   public async isMessageReacted(messageId: ObjectId): Promise<boolean> {
     return !!(await this.messageModel.exists({
       _id: messageId,

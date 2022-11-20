@@ -10,9 +10,11 @@ export class CanChatGuard implements CanActivate {
     const receiverId = request.params.receiverId;
     const userId = request.user.userId;
 
-    return [
-      await this.blockUserCacheService.isUserBlockedBy(receiverId, userId),
-      await this.blockUserCacheService.isUserBlockedBy(userId, receiverId),
-    ].some((isBlocked) => !isBlocked);
+    return (
+      await Promise.all([
+        this.blockUserCacheService.isUserBlockedBy(receiverId, userId),
+        this.blockUserCacheService.isUserBlockedBy(userId, receiverId),
+      ])
+    ).some((isBlocked) => !isBlocked);
   }
 }

@@ -29,6 +29,7 @@ import { WithReactionGuard } from '@/chat/guards/with-reaction.guard';
 import { RemoveReactionDto } from '@/chat/dto/requests/remove-reaction.dto';
 import { MarkAsReadDto } from '@/chat/dto/requests/mark-as-read.dto';
 import { MarkAsDeletedDto } from '@/chat/dto/requests/mark-as-deleted.dto';
+import { IsChatMemberGuard } from '@/chat/guards/is-chat-member.guard';
 
 @ApiTags('Chat')
 @ApiBearerAuth()
@@ -96,6 +97,9 @@ export class ChatController {
   }
 
   @Delete('message/mark-as-deleted')
+  @ApiBearerAuth()
+  @ApiBody({ type: MarkAsDeletedDto })
+  @UseGuards(AuthGuard(), CanChatGuard, IsChatMemberGuard)
   public async markAsDeleted(@Body() markAsDeletedDto: MarkAsDeletedDto) {
     return markAsDeletedDto;
   }
