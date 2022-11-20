@@ -22,7 +22,7 @@ export class PostConsumer extends BaseConsumer {
   @Process({ name: 'addPostToDB', concurrency: CONSUMER_CONCURRENCY })
   public async addPostToDB(job: Job<Post>, done: DoneCallback): Promise<void> {
     try {
-      this.postRepository.savePostToDb(job.data);
+      await this.postRepository.savePostToDb(job.data);
       job.progress(100);
       done(null, job.data);
     } catch (error) {
@@ -55,7 +55,7 @@ export class PostConsumer extends BaseConsumer {
     done: DoneCallback,
   ): Promise<void> {
     try {
-      this.postRepository.updatePost(job.data.postId, job.data.post);
+      await this.postRepository.updatePost(job.data.postId, job.data.post);
       job.progress(100);
       done(null, job.data);
     } catch (error) {

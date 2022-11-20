@@ -17,7 +17,7 @@ export class AuthConsumer extends BaseConsumer {
     done: DoneCallback,
   ): Promise<void> {
     try {
-      this.authRepository.createAuthUser(job.data);
+      await this.authRepository.createAuthUser(job.data);
       job.progress(100);
       done(null, job.data);
     } catch (error) {
