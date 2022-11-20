@@ -17,6 +17,7 @@ import { ChatCacheService } from '@/chat/repositories/chat.cache.service';
 import { AddReactionDto } from '@/chat/dto/requests/add-reaction.dto';
 import { RemoveReactionDto } from '@/chat/dto/requests/remove-reaction.dto';
 import { MarkAsReadDto } from '@/chat/dto/requests/mark-as-read.dto';
+import { MarkAsDeletedDto } from './dto/requests/mark-as-deleted.dto';
 
 @Injectable()
 export class ChatService {
@@ -136,6 +137,24 @@ export class ChatService {
     // TODO: Emit 'message read'
     // TODO: Emit 'chat list'
     // this.chatQueue.add('markAsRead')
+  }
+
+  public async markAsDeleted(
+    markAsDeletedDto: MarkAsDeletedDto,
+  ): Promise<void> {
+    await this.chatCacheService.markMessageAsDeleted(
+      markAsDeletedDto.messageId,
+      markAsDeletedDto.senderId,
+      markAsDeletedDto.receiverId,
+      markAsDeletedDto.justForMe,
+    );
+
+    // TODO: Emit 'message read' and 'chat list'
+
+    // this.chatQueue.add('markMessageAsDeleted', {
+    //   messageId: markAsDeletedDto.messageId,
+    //   justForMe: markAsDeletedDto.justForMe,
+    // });
   }
 
   private emitSocketIOEvent(data: MessageDocument): void {

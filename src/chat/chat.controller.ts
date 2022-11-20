@@ -100,7 +100,9 @@ export class ChatController {
   @ApiBearerAuth()
   @ApiBody({ type: MarkAsDeletedDto })
   @UseGuards(AuthGuard(), CanChatGuard, IsChatMemberGuard)
-  public async markAsDeleted(@Body() markAsDeletedDto: MarkAsDeletedDto) {
-    return markAsDeletedDto;
+  public async markAsDeleted(
+    @Body() markAsDeletedDto: MarkAsDeletedDto,
+  ): Promise<void> {
+    await this.chatService.markAsDeleted(markAsDeletedDto);
   }
 }
