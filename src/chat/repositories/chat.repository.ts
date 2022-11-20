@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { ObjectId } from 'mongodb';
+import { ID } from '@/shared/interfaces/types';
 import { Feelings } from '@/reaction/interfaces/reaction.interface';
 import { Chat } from '@/chat/models/chat.model';
 import { Message } from '@/chat/models/message.model';
@@ -82,5 +83,22 @@ export class ChatRepository {
       { chatId, isRead: false },
       { $set: { isRead: true } },
     );
+  }
+
+  public async markMessageAsDeletedForMe(messageId: ID): Promise<void> {
+    await this.messageModel.findByIdAndUpdate(messageId, {
+      $set: {
+        deleteForMe: true,
+      },
+    });
+  }
+
+  public async markMessageAsDeletedForEveryone(messageId: ID): Promise<void> {
+    await this.messageModel.findByIdAndUpdate(messageId, {
+      $set: {
+        deleteForMe: true,
+        deleteForEveryone: true,
+      },
+    });
   }
 }

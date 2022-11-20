@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsBoolean, IsMongoId } from 'class-validator';
 import { ID } from '@/shared/interfaces/types';
 
-export class MarkAsDeletedDto {
+export class MarkMessageAsDeletedDto {
   @ApiProperty({
     description: 'Sender id',
     nullable: false,

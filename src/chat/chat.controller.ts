@@ -28,7 +28,7 @@ import { NotAuthorGuard } from '@/chat/guards/not-author.guard';
 import { WithReactionGuard } from '@/chat/guards/with-reaction.guard';
 import { RemoveReactionDto } from '@/chat/dto/requests/remove-reaction.dto';
 import { MarkAsReadDto } from '@/chat/dto/requests/mark-as-read.dto';
-import { MarkAsDeletedDto } from '@/chat/dto/requests/mark-as-deleted.dto';
+import { MarkMessageAsDeletedDto } from '@/chat/dto/requests/mark-as-deleted.dto';
 import { IsChatMemberGuard } from '@/chat/guards/is-chat-member.guard';
 
 @ApiTags('Chat')
@@ -85,6 +85,7 @@ export class ChatController {
   }
 
   // TODO: Check params and guards are the corrects
+  // TODO: Rename to markMessageAsRead
   @Patch('message/mark-as-read')
   @ApiBearerAuth()
   @ApiBody({ type: MarkAsReadDto })
@@ -98,11 +99,11 @@ export class ChatController {
 
   @Delete('message/mark-as-deleted')
   @ApiBearerAuth()
-  @ApiBody({ type: MarkAsDeletedDto })
+  @ApiBody({ type: MarkMessageAsDeletedDto })
   @UseGuards(AuthGuard(), CanChatGuard, IsChatMemberGuard)
-  public async markAsDeleted(
-    @Body() markAsDeletedDto: MarkAsDeletedDto,
+  public async markMessageAsDeleted(
+    @Body() markMessageAsDeletedDto: MarkMessageAsDeletedDto,
   ): Promise<void> {
-    await this.chatService.markAsDeleted(markAsDeletedDto);
+    await this.chatService.markMessageAsDeleted(markMessageAsDeletedDto);
   }
 }
