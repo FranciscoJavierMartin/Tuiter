@@ -17,7 +17,7 @@ export class CommentConsumer extends BaseConsumer {
     done: DoneCallback,
   ): Promise<void> {
     try {
-      this.commentRepository.addCommentToDB(job.data);
+      await this.commentRepository.addCommentToDB(job.data);
       job.progress(100);
       done(null, job.data);
     } catch (error) {
