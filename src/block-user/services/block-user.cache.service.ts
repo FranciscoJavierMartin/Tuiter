@@ -24,9 +24,9 @@ export class BlockUserCacheService extends BaseCache {
         'blocked',
       );
       const blockedUsers: string[] = parseJson<string[]>(response);
-      const userIdString: string = userId.toString();
+      const userIdString: string = userId?.toString();
 
-      return blockedUsers.some((user) => user === userIdString);
+      return blockedUsers?.some((user) => user === userIdString);
     } catch (error) {
       this.logger.error(error);
       throw new InternalServerErrorException('Server error. Try again');

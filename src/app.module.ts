@@ -15,7 +15,12 @@ import { BlockUserModule } from '@/block-user/block-user.module';
 import { NotificationModule } from '@/notification/notification.module';
 import { EmailModule } from '@/email/email.module';
 import { ImageModule } from '@/image/image.module';
+import { ChatModule } from '@/chat/chat.module';
 
+// TODO: Document Chat module
+// TODO: Include 'writting' in chat
+// TODO: Check if guards has sense with always return a 403 error
+// TODO: Move to fastify instead of express
 // TODO: Move cache services to repositories folder
 // TODO: Use interfaces to access to repository services (just for DB services)
 // TODO: Setup tests
@@ -71,6 +76,7 @@ import { ImageModule } from '@/image/image.module';
     NotificationModule,
     EmailModule,
     ImageModule,
+    ChatModule,
   ],
   controllers: [],
   providers: [],
