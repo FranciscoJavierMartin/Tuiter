@@ -6,6 +6,7 @@ import { ID } from '@/shared/interfaces/types';
 import { ChatRepository } from '@/chat/repositories/chat.repository';
 import {
   AddReactionToMessageJobData,
+  MarkMessageAsDeletedJobData,
   MessageDocument,
 } from '@/chat/interfaces/chat.interface';
 
@@ -73,6 +74,30 @@ export class ChatConsumer extends BaseConsumer {
   public async markAsRead(job: Job<ID>, done: DoneCallback): Promise<void> {
     try {
       await this.chatRepository.markAsRead(job.data);
+      job.progress(100);
+      done(null, job.data);
+    } catch (error) {
+      this.logger.error(error);
+      done(error as Error);
+    }
+  }
+
+  @Process({
+    name: 'markMessageAsDeleted',
+    concurrency: CONSUMER_CONCURRENCY,
+  })
+  public async markMessageAsDeleted(
+    job: Job<MarkMessageAsDeletedJobData>,
+    done: DoneCallback,
+  ): Promise<void> {
+    try {
+      if (job.data.justForMe) {
+        await this.chatRepository.markMessageAsDeletedForMe(job.data.messageId);
+      } else {
+        await this.chatRepository.markMessageAsDeletedForEveryone(
+          job.data.messageId,
+        );
+      }
       job.progress(100);
       done(null, job.data);
     } catch (error) {

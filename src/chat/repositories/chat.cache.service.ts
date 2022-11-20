@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
@@ -13,6 +14,8 @@ import {
 } from '@/shared/contants';
 import { MessageDocument } from '@/chat/interfaces/chat.interface';
 import { Feelings } from '@/reaction/interfaces/reaction.interface';
+
+type UserChatItem = { receiverId: string; chatId: string };
 
 @Injectable()
 export class ChatCacheService extends BaseCache {
@@ -66,7 +69,7 @@ export class ChatCacheService extends BaseCache {
   public async getUserChat(
     senderId: ID,
     receiverId: ID,
-  ): Promise<{ receiverId: string; chatId: string } | undefined> {
+  ): Promise<UserChatItem | undefined> {
     try {
       const userChatList = await this.client.LRANGE(
         `${REDIS_CHAT_LIST_COLLECTION}:${senderId}`,
@@ -194,6 +197,67 @@ export class ChatCacheService extends BaseCache {
           JSON.stringify(message),
         );
       });
+    } catch (error) {
+      this.logger.error(error);
+      throw new InternalServerErrorException();
+    }
+  }
+
+  public async markMessageAsDeleted(
+    messageId: ID,
+    senderId: ID,
+    receiverId: ID,
+    justForMe: boolean,
+  ): Promise<void> {
+    try {
+      const chatId: string = await this.getChatIdFromCache(
+        senderId,
+        receiverId,
+      );
+      const { message, index } = await this.getMessageFromCache(
+        chatId as unknown as ID,
+        messageId,
+      );
+
+      if (justForMe) {
+        message.deleteForMe = true;
+      } else {
+        message.deleteForMe = true;
+        message.deleteForEveryone = true;
+      }
+
+      await this.client.LSET(
+        `${REDIS_MESSAGES_COLLECTION}:${chatId}`,
+        index,
+        JSON.stringify(message),
+      );
+    } catch (error) {
+      this.logger.error(error);
+      throw new InternalServerErrorException();
+    }
+  }
+
+  private async getChatIdFromCache(
+    senderId: ID,
+    receiverId: ID,
+  ): Promise<string> {
+    try {
+      const receiverIdString: string = receiverId.toString();
+      const userChatList: string[] = await this.client.LRANGE(
+        `${REDIS_CHAT_LIST_COLLECTION}:${senderId}`,
+        0,
+        -1,
+      );
+
+      const userChat = userChatList.find((userChat) =>
+        userChat.includes(receiverIdString),
+      );
+
+      if (!userChat) {
+        throw new BadRequestException(`Users has not been chatted before`);
+      }
+
+      return parseJson<UserChatItem>(userChat).chatId;
     } catch (error) {
       this.logger.error(error);
       throw new InternalServerErrorException();

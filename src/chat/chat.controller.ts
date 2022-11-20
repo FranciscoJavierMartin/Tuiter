@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   MaxFileSizeValidator,
   Param,
   ParseFilePipe,
@@ -27,6 +28,8 @@ import { NotAuthorGuard } from '@/chat/guards/not-author.guard';
 import { WithReactionGuard } from '@/chat/guards/with-reaction.guard';
 import { RemoveReactionDto } from '@/chat/dto/requests/remove-reaction.dto';
 import { MarkAsReadDto } from '@/chat/dto/requests/mark-as-read.dto';
+import { MarkMessageAsDeletedDto } from '@/chat/dto/requests/mark-as-deleted.dto';
+import { IsChatMemberGuard } from '@/chat/guards/is-chat-member.guard';
 
 @ApiTags('Chat')
 @ApiBearerAuth()
@@ -82,6 +85,7 @@ export class ChatController {
   }
 
   // TODO: Check params and guards are the corrects
+  // TODO: Rename to markMessageAsRead
   @Patch('message/mark-as-read')
   @ApiBearerAuth()
   @ApiBody({ type: MarkAsReadDto })
@@ -91,5 +95,15 @@ export class ChatController {
     @GetUser('userId') userId: ID,
   ): Promise<void> {
     await this.chatService.markAsRead(markAsReadDto);
+  }
+
+  @Delete('message/mark-as-deleted')
+  @ApiBearerAuth()
+  @ApiBody({ type: MarkMessageAsDeletedDto })
+  @UseGuards(AuthGuard(), CanChatGuard, IsChatMemberGuard)
+  public async markMessageAsDeleted(
+    @Body() markMessageAsDeletedDto: MarkMessageAsDeletedDto,
+  ): Promise<void> {
+    await this.chatService.markMessageAsDeleted(markMessageAsDeletedDto);
   }
 }
