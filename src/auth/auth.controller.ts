@@ -9,6 +9,7 @@ import {
   UseGuards,
   Param,
   Ip,
+  Patch,
 } from '@nestjs/common';
 import {
   ApiBadGatewayResponse,
@@ -143,5 +144,15 @@ export class AuthController {
     return {
       message: 'Password reset email sent',
     };
+  }
+
+  @Patch('change-password')
+  @ApiBearerAuth()
+  @ApiOkResponse({
+    description: 'Password updated',
+  })
+  @UseGuards(AuthGuard())
+  public async changePassword() {
+    return 'test';
   }
 }

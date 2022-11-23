@@ -17,7 +17,9 @@ import { EmailModule } from '@/email/email.module';
 import { ImageModule } from '@/image/image.module';
 import { ChatModule } from '@/chat/chat.module';
 
+// TODO: Remove Capitalize first letter for username
 // TODO: Document Chat module
+// TODO: When retrieve data from db instead of cache, then update cache data
 // TODO: Include 'writting' in chat
 // TODO: Check if guards has sense with always return a 403 error
 // TODO: Move to fastify instead of express
