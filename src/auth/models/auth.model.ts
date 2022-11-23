@@ -1,7 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 import { hashSync, compareSync } from 'bcryptjs';
-import { firstLetterUppercase } from '@/helpers/utils';
 
 const SALT_ROUND = 10;
 
@@ -46,7 +45,6 @@ AuthSchema.pre('save', function (this: AuthUser, next: () => void) {
   const hashedPassword: string = hashSync(this.password, SALT_ROUND);
   this.password = hashedPassword;
   this.email = this.email.toLowerCase();
-  this.username = firstLetterUppercase(this.username);
   next();
 });
 
