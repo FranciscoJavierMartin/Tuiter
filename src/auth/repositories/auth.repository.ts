@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { firstLetterUppercase } from '@/helpers/utils';
 import { AuthDocument, AuthUser } from '@/auth/models/auth.model';
 
 @Injectable()
@@ -31,10 +30,7 @@ export class AuthRepository {
   ): Promise<boolean> {
     return !!(await this.authModel
       .exists({
-        $or: [
-          { username: firstLetterUppercase(username) },
-          { email: email.toLowerCase() },
-        ],
+        $or: [{ username }, { email: email.toLowerCase() }],
       })
       .exec());
   }
@@ -45,11 +41,7 @@ export class AuthRepository {
    * @returns User from DB
    */
   public async getAuthUserByUsername(username: string): Promise<AuthDocument> {
-    return await this.authModel
-      .findOne({
-        username: firstLetterUppercase(username),
-      })
-      .exec();
+    return await this.authModel.findOne({ username }).exec();
   }
 
   /**
