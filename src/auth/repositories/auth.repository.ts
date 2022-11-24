@@ -77,6 +77,15 @@ export class AuthRepository {
     );
   }
 
+  public async updatePassword(
+    username: string,
+    hashedPassword: string,
+  ): Promise<void> {
+    await this.authModel
+      .updateOne({ username }, { $set: { password: hashedPassword } })
+      .exec();
+  }
+
   /**
    * Get auth user by password reset token
    * @param token Token to search user

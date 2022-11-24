@@ -156,11 +156,11 @@ export class AuthController {
   @UseGuards(AuthGuard())
   public async changePassword(
     @Body() changePasswordDto: ChangePasswordDto,
-    @GetUser() currentUser: CurrentUser,
+    @GetUser('username') username: string,
   ): Promise<void> {
     await this.authService.changePassword(
+      username,
       changePasswordDto.newPassword,
-      currentUser,
     );
   }
 }

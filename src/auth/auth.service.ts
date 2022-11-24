@@ -23,7 +23,6 @@ import { AuthDocument } from '@/auth/models/auth.model';
 import { LoginDto } from '@/auth/dto/requests/login.dto';
 import { UserDto } from '@/auth/dto/responses/user.dto';
 import { AuthRepository } from '@/auth/repositories/auth.repository';
-import { CurrentUser } from '@/auth/interfaces/current-user.interface';
 
 @Injectable()
 export class AuthService {
@@ -174,9 +173,24 @@ export class AuthService {
   }
 
   public async changePassword(
+    username: string,
     newPassword: string,
-    user: CurrentUser,
-  ): Promise<void> {}
+  ): Promise<void> {
+    const user: AuthDocument = await this.authRepository.getAuthUserByUsername(
+      username,
+    );
+
+    if (user.comparePassword(newPassword)) {
+      throw new BadRequestException('New password');
+    }
+
+    await this.authRepository.updatePassword(
+      username,
+      user.hashPassword(newPassword),
+    );
+
+    this.emailService.sendChangePasswordEmail(username, user.email, '');
+  }
 
   /**
    * Send email to user with a link to reset its password

@@ -18,6 +18,7 @@ import { ImageModule } from '@/image/image.module';
 import { ChatModule } from '@/chat/chat.module';
 
 // TODO: Add more complex password
+// TODO: Study if uId could be removed from auth model
 // TODO: Document Chat module
 // TODO: When retrieve data from db instead of cache, then update cache data
 // TODO: Include 'writting' in chat

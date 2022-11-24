@@ -47,6 +47,30 @@ export class EmailService {
   ): Promise<void> {
     this.emailQueue.add('sendResetPasswordEmail', {
       username,
+      subject: 'Password reset confirmation',
+      receiverEmail,
+      ipaddress,
+      date: new Date().toLocaleDateString(undefined, {
+        hour: '2-digit',
+        minute: '2-digit',
+      }),
+    });
+  }
+
+  /**
+   * Enqueue send change password email
+   * @param username User name
+   * @param receiverEmail Email address to send
+   * @param ipaddress User ip address
+   */
+  public async sendChangePasswordEmail(
+    username: string,
+    receiverEmail: string,
+    ipaddress: string,
+  ): Promise<void> {
+    this.emailQueue.add('sendResetPasswordEmail', {
+      username,
+      subject: 'Password changed confirmation',
       receiverEmail,
       ipaddress,
       date: new Date().toLocaleDateString(undefined, {
