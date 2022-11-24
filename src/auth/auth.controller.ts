@@ -156,7 +156,11 @@ export class AuthController {
   @UseGuards(AuthGuard())
   public async changePassword(
     @Body() changePasswordDto: ChangePasswordDto,
+    @GetUser() currentUser: CurrentUser,
   ): Promise<void> {
-    await this.authService.changePassword(changePasswordDto.newPassword);
+    await this.authService.changePassword(
+      changePasswordDto.newPassword,
+      currentUser,
+    );
   }
 }
