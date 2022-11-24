@@ -3,10 +3,15 @@ import { ID } from '@/shared/interfaces/types';
 import { AuthDocument } from '@/auth/models/auth.model';
 import { UserDocument } from '@/user/models/user.model';
 import { UserRepository } from '@/user/repositories/user.repository';
+import { UserDto } from '@/user/dto/responses/user.dto';
+import { UserCacheService } from '@/user/services/user.cache.service';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(
+    private readonly userRepository: UserRepository,
+    private readonly userCacheService: UserCacheService,
+  ) {}
 
   /**
    * Transform AuthDocument in UserDocument. Only for new users
@@ -49,5 +54,19 @@ export class UserService {
         youtube: '',
       },
     } as unknown as UserDocument;
+  }
+
+  /**
+   * Get profile by user id
+   * @param userId User id
+   * @returns User document (user model)
+   */
+  public async getProfileByUserId(userId: ID): Promise<UserDto> {
+    const cachedUser: UserDocument =
+      await this.userCacheService.getUserFromCache(userId);
+
+    return new UserDto(
+      cachedUser ?? (await this.userRepository.getUserById(userId)),
+    );
   }
 }

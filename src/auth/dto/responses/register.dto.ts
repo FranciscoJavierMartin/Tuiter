@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { UserDto } from '@/auth/dto/responses/user.dto';
+import { UserDto } from '@/user/dto/responses/user.dto';
 
 export class ResponseRegisterDto {
   @ApiProperty({

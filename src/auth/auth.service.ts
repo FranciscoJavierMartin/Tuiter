@@ -17,11 +17,11 @@ import { UserService } from '@/user/services/user.service';
 import { UserCacheService } from '@/user/services/user.cache.service';
 import { UserDocument } from '@/user/models/user.model';
 import { UserRepository } from '@/user/repositories/user.repository';
+import { UserDto } from '@/user/dto/responses/user.dto';
 import { RegisterDto } from '@/auth/dto/requests/register.dto';
 import { ResponseRegisterDto } from '@/auth/dto/responses/register.dto';
 import { AuthDocument } from '@/auth/models/auth.model';
 import { LoginDto } from '@/auth/dto/requests/login.dto';
-import { UserDto } from '@/auth/dto/responses/user.dto';
 import { AuthRepository } from '@/auth/repositories/auth.repository';
 
 @Injectable()
