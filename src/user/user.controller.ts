@@ -1,5 +1,10 @@
 import { Controller, Get, Param } from '@nestjs/common';
-import { ApiOkResponse, ApiParam, ApiTags } from '@nestjs/swagger';
+import {
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiParam,
+  ApiTags,
+} from '@nestjs/swagger';
 import { ValidateIdPipe } from '@/shared/pipes/validate-id.pipe';
 import { ID } from '@/shared/interfaces/types';
 import { UserService } from '@/user/services/user.service';
@@ -17,6 +22,9 @@ export class UserController {
   })
   @ApiOkResponse({
     description: 'User profile',
+  })
+  @ApiNotFoundResponse({
+    description: 'User not found',
   })
   public async getProfileByUserId(
     @Param('userId', ValidateIdPipe) userId: ID,

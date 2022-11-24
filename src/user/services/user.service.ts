@@ -56,6 +56,11 @@ export class UserService {
     } as unknown as UserDocument;
   }
 
+  /**
+   * Get profile by user id
+   * @param userId User id
+   * @returns User document (user model)
+   */
   public async getProfileByUserId(userId: ID): Promise<UserDto> {
     const cachedUser: UserDocument =
       await this.userCacheService.getUserFromCache(userId);
