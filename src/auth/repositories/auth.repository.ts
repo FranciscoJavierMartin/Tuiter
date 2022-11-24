@@ -77,6 +77,11 @@ export class AuthRepository {
     );
   }
 
+  /**
+   * Update user password in db
+   * @param username User name who want to update its password
+   * @param hashedPassword Hashed password
+   */
   public async updatePassword(
     username: string,
     hashedPassword: string,

@@ -172,6 +172,12 @@ export class AuthService {
     return existingUser;
   }
 
+  /**
+   * Change user password
+   * @param username User name who want to change its password
+   * @param newPassword new password (not encrypted yet)
+   * @param ip User ip
+   */
   public async changePassword(
     username: string,
     newPassword: string,
