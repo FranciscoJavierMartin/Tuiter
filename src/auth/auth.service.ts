@@ -173,6 +173,35 @@ export class AuthService {
   }
 
   /**
+   * Change user password
+   * @param username User name who want to change its password
+   * @param newPassword new password (not encrypted yet)
+   * @param ip User ip
+   */
+  public async changePassword(
+    username: string,
+    newPassword: string,
+    ip: string,
+  ): Promise<void> {
+    const user: AuthDocument = await this.authRepository.getAuthUserByUsername(
+      username,
+    );
+
+    if (user.comparePassword(newPassword)) {
+      throw new BadRequestException(
+        'New password cannot be the same than previous password',
+      );
+    }
+
+    await this.authRepository.updatePassword(
+      username,
+      user.hashPassword(newPassword),
+    );
+
+    this.emailService.sendChangePasswordEmail(username, user.email, ip);
+  }
+
+  /**
    * Send email to user with a link to reset its password
    * @param email email to be sent
    */

@@ -49,10 +49,11 @@ export class EmailConsumer extends BaseConsumer {
     done: DoneCallback,
   ): Promise<void> {
     try {
-      const { receiverEmail, username, ipaddress } = job.data;
+      const { receiverEmail, subject, username, ipaddress } = job.data;
 
       await this.emailSenderService.sendResetPasswordEmail(
         receiverEmail,
+        subject,
         username,
         ipaddress,
       );

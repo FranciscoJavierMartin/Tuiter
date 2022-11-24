@@ -6,6 +6,7 @@ export interface MailForgotPasswordData {
 
 export interface MailResetPasswordData {
   receiverEmail: string;
+  subject: string;
   username: string;
   ipaddress: string;
   date: string;

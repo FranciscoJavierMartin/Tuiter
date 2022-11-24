@@ -78,6 +78,20 @@ export class AuthRepository {
   }
 
   /**
+   * Update user password in db
+   * @param username User name who want to update its password
+   * @param hashedPassword Hashed password
+   */
+  public async updatePassword(
+    username: string,
+    hashedPassword: string,
+  ): Promise<void> {
+    await this.authModel
+      .updateOne({ username }, { $set: { password: hashedPassword } })
+      .exec();
+  }
+
+  /**
    * Get auth user by password reset token
    * @param token Token to search user
    * @returns Auth user

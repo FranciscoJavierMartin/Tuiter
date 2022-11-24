@@ -52,29 +52,26 @@ export class EmailSenderService {
   /**
    * Send email to user informing about password change
    * @param receiverEmail Email address to send
+   * @param subject Email subject
    * @param username User name
    * @param ipaddress User ip address
    */
   public async sendResetPasswordEmail(
     receiverEmail: string,
+    subject: string,
     username: string,
     ipaddress: string,
   ): Promise<void> {
-    await this.sendEmail(
-      receiverEmail,
-      'Password Reset Confirmation',
-      'reset-password-template',
-      {
-        username,
-        email: receiverEmail,
-        ipaddress,
-        date: new Date().toLocaleDateString(undefined, {
-          hour: '2-digit',
-          minute: '2-digit',
-        }),
-        image_url: lockImage,
-      },
-    );
+    await this.sendEmail(receiverEmail, subject, 'reset-password-template', {
+      username,
+      email: receiverEmail,
+      ipaddress,
+      date: new Date().toLocaleDateString(undefined, {
+        hour: '2-digit',
+        minute: '2-digit',
+      }),
+      image_url: lockImage,
+    });
   }
 
   /**

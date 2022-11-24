@@ -9,6 +9,7 @@ import {
   UseGuards,
   Param,
   Ip,
+  Patch,
 } from '@nestjs/common';
 import {
   ApiBadGatewayResponse,
@@ -36,6 +37,7 @@ import { ForgotPasswordDto } from '@/auth/dto/requests/forgot-password.dto';
 import { InfoMessageDto } from '@/auth/dto/responses/info-message.dto';
 import { ResetPasswordDto } from '@/auth/dto/requests/reset-password.dto';
 import { CurrentUser } from '@/auth/interfaces/current-user.interface';
+import { ChangePasswordDto } from '@/auth/dto/requests/change-password.dto';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -143,5 +145,30 @@ export class AuthController {
     return {
       message: 'Password reset email sent',
     };
+  }
+
+  @Patch('change-password')
+  @ApiBearerAuth()
+  @ApiBody({ type: ChangePasswordDto })
+  @ApiOkResponse({
+    description: 'Password updated',
+  })
+  @ApiBadRequestResponse({
+    description: 'New password cannot be the same than previous password',
+  })
+  @ApiBadGatewayResponse({
+    description: 'Error sending email',
+  })
+  @UseGuards(AuthGuard())
+  public async changePassword(
+    @Body() changePasswordDto: ChangePasswordDto,
+    @GetUser('username') username: string,
+    @Ip() ip: string,
+  ): Promise<void> {
+    await this.authService.changePassword(
+      username,
+      changePasswordDto.newPassword,
+      ip,
+    );
   }
 }
