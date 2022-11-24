@@ -4,10 +4,14 @@ import { AuthDocument } from '@/auth/models/auth.model';
 import { UserDocument } from '@/user/models/user.model';
 import { UserRepository } from '@/user/repositories/user.repository';
 import { UserDto } from '@/user/dto/responses/user.dto';
+import { UserCacheService } from '@/user/services/user.cache.service';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(
+    private readonly userRepository: UserRepository,
+    private readonly userCacheService: UserCacheService,
+  ) {}
 
   /**
    * Transform AuthDocument in UserDocument. Only for new users
@@ -52,5 +56,12 @@ export class UserService {
     } as unknown as UserDocument;
   }
 
-  public async getProfileByUserId(userId: ID): Promise<UserDto> {}
+  public async getProfileByUserId(userId: ID): Promise<UserDto> {
+    const cachedUser: UserDocument =
+      await this.userCacheService.getUserFromCache(userId);
+
+    return new UserDto(
+      cachedUser ?? (await this.userRepository.getUserById(userId)),
+    );
+  }
 }
