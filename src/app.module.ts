@@ -17,6 +17,7 @@ import { EmailModule } from '@/email/email.module';
 import { ImageModule } from '@/image/image.module';
 import { ChatModule } from '@/chat/chat.module';
 
+// TODO: Fix email image
 // TODO: Add more complex password
 // TODO: Study if uId could be removed from auth model
 // TODO: Document Chat module

@@ -175,6 +175,7 @@ export class AuthService {
   public async changePassword(
     username: string,
     newPassword: string,
+    ip: string,
   ): Promise<void> {
     const user: AuthDocument = await this.authRepository.getAuthUserByUsername(
       username,
@@ -189,7 +190,7 @@ export class AuthService {
       user.hashPassword(newPassword),
     );
 
-    this.emailService.sendChangePasswordEmail(username, user.email, '');
+    this.emailService.sendChangePasswordEmail(username, user.email, ip);
   }
 
   /**

@@ -157,10 +157,12 @@ export class AuthController {
   public async changePassword(
     @Body() changePasswordDto: ChangePasswordDto,
     @GetUser('username') username: string,
+    @Ip() ip: string,
   ): Promise<void> {
     await this.authService.changePassword(
       username,
       changePasswordDto.newPassword,
+      ip,
     );
   }
 }
