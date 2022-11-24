@@ -37,6 +37,7 @@ import { ForgotPasswordDto } from '@/auth/dto/requests/forgot-password.dto';
 import { InfoMessageDto } from '@/auth/dto/responses/info-message.dto';
 import { ResetPasswordDto } from '@/auth/dto/requests/reset-password.dto';
 import { CurrentUser } from '@/auth/interfaces/current-user.interface';
+import { ChangePasswordDto } from '@/auth/dto/requests/change-password.dto';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -148,11 +149,14 @@ export class AuthController {
 
   @Patch('change-password')
   @ApiBearerAuth()
+  @ApiBody({ type: ChangePasswordDto })
   @ApiOkResponse({
     description: 'Password updated',
   })
   @UseGuards(AuthGuard())
-  public async changePassword() {
-    return 'test';
+  public async changePassword(
+    @Body() changePasswordDto: ChangePasswordDto,
+  ): Promise<void> {
+    await this.authService.changePassword(changePasswordDto.newPassword);
   }
 }

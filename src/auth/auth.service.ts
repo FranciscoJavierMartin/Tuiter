@@ -172,6 +172,8 @@ export class AuthService {
     return existingUser;
   }
 
+  public async changePassword(newPassword: string): Promise<void> {}
+
   /**
    * Send email to user with a link to reset its password
    * @param email email to be sent
