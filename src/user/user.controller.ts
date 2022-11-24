@@ -1,9 +1,26 @@
-import { Controller } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { Controller, Get, Param } from '@nestjs/common';
+import { ApiOkResponse, ApiParam, ApiTags } from '@nestjs/swagger';
+import { ValidateIdPipe } from '@/shared/pipes/validate-id.pipe';
+import { ID } from '@/shared/interfaces/types';
 import { UserService } from '@/user/services/user.service';
+import { UserDto } from '@/user/dto/responses/user.dto';
 
 @ApiTags('User')
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
+
+  @Get('profile/:userId')
+  @ApiParam({
+    name: 'userId',
+    description: 'User id',
+  })
+  @ApiOkResponse({
+    description: 'User profile',
+  })
+  public async getProfileByUserId(
+    @Param('userId', ValidateIdPipe) userId: ID,
+  ): Promise<UserDto> {
+    return this.userService.getProfileByUserId(userId);
+  }
 }

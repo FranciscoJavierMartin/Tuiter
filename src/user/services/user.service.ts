@@ -3,6 +3,7 @@ import { ID } from '@/shared/interfaces/types';
 import { AuthDocument } from '@/auth/models/auth.model';
 import { UserDocument } from '@/user/models/user.model';
 import { UserRepository } from '@/user/repositories/user.repository';
+import { UserDto } from '@/user/dto/responses/user.dto';
 
 @Injectable()
 export class UserService {
@@ -50,4 +51,6 @@ export class UserService {
       },
     } as unknown as UserDocument;
   }
+
+  public async getProfileByUserId(userId: ID): Promise<UserDto> {}
 }
