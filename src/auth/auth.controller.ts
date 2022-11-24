@@ -153,6 +153,12 @@ export class AuthController {
   @ApiOkResponse({
     description: 'Password updated',
   })
+  @ApiBadRequestResponse({
+    description: 'New password cannot be the same than previous password',
+  })
+  @ApiBadGatewayResponse({
+    description: 'Error sending email',
+  })
   @UseGuards(AuthGuard())
   public async changePassword(
     @Body() changePasswordDto: ChangePasswordDto,

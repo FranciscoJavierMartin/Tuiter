@@ -182,7 +182,9 @@ export class AuthService {
     );
 
     if (user.comparePassword(newPassword)) {
-      throw new BadRequestException('New password');
+      throw new BadRequestException(
+        'New password cannot be the same than previous password',
+      );
     }
 
     await this.authRepository.updatePassword(
