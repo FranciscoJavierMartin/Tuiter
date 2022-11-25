@@ -1,15 +1,18 @@
 import { Injectable } from '@nestjs/common';
+import { escapeRegexp } from '@/helpers/utils';
 import { ID } from '@/shared/interfaces/types';
+import { AuthService } from '@/auth/auth.service';
 import { AuthDocument } from '@/auth/models/auth.model';
 import { UserDocument } from '@/user/models/user.model';
 import { UserRepository } from '@/user/repositories/user.repository';
 import { UserDto } from '@/user/dto/responses/user.dto';
 import { UserCacheService } from '@/user/services/user.cache.service';
+import { SearchUserDto } from '@/user/dto/responses/search-user.dto';
 
 @Injectable()
 export class UserService {
-
   constructor(
+    private readonly authService: AuthService,
     private readonly userRepository: UserRepository,
     private readonly userCacheService: UserCacheService,
   ) {}
@@ -86,7 +89,8 @@ export class UserService {
     return users.map((user) => new UserDto(user));
   }
 
-  public async searchUser(query: string) {
-    throw new Error('Method not implemented.');
+  public async searchUser(query: string): Promise<SearchUserDto[]> {
+    const regexp = new RegExp(escapeRegexp(query));
+    return await this.authService.searchUsers(regexp);
   }
 }

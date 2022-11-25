@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { PassportModule } from '@nestjs/passport';
@@ -34,6 +34,6 @@ import { AuthRepository } from '@/auth/repositories/auth.repository';
   ],
   controllers: [AuthController],
   providers: [JwtStrategy, AuthService, AuthConsumer, AuthRepository],
-  exports: [],
+  exports: [AuthService],
 })
 export class AuthModule {}

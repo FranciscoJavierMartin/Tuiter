@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { AuthDocument, AuthUser } from '@/auth/models/auth.model';
+import { SearchUserDto } from '@/user/dto/responses/search-user.dto';
 
 @Injectable()
 export class AuthRepository {
@@ -105,5 +106,29 @@ export class AuthRepository {
         passwordResetExpires: { $gt: Date.now() },
       })
       .exec();
+  }
+
+  public async searchUsers(regexp: RegExp): Promise<SearchUserDto[]> {
+    return await this.authModel.aggregate([
+      { $match: { username: regexp } },
+      {
+        $lookup: {
+          from: 'User',
+          localField: '_id',
+          foreignField: 'authId',
+          as: 'id',
+        },
+      },
+      { $unwind: '$user' },
+      {
+        $project: {
+          _id: '$user._id',
+          username: 1,
+          email: 1,
+          avatarColor: 1,
+          profilePicture: 1,
+        },
+      },
+    ]);
   }
 }

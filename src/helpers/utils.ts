@@ -114,3 +114,12 @@ export function getQueues(...names: string[]): BullModuleOptions[] {
 export function shuffle<T>(list: T[]): T[] {
   return list.sort(() => 0.5 - Math.random());
 }
+
+/**
+ * Escape text simbols
+ * @param text text to be escaped
+ * @returns Escaped text
+ */
+export function escapeRegexp(text: string): string {
+  return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
+}
