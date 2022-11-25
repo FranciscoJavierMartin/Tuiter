@@ -105,3 +105,12 @@ export function parseJson<T = any>(prop: string): T {
 export function getQueues(...names: string[]): BullModuleOptions[] {
   return queues.filter((queue) => names.includes(queue.name));
 }
+
+/**
+ * Shuffle list
+ * @param list items to be shuffle
+ * @returns Shuffled list
+ */
+export function shuffle<T>(list: T[]): T[] {
+  return list.sort(() => 0.5 - Math.random());
+}

@@ -1,6 +1,6 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { parseJson } from '@/helpers/utils';
+import { parseJson, shuffle } from '@/helpers/utils';
 import { BaseCache } from '@/shared/redis/base.cache';
 import { REDIS_USERS_COLLECTION } from '@/shared/contants';
 import { ID } from '@/shared/interfaces/types';
@@ -135,7 +135,7 @@ export class UserCacheService extends BaseCache {
   /**
    * Retrieve user from cache
    * @param userId User key to search
-   * @returns
+   * @returns Users stored in cache
    */
   public async getUserFromCache(userId: ID): Promise<UserDocument | null> {
     try {
@@ -159,6 +159,46 @@ export class UserCacheService extends BaseCache {
       response.bgImageVersion = parseJson<string>(`${response.bgImageVersion}`);
 
       return response;
+    } catch (error) {
+      this.logger.error(error);
+      throw new InternalServerErrorException('Server error. Try again');
+    }
+  }
+
+  /**
+   * Get random users
+   * @param count number of users to be returned
+   * @returns Random users from cache
+   */
+  public async getRandomUsers(count: number = 10): Promise<UserDocument[]> {
+    try {
+      return (
+        await Promise.all(
+          shuffle(await this.client.ZRANGE('user', 0, -1))
+            .slice(0, count)
+            .map(
+              async (userId: string) =>
+                (await this.client.HGETALL(
+                  `${REDIS_USERS_COLLECTION}:${userId}`,
+                )) as unknown as UserDocument,
+            ),
+        )
+      ).map(
+        (user: UserDocument) =>
+          ({
+            ...user,
+            postsCount: parseJson<number>(user.postsCount.toString()),
+            createdAt: new Date(user.createdAt),
+            blocked: parseJson<string[]>(user.blocked.toString()),
+            blockedBy: parseJson<string[]>(user.blockedBy.toString()),
+            notifications: parseJson<NotificationSettings>(
+              `${user.notifications}`,
+            ),
+            social: parseJson<SocialLinks>(`${user.social}`),
+            followersCount: parseJson<number>(user.followersCount.toString()),
+            followingCount: parseJson<number>(user.followingCount.toString()),
+          } as unknown as UserDocument),
+      );
     } catch (error) {
       this.logger.error(error);
       throw new InternalServerErrorException('Server error. Try again');
