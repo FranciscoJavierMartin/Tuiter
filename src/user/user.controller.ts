@@ -24,6 +24,15 @@ export class UserController {
     return this.userService.getRandomUsers();
   }
 
+  @Get('search/:query')
+  @ApiParam({
+    name: 'userId',
+    description: 'User id',
+  })
+  public async searchUser(@Param('query') query: string) {
+    return query;
+  }
+
   @Get('profile/:userId')
   @ApiParam({
     name: 'userId',
