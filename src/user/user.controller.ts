@@ -26,11 +26,11 @@ export class UserController {
 
   @Get('search/:query')
   @ApiParam({
-    name: 'userId',
-    description: 'User id',
+    name: 'query',
+    description: 'Criteria to search',
   })
   public async searchUser(@Param('query') query: string) {
-    return query;
+    return this.userService.searchUser(query);
   }
 
   @Get('profile/:userId')

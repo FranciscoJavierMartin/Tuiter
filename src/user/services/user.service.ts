@@ -8,6 +8,7 @@ import { UserCacheService } from '@/user/services/user.cache.service';
 
 @Injectable()
 export class UserService {
+
   constructor(
     private readonly userRepository: UserRepository,
     private readonly userCacheService: UserCacheService,
@@ -83,5 +84,9 @@ export class UserService {
       : await this.userRepository.getRandomUsers();
 
     return users.map((user) => new UserDto(user));
+  }
+
+  public async searchUser(query: string) {
+    throw new Error('Method not implemented.');
   }
 }
