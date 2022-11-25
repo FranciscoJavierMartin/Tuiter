@@ -70,7 +70,18 @@ export class UserService {
     );
   }
 
+  /**
+   * Get random users from data source
+   * @returns Random users
+   */
   public async getRandomUsers(): Promise<UserDto[]> {
-    throw new Error('Method not implemented.');
+    const cachedUsers: UserDocument[] =
+      await this.userCacheService.getRandomUsers();
+
+    const users: UserDocument[] = cachedUsers
+      ? cachedUsers
+      : await this.userRepository.getRandomUsers();
+
+    return users.map((user) => new UserDto(user));
   }
 }

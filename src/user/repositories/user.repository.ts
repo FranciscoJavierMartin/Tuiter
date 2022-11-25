@@ -100,6 +100,43 @@ export class UserRepository {
   }
 
   /**
+   * Get random users
+   * @param count Number of users to retrieved
+   * @returns Random users from database
+   */
+  public async getRandomUsers(count: number = 10): Promise<UserDocument[]> {
+    const users: UserDocument[] = await this.userModel.aggregate([
+      {
+        $lookup: {
+          from: 'Auth',
+          localField: 'authId',
+          foreignField: '_id',
+          as: 'authId',
+        },
+      },
+      { $unwind: '$authId' },
+      { $sample: { size: count } },
+      {
+        $addFields: {
+          username: '$authId.username',
+          email: '$authId.email',
+          avatarColor: '$authId.avatarColor',
+          uId: '$authId.uId',
+          createdAt: '$authId.createdAt',
+        },
+      },
+      {
+        $project: {
+          authId: 0,
+          __v: 0,
+        },
+      },
+    ]);
+
+    return users;
+  }
+
+  /**
    * Update User in DB
    * @param userId User id
    * @param user User data
