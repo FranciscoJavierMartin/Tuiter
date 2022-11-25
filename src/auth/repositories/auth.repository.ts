@@ -116,7 +116,7 @@ export class AuthRepository {
           from: 'User',
           localField: '_id',
           foreignField: 'authId',
-          as: 'id',
+          as: 'user',
         },
       },
       { $unwind: '$user' },

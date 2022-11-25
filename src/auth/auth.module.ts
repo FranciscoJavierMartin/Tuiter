@@ -13,6 +13,7 @@ import { AuthUser, AuthSchema } from '@/auth/models/auth.model';
 import { JwtStrategy } from '@/auth/strategies/jwt.strategy';
 import { AuthConsumer } from '@/auth/consumers/auth.consumer';
 import { AuthRepository } from '@/auth/repositories/auth.repository';
+import { SearchService } from '@/auth/services/search.service';
 
 @Module({
   imports: [
@@ -33,7 +34,13 @@ import { AuthRepository } from '@/auth/repositories/auth.repository';
     EmailModule,
   ],
   controllers: [AuthController],
-  providers: [JwtStrategy, AuthService, AuthConsumer, AuthRepository],
-  exports: [AuthService],
+  providers: [
+    JwtStrategy,
+    AuthService,
+    AuthConsumer,
+    AuthRepository,
+    SearchService,
+  ],
+  exports: [SearchService],
 })
 export class AuthModule {}

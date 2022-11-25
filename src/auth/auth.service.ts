@@ -17,7 +17,6 @@ import { UserService } from '@/user/services/user.service';
 import { UserCacheService } from '@/user/services/user.cache.service';
 import { UserDocument } from '@/user/models/user.model';
 import { UserRepository } from '@/user/repositories/user.repository';
-import { SearchUserDto } from '@/user/dto/responses/search-user.dto';
 import { UserDto } from '@/user/dto/responses/user.dto';
 import { RegisterDto } from '@/auth/dto/requests/register.dto';
 import { ResponseRegisterDto } from '@/auth/dto/responses/register.dto';
@@ -288,9 +287,5 @@ export class AuthService {
       avatarColor,
       profilePicture,
     });
-  }
-
-  public async searchUsers(regexp: RegExp): Promise<SearchUserDto[]> {
-    return this.authRepository.searchUsers(regexp);
   }
 }
