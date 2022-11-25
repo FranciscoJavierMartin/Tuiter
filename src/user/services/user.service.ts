@@ -69,4 +69,8 @@ export class UserService {
       cachedUser ?? (await this.userRepository.getUserById(userId)),
     );
   }
+
+  public async getRandomUsers(): Promise<UserDto[]> {
+    throw new Error('Method not implemented.');
+  }
 }

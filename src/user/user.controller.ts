@@ -15,6 +15,15 @@ import { UserDto } from '@/user/dto/responses/user.dto';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  @Get('profile/random')
+  @ApiOkResponse({
+    description: 'Random users',
+    type: [UserDto],
+  })
+  public async getRandomUsers(): Promise<UserDto[]> {
+    return this.userService.getRandomUsers();
+  }
+
   @Get('profile/:userId')
   @ApiParam({
     name: 'userId',
