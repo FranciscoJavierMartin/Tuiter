@@ -1,5 +1,7 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, UseGuards } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import {
+  ApiBearerAuth,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiParam,
@@ -7,25 +9,17 @@ import {
 } from '@nestjs/swagger';
 import { ValidateIdPipe } from '@/shared/pipes/validate-id.pipe';
 import { ID } from '@/shared/interfaces/types';
+import { GetUser } from '@/auth/decorators/get-user.decorator';
 import { UserService } from '@/user/services/user.service';
+import { UserInfoDto } from '@/user/dto/requests/user-info.dto';
+import { SocialLinksDto } from '@/user/dto/requests/social-links.dto';
 import { UserDto } from '@/user/dto/responses/user.dto';
-import { SearchUserDto } from './dto/responses/search-user.dto';
+import { SearchUserDto } from '@/user/dto/responses/search-user.dto';
 
 @ApiTags('User')
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
-
-  // TODO: Get user is is authenticated (Interceptor or middleware)
-  @Get('profile/random')
-  @ApiOkResponse({
-    description: 'Random users',
-    isArray: true,
-    type: [UserDto],
-  })
-  public async getRandomUsers(): Promise<UserDto[]> {
-    return this.userService.getRandomUsers();
-  }
 
   @Get('search/:query')
   @ApiParam({
@@ -43,6 +37,17 @@ export class UserController {
     return this.userService.searchUser(query);
   }
 
+  // TODO: Get user is is authenticated (Interceptor or middleware)
+  @Get('profile/suggestions')
+  @ApiOkResponse({
+    description: 'Random users',
+    isArray: true,
+    type: [UserDto],
+  })
+  public async getRandomUsers(): Promise<UserDto[]> {
+    return this.userService.getRandomUsers();
+  }
+
   @Get('profile/:userId')
   @ApiParam({
     name: 'userId',
@@ -50,6 +55,7 @@ export class UserController {
   })
   @ApiOkResponse({
     description: 'User profile',
+    type: UserDto,
   })
   @ApiNotFoundResponse({
     description: 'User not found',
@@ -58,5 +64,31 @@ export class UserController {
     @Param('userId', ValidateIdPipe) userId: ID,
   ): Promise<UserDto> {
     return this.userService.getProfileByUserId(userId);
+  }
+
+  @Patch('profile/user-info')
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard())
+  @ApiOkResponse({
+    description: 'User info updated',
+  })
+  public async updateUserInfo(
+    @Body() userInfoDto: UserInfoDto,
+    @GetUser('userId') userId: ID,
+  ): Promise<void> {
+    await this.userService.updateUserInfo(userId, userInfoDto);
+  }
+
+  @Patch('profile/social-links')
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard())
+  @ApiOkResponse({
+    description: 'Social links updated',
+  })
+  public async updateSocialLinks(
+    @Body() socialLinksDto: SocialLinksDto,
+    @GetUser('userId') userId: ID,
+  ): Promise<void> {
+    await this.userService.updateSocialLinks(userId, socialLinksDto);
   }
 }

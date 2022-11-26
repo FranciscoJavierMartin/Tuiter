@@ -1,13 +1,18 @@
 import { Injectable } from '@nestjs/common';
-import { escapeRegexp } from '@/helpers/utils';
+import { InjectQueue } from '@nestjs/bull';
+import { Queue } from 'bull';
+import { escapeRegexp, removeUndefinedAttributes } from '@/helpers/utils';
 import { ID } from '@/shared/interfaces/types';
 import { SearchService } from '@/auth/services/search.service';
 import { AuthDocument } from '@/auth/models/auth.model';
 import { UserDocument } from '@/user/models/user.model';
 import { UserRepository } from '@/user/repositories/user.repository';
-import { UserDto } from '@/user/dto/responses/user.dto';
 import { UserCacheService } from '@/user/services/user.cache.service';
+import { UserInfoDto } from '@/user/dto/requests/user-info.dto';
+import { SocialLinksDto } from '@/user/dto/requests/social-links.dto';
+import { UserDto } from '@/user/dto/responses/user.dto';
 import { SearchUserDto } from '@/user/dto/responses/search-user.dto';
+import { SocialLinks, UserJobData } from '@/user/interfaces/user.interface';
 
 @Injectable()
 export class UserService {
@@ -15,6 +20,8 @@ export class UserService {
     private readonly searchService: SearchService,
     private readonly userRepository: UserRepository,
     private readonly userCacheService: UserCacheService,
+    @InjectQueue('user')
+    private readonly userQueue: Queue<UserJobData>,
   ) {}
 
   /**
@@ -97,5 +104,50 @@ export class UserService {
   public async searchUser(query: string): Promise<SearchUserDto[]> {
     const regexp = new RegExp(escapeRegexp(query), 'i');
     return await this.searchService.searchUsers(regexp);
+  }
+
+  /**
+   * Update user info
+   * @param userId User id
+   * @param userInfoDto User data to be updated
+   */
+  public async updateUserInfo(
+    userId: ID,
+    userInfoDto: UserInfoDto,
+  ): Promise<void> {
+    // TODO: Check if this could be reused to updated other models
+    const userInfo: UserInfoDto = removeUndefinedAttributes(userInfoDto);
+
+    for (const [attribute, value] of Object.entries(userInfo)) {
+      await this.userCacheService.updateUserAttributeInCache(
+        userId,
+        attribute,
+        value,
+      );
+    }
+
+    this.userQueue.add('updateUserInDB', {
+      userId,
+      data: userInfo,
+    });
+  }
+
+  /**
+   * Update social links
+   * @param userId User id
+   * @param socialLinksDto social links to update
+   */
+  public async updateSocialLinks(
+    userId: ID,
+    socialLinksDto: SocialLinksDto,
+  ): Promise<void> {
+    const socialLinks: SocialLinksDto =
+      removeUndefinedAttributes(socialLinksDto);
+    await this.userCacheService.updateSocialLinksInCache(userId, socialLinks);
+
+    this.userQueue.add('updateSocialLinksInDB', {
+      userId,
+      socialLinks: socialLinks as unknown as SocialLinks,
+    });
   }
 }

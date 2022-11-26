@@ -4,6 +4,7 @@ import mongoose, { Model } from 'mongoose';
 import { ObjectId } from 'mongodb';
 import { ID } from '@/shared/interfaces/types';
 import { User, UserDocument } from '@/user/models/user.model';
+import { SocialLinks } from '@/user/interfaces/user.interface';
 
 @Injectable()
 export class UserRepository {
@@ -161,6 +162,12 @@ export class UserRepository {
       .exec();
   }
 
+  /**
+   * Update users follower and following count
+   * @param followerId Follower id
+   * @param followeeId Followee id
+   * @param increment Amount to increment
+   */
   public async updateUserFollowersCount(
     followerId: ObjectId,
     followeeId: ObjectId,
@@ -178,6 +185,23 @@ export class UserRepository {
         },
       }),
     ]);
+  }
+
+  /**
+   * Update social links
+   * @param userId User id
+   * @param socialLinks Social links
+   */
+  public async updateSocialLinks(
+    userId: ObjectId,
+    socialLinks: SocialLinks,
+  ): Promise<void> {
+    const user = await this.userModel.findById(userId);
+    user.social = {
+      ...user.social,
+      ...socialLinks,
+    };
+    await user.save();
   }
 
   /**
