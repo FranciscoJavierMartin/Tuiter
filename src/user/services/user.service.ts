@@ -5,8 +5,9 @@ import { SearchService } from '@/auth/services/search.service';
 import { AuthDocument } from '@/auth/models/auth.model';
 import { UserDocument } from '@/user/models/user.model';
 import { UserRepository } from '@/user/repositories/user.repository';
-import { UserDto } from '@/user/dto/responses/user.dto';
 import { UserCacheService } from '@/user/services/user.cache.service';
+import { UserInfoDto } from '@/user/dto/requests/user-info.dto';
+import { UserDto } from '@/user/dto/responses/user.dto';
 import { SearchUserDto } from '@/user/dto/responses/search-user.dto';
 
 @Injectable()
@@ -98,4 +99,9 @@ export class UserService {
     const regexp = new RegExp(escapeRegexp(query), 'i');
     return await this.searchService.searchUsers(regexp);
   }
+
+  public async updateUserInfo(
+    userId: ID,
+    userInfoDto: UserInfoDto,
+  ): Promise<void> {}
 }

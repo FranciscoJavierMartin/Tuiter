@@ -70,7 +70,7 @@ export class UserController {
   public async updateUserInfo(
     @Body() userInfoDto: UserInfoDto,
     @GetUser('userId') userId: ID,
-  ) {
-    return userInfoDto;
+  ): Promise<void> {
+    await this.userService.updateUserInfo(userId, userInfoDto);
   }
 }
