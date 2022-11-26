@@ -89,6 +89,11 @@ export class UserService {
     return users.map((user) => new UserDto(user));
   }
 
+  /**
+   * Retrieve users that match with given query
+   * @param query Username pattern to match
+   * @returns User list
+   */
   public async searchUser(query: string): Promise<SearchUserDto[]> {
     const regexp = new RegExp(escapeRegexp(query), 'i');
     return await this.searchService.searchUsers(regexp);
