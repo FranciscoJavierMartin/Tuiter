@@ -55,6 +55,7 @@ export class UserController {
   })
   @ApiOkResponse({
     description: 'User profile',
+    type: UserDto,
   })
   @ApiNotFoundResponse({
     description: 'User not found',

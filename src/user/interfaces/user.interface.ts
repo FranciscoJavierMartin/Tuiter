@@ -1,5 +1,5 @@
-import { NotificationType } from '@/notification/interfaces/notification.interface';
 import { ID } from '@/shared/interfaces/types';
+import { NotificationType } from '@/notification/interfaces/notification.interface';
 import { User, UserDocument } from '@/user/models/user.model';
 
 export enum SocialLinksType {

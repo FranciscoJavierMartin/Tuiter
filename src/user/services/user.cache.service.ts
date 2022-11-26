@@ -133,6 +133,11 @@ export class UserCacheService extends BaseCache {
     }
   }
 
+  /**
+   * Update social links in cache
+   * @param userId User id
+   * @param socialLinks Social links to update
+   */
   public async updateSocialLinksInCache(
     userId: ID,
     socialLinks: SocialLinksDto,
