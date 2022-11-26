@@ -1,5 +1,6 @@
-import { Controller, Get, Param, Patch } from '@nestjs/common';
+import { Controller, Get, Param, Patch, UseGuards } from '@nestjs/common';
 import {
+  ApiBearerAuth,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiParam,
@@ -10,6 +11,7 @@ import { ID } from '@/shared/interfaces/types';
 import { UserService } from '@/user/services/user.service';
 import { UserDto } from '@/user/dto/responses/user.dto';
 import { SearchUserDto } from './dto/responses/search-user.dto';
+import { AuthGuard } from '@nestjs/passport';
 
 @ApiTags('User')
 @Controller('user')
@@ -61,6 +63,8 @@ export class UserController {
   }
 
   @Patch('profile/user-info')
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard())
   public async updateUserInfo() {
     return 'test';
   }
