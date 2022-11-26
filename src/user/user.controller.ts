@@ -12,6 +12,7 @@ import { ID } from '@/shared/interfaces/types';
 import { GetUser } from '@/auth/decorators/get-user.decorator';
 import { UserService } from '@/user/services/user.service';
 import { UserInfoDto } from '@/user/dto/requests/user-info.dto';
+import { SocialLinksDto } from '@/user/dto/requests/social-links.dto';
 import { UserDto } from '@/user/dto/responses/user.dto';
 import { SearchUserDto } from '@/user/dto/responses/search-user.dto';
 
@@ -75,5 +76,18 @@ export class UserController {
     @GetUser('userId') userId: ID,
   ): Promise<void> {
     await this.userService.updateUserInfo(userId, userInfoDto);
+  }
+
+  @Patch('profile/social-links')
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard())
+  @ApiOkResponse({
+    description: 'Social links updated',
+  })
+  public async updateSocialLinks(
+    @Body() socialLinksDto: SocialLinksDto,
+    @GetUser('userId') userId: ID,
+  ): Promise<void> {
+    // await this.userService.updateUserInfo(userId, userInfoDto);
   }
 }

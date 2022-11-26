@@ -114,6 +114,7 @@ export class UserService {
     userId: ID,
     userInfoDto: UserInfoDto,
   ): Promise<void> {
+    // TODO: Check if this could be reused to updated other models
     const userInfo: UserInfoDto = Object.entries(userInfoDto)
       .filter((field) => field[1] !== undefined)
       .reduce(
