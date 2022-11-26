@@ -17,6 +17,7 @@ import { EmailModule } from '@/email/email.module';
 import { ImageModule } from '@/image/image.module';
 import { ChatModule } from '@/chat/chat.module';
 
+// TODO: Add isArray to swagger response when returned type is array
 // TODO: Fix email image
 // TODO: Add more complex password
 // TODO: Study if uId could be removed from auth model
