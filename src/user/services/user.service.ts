@@ -12,7 +12,7 @@ import { UserInfoDto } from '@/user/dto/requests/user-info.dto';
 import { SocialLinksDto } from '@/user/dto/requests/social-links.dto';
 import { UserDto } from '@/user/dto/responses/user.dto';
 import { SearchUserDto } from '@/user/dto/responses/search-user.dto';
-import { UserJobData } from '@/user/interfaces/user.interface';
+import { SocialLinks, UserJobData } from '@/user/interfaces/user.interface';
 
 @Injectable()
 export class UserService {
@@ -132,6 +132,11 @@ export class UserService {
     });
   }
 
+  /**
+   * Update social links
+   * @param userId User id
+   * @param socialLinksDto social links to update
+   */
   public async updateSocialLinks(
     userId: ID,
     socialLinksDto: SocialLinksDto,
@@ -139,5 +144,10 @@ export class UserService {
     const socialLinks: SocialLinksDto =
       removeUndefinedAttributes(socialLinksDto);
     await this.userCacheService.updateSocialLinksInCache(userId, socialLinks);
+
+    this.userQueue.add('updateSocialLinksInDB', {
+      userId,
+      socialLinks: socialLinks as unknown as SocialLinks,
+    });
   }
 }
