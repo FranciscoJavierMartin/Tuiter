@@ -67,6 +67,9 @@ export class UserController {
   @Patch('profile/user-info')
   @ApiBearerAuth()
   @UseGuards(AuthGuard())
+  @ApiOkResponse({
+    description: 'User info updated',
+  })
   public async updateUserInfo(
     @Body() userInfoDto: UserInfoDto,
     @GetUser('userId') userId: ID,

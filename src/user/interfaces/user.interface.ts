@@ -1,11 +1,20 @@
 import { NotificationType } from '@/notification/interfaces/notification.interface';
-import { UserDocument } from '@/user/models/user.model';
+import { ID } from '@/shared/interfaces/types';
+import { User, UserDocument } from '@/user/models/user.model';
 
 export enum SocialLinksType {
   facebook = 'facebook',
   instagram = 'instagram',
   twitter = 'twitter',
   youtube = 'youtube',
+}
+
+// TODO: Refactor entrire interfaces
+export type UserJobData = UpdateUserJobData;
+
+export interface UpdateUserJobData {
+  userId: ID;
+  data: Partial<User>;
 }
 
 export type NotificationSettings = Record<NotificationType, boolean>;

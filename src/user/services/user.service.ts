@@ -1,4 +1,6 @@
 import { Injectable } from '@nestjs/common';
+import { InjectQueue } from '@nestjs/bull';
+import { Queue } from 'bull';
 import { escapeRegexp } from '@/helpers/utils';
 import { ID } from '@/shared/interfaces/types';
 import { SearchService } from '@/auth/services/search.service';
@@ -9,6 +11,7 @@ import { UserCacheService } from '@/user/services/user.cache.service';
 import { UserInfoDto } from '@/user/dto/requests/user-info.dto';
 import { UserDto } from '@/user/dto/responses/user.dto';
 import { SearchUserDto } from '@/user/dto/responses/search-user.dto';
+import { UserJobData } from '@/user/interfaces/user.interface';
 
 @Injectable()
 export class UserService {
@@ -16,6 +19,8 @@ export class UserService {
     private readonly searchService: SearchService,
     private readonly userRepository: UserRepository,
     private readonly userCacheService: UserCacheService,
+    @InjectQueue('user')
+    private readonly userQueue: Queue<UserJobData>,
   ) {}
 
   /**
@@ -100,18 +105,33 @@ export class UserService {
     return await this.searchService.searchUsers(regexp);
   }
 
+  /**
+   * Update user info
+   * @param userId User id
+   * @param userInfoDto User data to be updated
+   */
   public async updateUserInfo(
     userId: ID,
     userInfoDto: UserInfoDto,
   ): Promise<void> {
-    for (const [attribute, value] of Object.entries(userInfoDto)) {
-      if (value) {
-        await this.userCacheService.updateUserAttributeInCache(
-          userId,
-          attribute,
-          value,
-        );
-      }
+    const userInfo: UserInfoDto = Object.entries(userInfoDto)
+      .filter((field) => field[1] !== undefined)
+      .reduce(
+        (acc, [attribute, value]) => ({ ...acc, [attribute]: value }),
+        {},
+      );
+
+    for (const [attribute, value] of Object.entries(userInfo)) {
+      await this.userCacheService.updateUserAttributeInCache(
+        userId,
+        attribute,
+        value,
+      );
     }
+
+    this.userQueue.add('updateUserInDB', {
+      userId,
+      data: userInfo,
+    });
   }
 }
