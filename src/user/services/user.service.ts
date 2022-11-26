@@ -103,5 +103,15 @@ export class UserService {
   public async updateUserInfo(
     userId: ID,
     userInfoDto: UserInfoDto,
-  ): Promise<void> {}
+  ): Promise<void> {
+    for (const [attribute, value] of Object.entries(userInfoDto)) {
+      if (value) {
+        await this.userCacheService.updateUserAttributeInCache(
+          userId,
+          attribute,
+          value,
+        );
+      }
+    }
+  }
 }
