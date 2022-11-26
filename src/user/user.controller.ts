@@ -12,6 +12,7 @@ import { UserService } from '@/user/services/user.service';
 import { UserDto } from '@/user/dto/responses/user.dto';
 import { SearchUserDto } from './dto/responses/search-user.dto';
 import { AuthGuard } from '@nestjs/passport';
+import { GetUser } from '@/auth/decorators/get-user.decorator';
 
 @ApiTags('User')
 @Controller('user')
@@ -65,7 +66,7 @@ export class UserController {
   @Patch('profile/user-info')
   @ApiBearerAuth()
   @UseGuards(AuthGuard())
-  public async updateUserInfo() {
-    return 'test';
+  public async updateUserInfo(@GetUser('userId') userId: ID) {
+    return userId;
   }
 }
