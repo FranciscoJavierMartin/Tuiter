@@ -16,6 +16,7 @@ import { SearchUserDto } from './dto/responses/search-user.dto';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  // TODO: Get user is is authenticated (Interceptor or middleware)
   @Get('profile/random')
   @ApiOkResponse({
     description: 'Random users',
