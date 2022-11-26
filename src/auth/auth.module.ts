@@ -1,4 +1,4 @@
-import { forwardRef, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { PassportModule } from '@nestjs/passport';
@@ -7,13 +7,13 @@ import { BullModule } from '@nestjs/bull';
 import { getQueues } from '@/helpers/utils';
 import { EmailModule } from '@/email/email.module';
 import { UserModule } from '@/user/user.module';
-import { AuthService } from '@/auth/auth.service';
+import { AuthService } from '@/auth/services/auth.service';
+import { SearchService } from '@/auth/services/search.service';
 import { AuthController } from '@/auth/auth.controller';
 import { AuthUser, AuthSchema } from '@/auth/models/auth.model';
 import { JwtStrategy } from '@/auth/strategies/jwt.strategy';
 import { AuthConsumer } from '@/auth/consumers/auth.consumer';
 import { AuthRepository } from '@/auth/repositories/auth.repository';
-import { SearchService } from '@/auth/services/search.service';
 
 @Module({
   imports: [

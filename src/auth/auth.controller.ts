@@ -28,7 +28,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { AuthGuard } from '@nestjs/passport';
 import { FILE_SIZE_LIMIT } from '@/shared/contants';
 import { UserDto } from '@/user/dto/responses/user.dto';
-import { AuthService } from '@/auth/auth.service';
+import { AuthService } from '@/auth/services/auth.service';
 import { RegisterDto } from '@/auth/dto/requests/register.dto';
 import { ResponseRegisterDto } from '@/auth/dto/responses/register.dto';
 import { LoginDto } from '@/auth/dto/requests/login.dto';
