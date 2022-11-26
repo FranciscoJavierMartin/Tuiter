@@ -1,4 +1,4 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, Patch } from '@nestjs/common';
 import {
   ApiNotFoundResponse,
   ApiOkResponse,
@@ -16,17 +16,6 @@ import { SearchUserDto } from './dto/responses/search-user.dto';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  // TODO: Get user is is authenticated (Interceptor or middleware)
-  @Get('profile/random')
-  @ApiOkResponse({
-    description: 'Random users',
-    isArray: true,
-    type: [UserDto],
-  })
-  public async getRandomUsers(): Promise<UserDto[]> {
-    return this.userService.getRandomUsers();
-  }
-
   @Get('search/:query')
   @ApiParam({
     name: 'query',
@@ -41,6 +30,17 @@ export class UserController {
     @Param('query') query: string,
   ): Promise<SearchUserDto[]> {
     return this.userService.searchUser(query);
+  }
+
+  // TODO: Get user is is authenticated (Interceptor or middleware)
+  @Get('profile/suggestions')
+  @ApiOkResponse({
+    description: 'Random users',
+    isArray: true,
+    type: [UserDto],
+  })
+  public async getRandomUsers(): Promise<UserDto[]> {
+    return this.userService.getRandomUsers();
   }
 
   @Get('profile/:userId')
@@ -58,5 +58,10 @@ export class UserController {
     @Param('userId', ValidateIdPipe) userId: ID,
   ): Promise<UserDto> {
     return this.userService.getProfileByUserId(userId);
+  }
+
+  @Patch('profile/user-info')
+  public async updateUserInfo() {
+    return 'test';
   }
 }
