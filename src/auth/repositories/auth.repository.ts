@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { AuthDocument, AuthUser } from '@/auth/models/auth.model';
 import { SearchUserDto } from '@/user/dto/responses/search-user.dto';
+import { AuthDocument, AuthUser } from '@/auth/models/auth.model';
 
 @Injectable()
 export class AuthRepository {
@@ -108,6 +108,11 @@ export class AuthRepository {
       .exec();
   }
 
+  /**
+   * Retrieve a list of users where their username match with regexp passed
+   * @param regexp Regular expression to match username
+   * @returns User list from DB
+   */
   public async searchUsers(regexp: RegExp): Promise<SearchUserDto[]> {
     return await this.authModel.aggregate([
       { $match: { username: regexp } },
