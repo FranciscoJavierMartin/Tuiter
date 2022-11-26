@@ -1,4 +1,5 @@
-import { Controller, Get, Param, Patch, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, UseGuards } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import {
   ApiBearerAuth,
   ApiNotFoundResponse,
@@ -8,11 +9,11 @@ import {
 } from '@nestjs/swagger';
 import { ValidateIdPipe } from '@/shared/pipes/validate-id.pipe';
 import { ID } from '@/shared/interfaces/types';
-import { UserService } from '@/user/services/user.service';
-import { UserDto } from '@/user/dto/responses/user.dto';
-import { SearchUserDto } from './dto/responses/search-user.dto';
-import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from '@/auth/decorators/get-user.decorator';
+import { UserService } from '@/user/services/user.service';
+import { UserInfoDto } from '@/user/dto/requests/user-info.dto';
+import { UserDto } from '@/user/dto/responses/user.dto';
+import { SearchUserDto } from '@/user/dto/responses/search-user.dto';
 
 @ApiTags('User')
 @Controller('user')
@@ -66,7 +67,10 @@ export class UserController {
   @Patch('profile/user-info')
   @ApiBearerAuth()
   @UseGuards(AuthGuard())
-  public async updateUserInfo(@GetUser('userId') userId: ID) {
-    return userId;
+  public async updateUserInfo(
+    @Body() userInfoDto: UserInfoDto,
+    @GetUser('userId') userId: ID,
+  ) {
+    return userInfoDto;
   }
 }
