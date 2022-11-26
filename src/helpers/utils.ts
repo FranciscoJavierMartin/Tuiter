@@ -123,3 +123,9 @@ export function shuffle<T>(list: T[]): T[] {
 export function escapeRegexp(text: string): string {
   return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
 }
+
+export function removeUndefinedAttributes(obj: object): object {
+  return Object.entries(obj)
+    .filter((field) => field[1] !== undefined)
+    .reduce((acc, [attribute, value]) => ({ ...acc, [attribute]: value }), {});
+}

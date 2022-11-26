@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectQueue } from '@nestjs/bull';
 import { Queue } from 'bull';
-import { escapeRegexp } from '@/helpers/utils';
+import { escapeRegexp, removeUndefinedAttributes } from '@/helpers/utils';
 import { ID } from '@/shared/interfaces/types';
 import { SearchService } from '@/auth/services/search.service';
 import { AuthDocument } from '@/auth/models/auth.model';
@@ -9,6 +9,7 @@ import { UserDocument } from '@/user/models/user.model';
 import { UserRepository } from '@/user/repositories/user.repository';
 import { UserCacheService } from '@/user/services/user.cache.service';
 import { UserInfoDto } from '@/user/dto/requests/user-info.dto';
+import { SocialLinksDto } from '@/user/dto/requests/social-links.dto';
 import { UserDto } from '@/user/dto/responses/user.dto';
 import { SearchUserDto } from '@/user/dto/responses/search-user.dto';
 import { UserJobData } from '@/user/interfaces/user.interface';
@@ -115,12 +116,7 @@ export class UserService {
     userInfoDto: UserInfoDto,
   ): Promise<void> {
     // TODO: Check if this could be reused to updated other models
-    const userInfo: UserInfoDto = Object.entries(userInfoDto)
-      .filter((field) => field[1] !== undefined)
-      .reduce(
-        (acc, [attribute, value]) => ({ ...acc, [attribute]: value }),
-        {},
-      );
+    const userInfo: UserInfoDto = removeUndefinedAttributes(userInfoDto);
 
     for (const [attribute, value] of Object.entries(userInfo)) {
       await this.userCacheService.updateUserAttributeInCache(
@@ -134,5 +130,14 @@ export class UserService {
       userId,
       data: userInfo,
     });
+  }
+
+  public async updateSocialLinks(
+    userId: ID,
+    socialLinksDto: SocialLinksDto,
+  ): Promise<void> {
+    const socialLinks: SocialLinksDto =
+      removeUndefinedAttributes(socialLinksDto);
+    await this.userCacheService.updateSocialLinksInCache(userId, socialLinks);
   }
 }

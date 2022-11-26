@@ -88,6 +88,6 @@ export class UserController {
     @Body() socialLinksDto: SocialLinksDto,
     @GetUser('userId') userId: ID,
   ): Promise<void> {
-    // await this.userService.updateUserInfo(userId, userInfoDto);
+    await this.userService.updateSocialLinks(userId, socialLinksDto);
   }
 }
