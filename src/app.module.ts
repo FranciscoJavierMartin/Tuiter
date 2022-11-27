@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { BullModule } from '@nestjs/bull';
@@ -16,6 +16,7 @@ import { NotificationModule } from '@/notification/notification.module';
 import { EmailModule } from '@/email/email.module';
 import { ImageModule } from '@/image/image.module';
 import { ChatModule } from '@/chat/chat.module';
+import { LoggerMiddleware } from './shared/middlewares/logger.middleware';
 
 // TODO: Add logic to find connected users
 // TODO: Check email notifications according to user preferences
@@ -91,4 +92,8 @@ import { ChatModule } from '@/chat/chat.module';
   controllers: [],
   providers: [],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer): void {
+    consumer.apply(LoggerMiddleware).forRoutes('*');
+  }
+}
