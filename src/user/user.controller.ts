@@ -13,6 +13,7 @@ import { GetUser } from '@/auth/decorators/get-user.decorator';
 import { UserService } from '@/user/services/user.service';
 import { UserInfoDto } from '@/user/dto/requests/user-info.dto';
 import { SocialLinksDto } from '@/user/dto/requests/social-links.dto';
+import { NotificationSettingsDto } from '@/user/dto/requests/notification-settings.dto';
 import { UserDto } from '@/user/dto/responses/user.dto';
 import { SearchUserDto } from '@/user/dto/responses/search-user.dto';
 
@@ -90,5 +91,21 @@ export class UserController {
     @GetUser('userId') userId: ID,
   ): Promise<void> {
     await this.userService.updateSocialLinks(userId, socialLinksDto);
+  }
+
+  @Patch('profile/notification-settings')
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard())
+  @ApiOkResponse({
+    description: 'Notification settings updated',
+  })
+  public async updateNotificationSettings(
+    @Body() notificationSettingsDto: NotificationSettingsDto,
+    @GetUser('userId') userId: ID,
+  ): Promise<void> {
+    await this.userService.updateNotificationSettings(
+      userId,
+      notificationSettingsDto,
+    );
   }
 }

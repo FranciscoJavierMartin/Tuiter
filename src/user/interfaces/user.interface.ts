@@ -10,7 +10,10 @@ export enum SocialLinksType {
 }
 
 // TODO: Refactor entrire interfaces
-export type UserJobData = UpdateUserJobData | UpdateSocialLinksJobData;
+export type UserJobData =
+  | UpdateUserJobData
+  | UpdateSocialLinksJobData
+  | UpdateNotificationSettingsJobData;
 
 export interface UpdateUserJobData {
   userId: ID;
@@ -20,6 +23,11 @@ export interface UpdateUserJobData {
 export interface UpdateSocialLinksJobData {
   userId: ID;
   socialLinks: SocialLinks;
+}
+
+export interface UpdateNotificationSettingsJobData {
+  userId: ID;
+  notificationSettings: NotificationSettings;
 }
 
 export type NotificationSettings = Record<NotificationType, boolean>;

@@ -10,9 +10,14 @@ import { UserRepository } from '@/user/repositories/user.repository';
 import { UserCacheService } from '@/user/services/user.cache.service';
 import { UserInfoDto } from '@/user/dto/requests/user-info.dto';
 import { SocialLinksDto } from '@/user/dto/requests/social-links.dto';
+import { NotificationSettingsDto } from '@/user/dto/requests/notification-settings.dto';
 import { UserDto } from '@/user/dto/responses/user.dto';
 import { SearchUserDto } from '@/user/dto/responses/search-user.dto';
-import { SocialLinks, UserJobData } from '@/user/interfaces/user.interface';
+import {
+  NotificationSettings,
+  SocialLinks,
+  UserJobData,
+} from '@/user/interfaces/user.interface';
 
 @Injectable()
 export class UserService {
@@ -148,6 +153,30 @@ export class UserService {
     this.userQueue.add('updateSocialLinksInDB', {
       userId,
       socialLinks: socialLinks as unknown as SocialLinks,
+    });
+  }
+
+  /**
+   * Update user notification settings
+   * @param userId User id
+   * @param notificationSettingsDto notification settings to update
+   */
+  public async updateNotificationSettings(
+    userId: ID,
+    notificationSettingsDto: NotificationSettingsDto,
+  ): Promise<void> {
+    const notificationSettings: NotificationSettingsDto =
+      removeUndefinedAttributes(notificationSettingsDto);
+
+    await this.userCacheService.updateNotificationSettingsInCache(
+      userId,
+      notificationSettings,
+    );
+
+    this.userQueue.add('updateNotificationSettingsInDB', {
+      userId,
+      notificationSettings:
+        notificationSettings as unknown as NotificationSettings,
     });
   }
 }

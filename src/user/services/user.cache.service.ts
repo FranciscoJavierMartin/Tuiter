@@ -10,6 +10,7 @@ import {
   SocialLinks,
 } from '@/user/interfaces/user.interface';
 import { SocialLinksDto } from '@/user/dto/requests/social-links.dto';
+import { NotificationSettingsDto } from '@/user/dto/requests/notification-settings.dto';
 
 @Injectable()
 export class UserCacheService extends BaseCache {
@@ -143,25 +144,34 @@ export class UserCacheService extends BaseCache {
     socialLinks: SocialLinksDto,
   ): Promise<void> {
     try {
-      const socialLinksInCache = await this.client.HGET(
-        `${REDIS_USERS_COLLECTION}:${userId}`,
-        'social',
-      );
-
-      const previousSocialLinks: SocialLinks =
-        parseJson<SocialLinks>(socialLinksInCache);
-
-      await this.client.HSET(`${REDIS_USERS_COLLECTION}:${userId}`, [
-        'social',
-        JSON.stringify({
-          ...previousSocialLinks,
-          ...socialLinks,
-        }),
-      ]);
+      await this.updateRecordInCache(userId, 'social', socialLinks);
     } catch (error) {
       this.logger.error(error);
       throw new InternalServerErrorException(
         `Error updating social links from user ${userId} in Redis`,
+      );
+    }
+  }
+
+  /**
+   * Update notification settings in cache
+   * @param userId User id
+   * @param notificationSettings Notification settings to update
+   */
+  public async updateNotificationSettingsInCache(
+    userId: ID,
+    notificationSettings: NotificationSettingsDto,
+  ): Promise<void> {
+    try {
+      await this.updateRecordInCache(
+        userId,
+        'notifications',
+        notificationSettings,
+      );
+    } catch (error) {
+      this.logger.error(error);
+      throw new InternalServerErrorException(
+        `Error updating notification settings from user ${userId} in Redis`,
       );
     }
   }
@@ -237,5 +247,33 @@ export class UserCacheService extends BaseCache {
       this.logger.error(error);
       throw new InternalServerErrorException('Server error. Try again');
     }
+  }
+
+  /**
+   * Update record in cache
+   * @param userId User if
+   * @param field field to be updated
+   * @param data New data to update
+   */
+  private async updateRecordInCache(
+    userId: ID,
+    field: 'notifications' | 'social',
+    data: NotificationSettingsDto | SocialLinksDto,
+  ): Promise<void> {
+    const recordInCache = await this.client.HGET(
+      `${REDIS_USERS_COLLECTION}:${userId}`,
+      field,
+    );
+
+    const previousRecord: Record<string, string | boolean> =
+      parseJson<Record<string, string | boolean>>(recordInCache);
+
+    await this.client.HSET(`${REDIS_USERS_COLLECTION}:${userId}`, [
+      field,
+      JSON.stringify({
+        ...previousRecord,
+        ...data,
+      }),
+    ]);
   }
 }
