@@ -50,7 +50,6 @@ export class UserController {
     return this.userService.searchUser(query);
   }
 
-  // TODO: Get user is is authenticated (Interceptor or middleware)
   @Get('profile/suggestions')
   @UseInterceptors(GetOptionalUserInterceptor)
   @ApiOkResponse({
