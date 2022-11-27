@@ -1,4 +1,13 @@
-import { Body, Controller, Get, Param, Patch, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Req,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import {
   ApiBearerAuth,
@@ -16,6 +25,9 @@ import { SocialLinksDto } from '@/user/dto/requests/social-links.dto';
 import { NotificationSettingsDto } from '@/user/dto/requests/notification-settings.dto';
 import { UserDto } from '@/user/dto/responses/user.dto';
 import { SearchUserDto } from '@/user/dto/responses/search-user.dto';
+import { GetOptionalUserInterceptor } from '@/shared/interceptors/get-optional-user.interceptor';
+import { Request } from 'express';
+import { CurrentUser } from '@/auth/interfaces/current-user.interface';
 
 @ApiTags('User')
 @Controller('user')
@@ -40,13 +52,16 @@ export class UserController {
 
   // TODO: Get user is is authenticated (Interceptor or middleware)
   @Get('profile/suggestions')
+  @UseInterceptors(GetOptionalUserInterceptor)
   @ApiOkResponse({
     description: 'Random users',
     isArray: true,
     type: [UserDto],
   })
-  public async getRandomUsers(): Promise<UserDto[]> {
-    return this.userService.getRandomUsers();
+  public async getRandomUsers(@Req() request: Request): Promise<UserDto[]> {
+    return this.userService.getRandomUsers(
+      (request.user as CurrentUser)?.userId?.toString(),
+    );
   }
 
   @Get('profile/:userId')

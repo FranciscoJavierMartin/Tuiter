@@ -211,21 +211,33 @@ export class UserCacheService extends BaseCache {
 
   /**
    * Get random users
+   * @param userId User id to exclude
    * @param count number of users to be returned
    * @returns Random users from cache
    */
-  public async getRandomUsers(count: number = 10): Promise<UserDocument[]> {
+  public async getRandomUsers(
+    userId?: string,
+    count: number = 10,
+  ): Promise<UserDocument[]> {
     try {
+      const userIds: string[] = shuffle(
+        await this.client.ZRANGE('user', 0, -1),
+      );
+
+      const userIdsSuggested: string[] = userId
+        ? userIds.filter((user) => user !== userId)
+        : userIds;
+
+      const userIdsSelected: string[] = userIdsSuggested.slice(0, count);
+
       return (
         await Promise.all(
-          shuffle(await this.client.ZRANGE('user', 0, -1))
-            .slice(0, count)
-            .map(
-              async (userId: string) =>
-                (await this.client.HGETALL(
-                  `${REDIS_USERS_COLLECTION}:${userId}`,
-                )) as unknown as UserDocument,
-            ),
+          userIdsSelected.map(
+            async (userId: string) =>
+              (await this.client.HGETALL(
+                `${REDIS_USERS_COLLECTION}:${userId}`,
+              )) as unknown as UserDocument,
+          ),
         )
       ).map(
         (user: UserDocument) =>
