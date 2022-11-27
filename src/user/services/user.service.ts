@@ -96,7 +96,7 @@ export class UserService {
 
     const users: UserDocument[] = cachedUsers
       ? cachedUsers
-      : await this.userRepository.getRandomUsers();
+      : await this.userRepository.getRandomUsers(userId);
 
     return users.map((user) => new UserDto(user));
   }

@@ -211,6 +211,7 @@ export class UserCacheService extends BaseCache {
 
   /**
    * Get random users
+   * @param userId User id to exclude
    * @param count number of users to be returned
    * @returns Random users from cache
    */

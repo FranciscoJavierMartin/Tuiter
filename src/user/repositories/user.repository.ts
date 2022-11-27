@@ -105,11 +105,17 @@ export class UserRepository {
 
   /**
    * Get random users
+   * @param userId User id to exclude
    * @param count Number of users to retrieved
    * @returns Random users from database
    */
-  public async getRandomUsers(count: number = 10): Promise<UserDocument[]> {
+  public async getRandomUsers(
+    userId?: string,
+    count: number = 10,
+  ): Promise<UserDocument[]> {
     const users: UserDocument[] = await this.userModel.aggregate([
+      { $match: { _id: { $ne: new mongoose.Types.ObjectId(userId) } } },
+      { $sample: { size: count } },
       {
         $lookup: {
           from: 'Auth',
@@ -119,7 +125,6 @@ export class UserRepository {
         },
       },
       { $unwind: '$authId' },
-      { $sample: { size: count } },
       {
         $addFields: {
           username: '$authId.username',
