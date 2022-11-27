@@ -27,6 +27,7 @@ import { UserDto } from '@/user/dto/responses/user.dto';
 import { SearchUserDto } from '@/user/dto/responses/search-user.dto';
 import { GetOptionalUserInterceptor } from '@/shared/interceptors/get-optional-user.interceptor';
 import { Request } from 'express';
+import { CurrentUser } from '@/auth/interfaces/current-user.interface';
 
 @ApiTags('User')
 @Controller('user')
@@ -58,7 +59,9 @@ export class UserController {
     type: [UserDto],
   })
   public async getRandomUsers(@Req() request: Request): Promise<UserDto[]> {
-    return this.userService.getRandomUsers();
+    return this.userService.getRandomUsers(
+      (request.user as CurrentUser)?.userId?.toString(),
+    );
   }
 
   @Get('profile/:userId')

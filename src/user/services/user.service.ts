@@ -90,9 +90,9 @@ export class UserService {
    * Get random users from data source
    * @returns Random users
    */
-  public async getRandomUsers(): Promise<UserDto[]> {
+  public async getRandomUsers(userId?: string): Promise<UserDto[]> {
     const cachedUsers: UserDocument[] =
-      await this.userCacheService.getRandomUsers();
+      await this.userCacheService.getRandomUsers(userId);
 
     const users: UserDocument[] = cachedUsers
       ? cachedUsers
