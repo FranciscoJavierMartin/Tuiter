@@ -103,6 +103,6 @@ export class UserController {
     @Body() notificationsDto: NotificationSettingsDto,
     @GetUser('userId') userId: ID,
   ): Promise<void> {
-    // await this.userService.updateSocialLinks(userId, socialLinksDto);
+    await this.userService.updateNotificationSettings(userId, notificationsDto);
   }
 }
