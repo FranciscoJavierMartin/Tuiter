@@ -161,8 +161,12 @@ export class UserService {
     userId: ID,
     notificationSettingsDto: NotificationSettingsDto,
   ): Promise<void> {
-    const notificationSettings: SocialLinksDto = removeUndefinedAttributes(
-      notificationSettingsDto,
+    const notificationSettings: NotificationSettingsDto =
+      removeUndefinedAttributes(notificationSettingsDto);
+
+    await this.userCacheService.updateNotificationSettingsInCache(
+      userId,
+      notificationSettings,
     );
   }
 }

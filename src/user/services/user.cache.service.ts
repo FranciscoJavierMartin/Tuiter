@@ -10,6 +10,7 @@ import {
   SocialLinks,
 } from '@/user/interfaces/user.interface';
 import { SocialLinksDto } from '@/user/dto/requests/social-links.dto';
+import { NotificationSettingsDto } from '@/user/dto/requests/notification-settings.dto';
 
 @Injectable()
 export class UserCacheService extends BaseCache {
@@ -162,6 +163,34 @@ export class UserCacheService extends BaseCache {
       this.logger.error(error);
       throw new InternalServerErrorException(
         `Error updating social links from user ${userId} in Redis`,
+      );
+    }
+  }
+
+  public async updateNotificationSettingsInCache(
+    userId: ID,
+    notificationSettings: NotificationSettingsDto,
+  ): Promise<void> {
+    try {
+      const notificationsSettingsInCache = await this.client.HGET(
+        `${REDIS_USERS_COLLECTION}:${userId}`,
+        'notifications',
+      );
+
+      const previousNotificationSettings: NotificationSettings =
+        parseJson<NotificationSettings>(notificationsSettingsInCache);
+
+      await this.client.HSET(`${REDIS_USERS_COLLECTION}:${userId}`, [
+        'notifications',
+        JSON.stringify({
+          ...previousNotificationSettings,
+          ...notificationSettings,
+        }),
+      ]);
+    } catch (error) {
+      this.logger.error(error);
+      throw new InternalServerErrorException(
+        `Error updating notification settings from user ${userId} in Redis`,
       );
     }
   }
