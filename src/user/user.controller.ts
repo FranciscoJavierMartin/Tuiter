@@ -100,9 +100,12 @@ export class UserController {
     description: 'Notification settings updated',
   })
   public async updateNotificationSettings(
-    @Body() notificationsDto: NotificationSettingsDto,
+    @Body() notificationSettingsDto: NotificationSettingsDto,
     @GetUser('userId') userId: ID,
   ): Promise<void> {
-    await this.userService.updateNotificationSettings(userId, notificationsDto);
+    await this.userService.updateNotificationSettings(
+      userId,
+      notificationSettingsDto,
+    );
   }
 }

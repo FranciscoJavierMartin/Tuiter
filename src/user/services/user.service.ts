@@ -155,10 +155,14 @@ export class UserService {
   /**
    * Update user notification settings
    * @param userId User id
-   * @param notificationsDto notification settings to update
+   * @param notificationSettingsDto notification settings to update
    */
   public async updateNotificationSettings(
     userId: ID,
-    notificationsDto: NotificationSettingsDto,
-  ): Promise<void> {}
+    notificationSettingsDto: NotificationSettingsDto,
+  ): Promise<void> {
+    const notificationSettings: SocialLinksDto = removeUndefinedAttributes(
+      notificationSettingsDto,
+    );
+  }
 }
