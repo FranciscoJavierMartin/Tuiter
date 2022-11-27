@@ -4,6 +4,10 @@ import mongoose, { Model } from 'mongoose';
 import { ObjectId } from 'mongodb';
 import { ID } from '@/shared/interfaces/types';
 import { User, UserDocument } from '@/user/models/user.model';
+import {
+  NotificationSettings,
+  SocialLinks,
+} from '@/user/interfaces/user.interface';
 
 @Injectable()
 export class UserRepository {
@@ -100,6 +104,43 @@ export class UserRepository {
   }
 
   /**
+   * Get random users
+   * @param count Number of users to retrieved
+   * @returns Random users from database
+   */
+  public async getRandomUsers(count: number = 10): Promise<UserDocument[]> {
+    const users: UserDocument[] = await this.userModel.aggregate([
+      {
+        $lookup: {
+          from: 'Auth',
+          localField: 'authId',
+          foreignField: '_id',
+          as: 'authId',
+        },
+      },
+      { $unwind: '$authId' },
+      { $sample: { size: count } },
+      {
+        $addFields: {
+          username: '$authId.username',
+          email: '$authId.email',
+          avatarColor: '$authId.avatarColor',
+          uId: '$authId.uId',
+          createdAt: '$authId.createdAt',
+        },
+      },
+      {
+        $project: {
+          authId: 0,
+          __v: 0,
+        },
+      },
+    ]);
+
+    return users;
+  }
+
+  /**
    * Update User in DB
    * @param userId User id
    * @param user User data
@@ -124,6 +165,12 @@ export class UserRepository {
       .exec();
   }
 
+  /**
+   * Update users follower and following count
+   * @param followerId Follower id
+   * @param followeeId Followee id
+   * @param increment Amount to increment
+   */
   public async updateUserFollowersCount(
     followerId: ObjectId,
     followeeId: ObjectId,
@@ -141,6 +188,40 @@ export class UserRepository {
         },
       }),
     ]);
+  }
+
+  /**
+   * Update social links
+   * @param userId User id
+   * @param socialLinks Social links
+   */
+  public async updateSocialLinks(
+    userId: ObjectId,
+    socialLinks: SocialLinks,
+  ): Promise<void> {
+    const user = await this.userModel.findById(userId);
+    user.social = {
+      ...user.social,
+      ...socialLinks,
+    };
+    await user.save();
+  }
+
+  /**
+   * Update notification settings
+   * @param userId User id
+   * @param notificationSettings Notification settings
+   */
+  public async updateNotificationSettings(
+    userId: ObjectId,
+    notificationSettings: NotificationSettings,
+  ): Promise<void> {
+    const user = await this.userModel.findById(userId);
+    user.notifications = {
+      ...user.notifications,
+      ...notificationSettings,
+    };
+    await user.save();
   }
 
   /**

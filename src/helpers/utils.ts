@@ -105,3 +105,32 @@ export function parseJson<T = any>(prop: string): T {
 export function getQueues(...names: string[]): BullModuleOptions[] {
   return queues.filter((queue) => names.includes(queue.name));
 }
+
+/**
+ * Shuffle list
+ * @param list items to be shuffle
+ * @returns Shuffled list
+ */
+export function shuffle<T>(list: T[]): T[] {
+  return list.sort(() => 0.5 - Math.random());
+}
+
+/**
+ * Escape text simbols
+ * @param text text to be escaped
+ * @returns Escaped text
+ */
+export function escapeRegexp(text: string): string {
+  return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
+}
+
+/**
+ * Remove undefined values and the associated keys from object
+ * @param obj Object to be filtered
+ * @returns Filtered object
+ */
+export function removeUndefinedAttributes(obj: object): object {
+  return Object.entries(obj)
+    .filter((field) => field[1] !== undefined)
+    .reduce((acc, [attribute, value]) => ({ ...acc, [attribute]: value }), {});
+}

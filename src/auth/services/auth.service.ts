@@ -17,11 +17,11 @@ import { UserService } from '@/user/services/user.service';
 import { UserCacheService } from '@/user/services/user.cache.service';
 import { UserDocument } from '@/user/models/user.model';
 import { UserRepository } from '@/user/repositories/user.repository';
+import { UserDto } from '@/user/dto/responses/user.dto';
 import { RegisterDto } from '@/auth/dto/requests/register.dto';
 import { ResponseRegisterDto } from '@/auth/dto/responses/register.dto';
 import { AuthDocument } from '@/auth/models/auth.model';
 import { LoginDto } from '@/auth/dto/requests/login.dto';
-import { UserDto } from '@/auth/dto/responses/user.dto';
 import { AuthRepository } from '@/auth/repositories/auth.repository';
 
 @Injectable()
@@ -170,6 +170,35 @@ export class AuthService {
       cachedUser ?? (await this.userRepository.getUserById(userId));
 
     return existingUser;
+  }
+
+  /**
+   * Change user password
+   * @param username User name who want to change its password
+   * @param newPassword new password (not encrypted yet)
+   * @param ip User ip
+   */
+  public async changePassword(
+    username: string,
+    newPassword: string,
+    ip: string,
+  ): Promise<void> {
+    const user: AuthDocument = await this.authRepository.getAuthUserByUsername(
+      username,
+    );
+
+    if (user.comparePassword(newPassword)) {
+      throw new BadRequestException(
+        'New password cannot be the same than previous password',
+      );
+    }
+
+    await this.authRepository.updatePassword(
+      username,
+      user.hashPassword(newPassword),
+    );
+
+    this.emailService.sendChangePasswordEmail(username, user.email, ip);
   }
 
   /**

@@ -9,6 +9,7 @@ import {
   UseGuards,
   Param,
   Ip,
+  Patch,
 } from '@nestjs/common';
 import {
   ApiBadGatewayResponse,
@@ -26,16 +27,17 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { AuthGuard } from '@nestjs/passport';
 import { FILE_SIZE_LIMIT } from '@/shared/contants';
-import { AuthService } from '@/auth/auth.service';
+import { UserDto } from '@/user/dto/responses/user.dto';
+import { AuthService } from '@/auth/services/auth.service';
 import { RegisterDto } from '@/auth/dto/requests/register.dto';
 import { ResponseRegisterDto } from '@/auth/dto/responses/register.dto';
 import { LoginDto } from '@/auth/dto/requests/login.dto';
 import { GetUser } from '@/auth/decorators/get-user.decorator';
-import { UserDto } from '@/auth/dto/responses/user.dto';
 import { ForgotPasswordDto } from '@/auth/dto/requests/forgot-password.dto';
 import { InfoMessageDto } from '@/auth/dto/responses/info-message.dto';
 import { ResetPasswordDto } from '@/auth/dto/requests/reset-password.dto';
 import { CurrentUser } from '@/auth/interfaces/current-user.interface';
+import { ChangePasswordDto } from '@/auth/dto/requests/change-password.dto';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -143,5 +145,30 @@ export class AuthController {
     return {
       message: 'Password reset email sent',
     };
+  }
+
+  @Patch('change-password')
+  @ApiBearerAuth()
+  @ApiBody({ type: ChangePasswordDto })
+  @ApiOkResponse({
+    description: 'Password updated',
+  })
+  @ApiBadRequestResponse({
+    description: 'New password cannot be the same than previous password',
+  })
+  @ApiBadGatewayResponse({
+    description: 'Error sending email',
+  })
+  @UseGuards(AuthGuard())
+  public async changePassword(
+    @Body() changePasswordDto: ChangePasswordDto,
+    @GetUser('username') username: string,
+    @Ip() ip: string,
+  ): Promise<void> {
+    await this.authService.changePassword(
+      username,
+      changePasswordDto.newPassword,
+      ip,
+    );
   }
 }

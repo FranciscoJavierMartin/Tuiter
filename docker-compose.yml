@@ -2,7 +2,7 @@ version: '3.0'
 
 services:
   mongo:
-    image: mongo
+    image: mongo:6.0.3
     restart: always
     ports:
       - '27017:27017'
@@ -21,7 +21,7 @@ services:
     environment:
       - ME_CONFIG_MONGODB_URL=mongodb://mongo:27017
   redis:
-    image: redis/redis-stack-server:latest
+    image: redis/redis-stack-server:6.2.4-v4
     restart: always
     depends_on:
       - mongo

@@ -17,7 +17,17 @@ import { EmailModule } from '@/email/email.module';
 import { ImageModule } from '@/image/image.module';
 import { ChatModule } from '@/chat/chat.module';
 
+// TODO: Add logic to find connected users
+// TODO: Check email notifications according to user preferences
+// TODO: Update type in Swagger response tags
+// TODO: Update error messages in catch from redis services
+// TODO: Add more swagger tags to auth endpoints
+// TODO: Add isArray to swagger response when returned type is array
+// TODO: Fix email image
+// TODO: Add more complex password
+// TODO: Study if uId could be removed from auth model
 // TODO: Document Chat module
+// TODO: When retrieve data from db instead of cache, then update cache data
 // TODO: Include 'writting' in chat
 // TODO: Check if guards has sense with always return a 403 error
 // TODO: Move to fastify instead of express

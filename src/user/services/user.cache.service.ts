@@ -1,6 +1,6 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { parseJson } from '@/helpers/utils';
+import { parseJson, shuffle } from '@/helpers/utils';
 import { BaseCache } from '@/shared/redis/base.cache';
 import { REDIS_USERS_COLLECTION } from '@/shared/contants';
 import { ID } from '@/shared/interfaces/types';
@@ -9,6 +9,8 @@ import {
   NotificationSettings,
   SocialLinks,
 } from '@/user/interfaces/user.interface';
+import { SocialLinksDto } from '@/user/dto/requests/social-links.dto';
+import { NotificationSettingsDto } from '@/user/dto/requests/notification-settings.dto';
 
 @Injectable()
 export class UserCacheService extends BaseCache {
@@ -133,9 +135,51 @@ export class UserCacheService extends BaseCache {
   }
 
   /**
+   * Update social links in cache
+   * @param userId User id
+   * @param socialLinks Social links to update
+   */
+  public async updateSocialLinksInCache(
+    userId: ID,
+    socialLinks: SocialLinksDto,
+  ): Promise<void> {
+    try {
+      await this.updateRecordInCache(userId, 'social', socialLinks);
+    } catch (error) {
+      this.logger.error(error);
+      throw new InternalServerErrorException(
+        `Error updating social links from user ${userId} in Redis`,
+      );
+    }
+  }
+
+  /**
+   * Update notification settings in cache
+   * @param userId User id
+   * @param notificationSettings Notification settings to update
+   */
+  public async updateNotificationSettingsInCache(
+    userId: ID,
+    notificationSettings: NotificationSettingsDto,
+  ): Promise<void> {
+    try {
+      await this.updateRecordInCache(
+        userId,
+        'notifications',
+        notificationSettings,
+      );
+    } catch (error) {
+      this.logger.error(error);
+      throw new InternalServerErrorException(
+        `Error updating notification settings from user ${userId} in Redis`,
+      );
+    }
+  }
+
+  /**
    * Retrieve user from cache
    * @param userId User key to search
-   * @returns
+   * @returns Users stored in cache
    */
   public async getUserFromCache(userId: ID): Promise<UserDocument | null> {
     try {
@@ -163,5 +207,73 @@ export class UserCacheService extends BaseCache {
       this.logger.error(error);
       throw new InternalServerErrorException('Server error. Try again');
     }
+  }
+
+  /**
+   * Get random users
+   * @param count number of users to be returned
+   * @returns Random users from cache
+   */
+  public async getRandomUsers(count: number = 10): Promise<UserDocument[]> {
+    try {
+      return (
+        await Promise.all(
+          shuffle(await this.client.ZRANGE('user', 0, -1))
+            .slice(0, count)
+            .map(
+              async (userId: string) =>
+                (await this.client.HGETALL(
+                  `${REDIS_USERS_COLLECTION}:${userId}`,
+                )) as unknown as UserDocument,
+            ),
+        )
+      ).map(
+        (user: UserDocument) =>
+          ({
+            ...user,
+            postsCount: parseJson<number>(user.postsCount.toString()),
+            createdAt: new Date(user.createdAt),
+            blocked: parseJson<string[]>(user.blocked.toString()),
+            blockedBy: parseJson<string[]>(user.blockedBy.toString()),
+            notifications: parseJson<NotificationSettings>(
+              `${user.notifications}`,
+            ),
+            social: parseJson<SocialLinks>(`${user.social}`),
+            followersCount: parseJson<number>(user.followersCount.toString()),
+            followingCount: parseJson<number>(user.followingCount.toString()),
+          } as unknown as UserDocument),
+      );
+    } catch (error) {
+      this.logger.error(error);
+      throw new InternalServerErrorException('Server error. Try again');
+    }
+  }
+
+  /**
+   * Update record in cache
+   * @param userId User if
+   * @param field field to be updated
+   * @param data New data to update
+   */
+  private async updateRecordInCache(
+    userId: ID,
+    field: 'notifications' | 'social',
+    data: NotificationSettingsDto | SocialLinksDto,
+  ): Promise<void> {
+    const recordInCache = await this.client.HGET(
+      `${REDIS_USERS_COLLECTION}:${userId}`,
+      field,
+    );
+
+    const previousRecord: Record<string, string | boolean> =
+      parseJson<Record<string, string | boolean>>(recordInCache);
+
+    await this.client.HSET(`${REDIS_USERS_COLLECTION}:${userId}`, [
+      field,
+      JSON.stringify({
+        ...previousRecord,
+        ...data,
+      }),
+    ]);
   }
 }
