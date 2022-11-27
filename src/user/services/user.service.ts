@@ -13,7 +13,11 @@ import { SocialLinksDto } from '@/user/dto/requests/social-links.dto';
 import { NotificationSettingsDto } from '@/user/dto/requests/notification-settings.dto';
 import { UserDto } from '@/user/dto/responses/user.dto';
 import { SearchUserDto } from '@/user/dto/responses/search-user.dto';
-import { SocialLinks, UserJobData } from '@/user/interfaces/user.interface';
+import {
+  NotificationSettings,
+  SocialLinks,
+  UserJobData,
+} from '@/user/interfaces/user.interface';
 
 @Injectable()
 export class UserService {
@@ -168,5 +172,11 @@ export class UserService {
       userId,
       notificationSettings,
     );
+
+    this.userQueue.add('updateNotificationSettingsInDB', {
+      userId,
+      notificationSettings:
+        notificationSettings as unknown as NotificationSettings,
+    });
   }
 }

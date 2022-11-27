@@ -4,7 +4,10 @@ import mongoose, { Model } from 'mongoose';
 import { ObjectId } from 'mongodb';
 import { ID } from '@/shared/interfaces/types';
 import { User, UserDocument } from '@/user/models/user.model';
-import { SocialLinks } from '@/user/interfaces/user.interface';
+import {
+  NotificationSettings,
+  SocialLinks,
+} from '@/user/interfaces/user.interface';
 
 @Injectable()
 export class UserRepository {
@@ -200,6 +203,23 @@ export class UserRepository {
     user.social = {
       ...user.social,
       ...socialLinks,
+    };
+    await user.save();
+  }
+
+  /**
+   * Update notification settings
+   * @param userId User id
+   * @param notificationSettings Notification settings
+   */
+  public async updateNotificationSettings(
+    userId: ObjectId,
+    notificationSettings: NotificationSettings,
+  ): Promise<void> {
+    const user = await this.userModel.findById(userId);
+    user.notifications = {
+      ...user.notifications,
+      ...notificationSettings,
     };
     await user.save();
   }

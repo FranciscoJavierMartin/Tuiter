@@ -5,6 +5,7 @@ import { CONSUMER_CONCURRENCY } from '@/shared/contants';
 import { UserDocument } from '@/user/models/user.model';
 import { UserRepository } from '@/user/repositories/user.repository';
 import {
+  UpdateNotificationSettingsJobData,
   UpdateSocialLinksJobData,
   UpdateUserJobData,
 } from '@/user/interfaces/user.interface';
@@ -54,6 +55,27 @@ export class UserConsumer extends BaseConsumer {
       await this.userRepository.updateSocialLinks(
         job.data.userId,
         job.data.socialLinks,
+      );
+      job.progress(100);
+      done(null, job.data);
+    } catch (error) {
+      this.logger.error(error);
+      done(error as Error);
+    }
+  }
+
+  @Process({
+    name: 'updateNotificationSettingsInDB',
+    concurrency: CONSUMER_CONCURRENCY,
+  })
+  public async updateNotificationSettingsInDB(
+    job: Job<UpdateNotificationSettingsJobData>,
+    done: DoneCallback,
+  ): Promise<void> {
+    try {
+      await this.userRepository.updateNotificationSettings(
+        job.data.userId,
+        job.data.notificationSettings,
       );
       job.progress(100);
       done(null, job.data);

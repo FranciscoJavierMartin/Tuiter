@@ -177,34 +177,6 @@ export class UserCacheService extends BaseCache {
   }
 
   /**
-   * Update record in cache
-   * @param userId User if
-   * @param field field to be updated
-   * @param data New data to update
-   */
-  private async updateRecordInCache(
-    userId: ID,
-    field: 'notifications' | 'social',
-    data: NotificationSettingsDto | SocialLinksDto,
-  ): Promise<void> {
-    const recordInCache = await this.client.HGET(
-      `${REDIS_USERS_COLLECTION}:${userId}`,
-      field,
-    );
-
-    const previousRecord: Record<string, string | boolean> =
-      parseJson<Record<string, string | boolean>>(recordInCache);
-
-    await this.client.HSET(`${REDIS_USERS_COLLECTION}:${userId}`, [
-      field,
-      JSON.stringify({
-        ...previousRecord,
-        ...data,
-      }),
-    ]);
-  }
-
-  /**
    * Retrieve user from cache
    * @param userId User key to search
    * @returns Users stored in cache
@@ -275,5 +247,33 @@ export class UserCacheService extends BaseCache {
       this.logger.error(error);
       throw new InternalServerErrorException('Server error. Try again');
     }
+  }
+
+  /**
+   * Update record in cache
+   * @param userId User if
+   * @param field field to be updated
+   * @param data New data to update
+   */
+  private async updateRecordInCache(
+    userId: ID,
+    field: 'notifications' | 'social',
+    data: NotificationSettingsDto | SocialLinksDto,
+  ): Promise<void> {
+    const recordInCache = await this.client.HGET(
+      `${REDIS_USERS_COLLECTION}:${userId}`,
+      field,
+    );
+
+    const previousRecord: Record<string, string | boolean> =
+      parseJson<Record<string, string | boolean>>(recordInCache);
+
+    await this.client.HSET(`${REDIS_USERS_COLLECTION}:${userId}`, [
+      field,
+      JSON.stringify({
+        ...previousRecord,
+        ...data,
+      }),
+    ]);
   }
 }

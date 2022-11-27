@@ -17,6 +17,7 @@ import { EmailModule } from '@/email/email.module';
 import { ImageModule } from '@/image/image.module';
 import { ChatModule } from '@/chat/chat.module';
 
+// TODO: Check email notifications according to user preferences
 // TODO: Update type in Swagger response tags
 // TODO: Update error messages in catch from redis services
 // TODO: Add more swagger tags to auth endpoints
