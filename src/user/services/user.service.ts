@@ -88,6 +88,7 @@ export class UserService {
 
   /**
    * Get random users from data source
+   * @param userId User id to exclude
    * @returns Random users
    */
   public async getRandomUsers(userId?: string): Promise<UserDto[]> {
