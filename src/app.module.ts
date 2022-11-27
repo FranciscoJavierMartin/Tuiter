@@ -5,6 +5,7 @@ import { BullModule } from '@nestjs/bull';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { SharedModule } from '@/shared/shared.module';
+import { LoggerMiddleware } from '@/shared/middlewares/logger.middleware';
 import { AuthModule } from '@/auth/auth.module';
 import { UserModule } from '@/user/user.module';
 import { PostModule } from '@/post/post.module';
@@ -16,7 +17,6 @@ import { NotificationModule } from '@/notification/notification.module';
 import { EmailModule } from '@/email/email.module';
 import { ImageModule } from '@/image/image.module';
 import { ChatModule } from '@/chat/chat.module';
-import { LoggerMiddleware } from './shared/middlewares/logger.middleware';
 
 // TODO: Add logic to find connected users
 // TODO: Check email notifications according to user preferences
