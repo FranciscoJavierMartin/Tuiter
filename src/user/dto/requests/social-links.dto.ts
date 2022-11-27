@@ -2,6 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsOptional, IsString, IsUrl, ValidateIf } from 'class-validator';
 
 export class SocialLinksDto {
+  // TODO: Replace for ApiPropertyOptional
   @ApiProperty({
     description: 'Facebook profile link',
     required: false,
