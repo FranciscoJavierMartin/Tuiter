@@ -17,6 +17,7 @@ import { NotificationModule } from '@/notification/notification.module';
 import { EmailModule } from '@/email/email.module';
 import { ImageModule } from '@/image/image.module';
 import { ChatModule } from '@/chat/chat.module';
+import { HealthModule } from '@/health/health.module';
 
 // TODO: Add logic to find connected users
 // TODO: Check email notifications according to user preferences
@@ -88,6 +89,7 @@ import { ChatModule } from '@/chat/chat.module';
     EmailModule,
     ImageModule,
     ChatModule,
+    HealthModule,
   ],
   controllers: [],
   providers: [],
