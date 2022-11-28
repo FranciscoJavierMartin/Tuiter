@@ -187,7 +187,6 @@ export class UserCacheService extends BaseCache {
         `${REDIS_USERS_COLLECTION}:${userId}`,
       )) as unknown as UserDocument;
 
-      // TODO: Cast notifications and social
       response.createdAt = new Date(parseJson(`${response.createdAt}`));
       response.postsCount = parseJson<number>(`${response.postsCount}`);
       response.blocked = parseJson<ID[]>(`${response.blocked}`);
