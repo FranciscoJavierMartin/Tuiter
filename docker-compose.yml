@@ -8,7 +8,7 @@ services:
       - '27017:27017'
     container_name: tuiter-db
     volumes:
-      - ./mongodb:/var/lib/postgresql/data
+      - ./mongodb:/var/lib/mongodb/data
   mongoexpress:
     image: mongo-express
     depends_on:
