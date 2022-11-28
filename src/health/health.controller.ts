@@ -16,4 +16,9 @@ export class HealthController {
       second: '2-digit',
     })}`;
   }
+
+  @Get('env')
+  public async env(): Promise<string> {
+    return `This is the ${process.env.NODE_ENV} environment.`;
+  }
 }
