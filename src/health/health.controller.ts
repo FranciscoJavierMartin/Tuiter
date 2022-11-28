@@ -1,5 +1,6 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Param, ParseIntPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { performance } from 'perf_hooks';
 
 @Controller('health')
 export class HealthController {
@@ -27,6 +28,24 @@ export class HealthController {
     } on ${this.getCurrentDate()}`;
   }
 
+  @Get('performance/:term')
+  public async performance(
+    @Param('term', ParseIntPipe) term: number,
+  ): Promise<string> {
+    const start: number = performance.now();
+    const result: number = this.fibonacci(term);
+    const end: number = performance.now();
+
+    const response = await fetch(this.configService.get('EC2_URL'));
+    const data = await response.json();
+
+    return `Fibonacci series of ${term} is ${result} and it took ${
+      end - start
+    } ms with EC2 instance of ${data} and process id ${
+      process.pid
+    } on ${this.getCurrentDate()}`;
+  }
+
   private getCurrentDate(): string {
     return new Date().toLocaleDateString(undefined, {
       day: '2-digit',
@@ -37,5 +56,9 @@ export class HealthController {
       minute: '2-digit',
       second: '2-digit',
     });
+  }
+
+  private fibonacci(data: number): number {
+    return data < 2 ? 1 : this.fibonacci(data - 2) + this.fibonacci(data - 1);
   }
 }
