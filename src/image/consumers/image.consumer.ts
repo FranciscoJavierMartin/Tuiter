@@ -1,7 +1,7 @@
 import { Process, Processor } from '@nestjs/bull';
 import { DoneCallback, Job } from 'bull';
 import { BaseConsumer } from '@/shared/consumers/base.consumer';
-import { CONSUMER_CONCURRENCY } from '@/shared/contants';
+import { CONSUMER_CONCURRENCY } from '@/shared/constants';
 import { UploaderService } from '@/shared/services/uploader.service';
 import {
   AddImageJobData,

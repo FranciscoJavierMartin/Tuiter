@@ -11,7 +11,7 @@ import { ID } from '@/shared/interfaces/types';
 import {
   REDIS_CHAT_LIST_COLLECTION,
   REDIS_MESSAGES_COLLECTION,
-} from '@/shared/contants';
+} from '@/shared/constants';
 import { MessageDocument } from '@/chat/interfaces/chat.interface';
 import { Feelings } from '@/reaction/interfaces/reaction.interface';
 

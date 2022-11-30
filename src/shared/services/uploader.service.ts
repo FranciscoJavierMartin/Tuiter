@@ -28,6 +28,7 @@ export class UploaderService {
       cloudinary.uploader.upload(
         `data:${file.mimetype};base64,${file.buffer.toString('base64')}`,
         {
+          chunk_size: 10,
           public_id,
           overwrite,
           invalidate,

@@ -6,7 +6,7 @@ import {
   REDIS_FOLLOWERS_COLLECTION,
   REDIS_FOLLOWING_COLLECTION,
   REDIS_USERS_COLLECTION,
-} from '@/shared/contants';
+} from '@/shared/constants';
 import { ID } from '@/shared/interfaces/types';
 import { BaseCache } from '@/shared/redis/base.cache';
 import { UserCacheService } from '@/user/services/user.cache.service';

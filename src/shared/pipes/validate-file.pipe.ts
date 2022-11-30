@@ -3,7 +3,7 @@ import {
   MaxFileSizeValidator,
   ParseFilePipe,
 } from '@nestjs/common';
-import { FILE_SIZE_LIMIT_MB } from '@/shared/contants';
+import { FILE_SIZE_LIMIT_MB } from '@/shared/constants';
 
 export const DefaultImagePipe = new ParseFilePipe({
   fileIsRequired: false,

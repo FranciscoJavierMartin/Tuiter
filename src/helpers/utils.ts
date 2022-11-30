@@ -1,5 +1,5 @@
 import { BullModuleOptions } from '@nestjs/bull';
-import { DEFAULT_JOB_OPTIONS } from '@/shared/contants';
+import { DEFAULT_JOB_OPTIONS } from '@/shared/constants';
 
 const queues: BullModuleOptions[] = [
   {

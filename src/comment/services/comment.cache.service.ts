@@ -5,7 +5,7 @@ import { BaseCache } from '@/shared/redis/base.cache';
 import {
   REDIS_COMMENTS_COLLECTION,
   REDIS_POSTS_COLLECTION,
-} from '@/shared/contants';
+} from '@/shared/constants';
 import { ID } from '@/shared/interfaces/types';
 import { Comment } from '@/comment/models/comment.model';
 

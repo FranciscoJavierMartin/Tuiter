@@ -9,7 +9,7 @@ import {
   REDIS_POSTS_COLLECTION,
   REDIS_REACTIONS_COLLECTION,
   REDIS_USERS_COLLECTION,
-} from '@/shared/contants';
+} from '@/shared/constants';
 
 @Injectable()
 export class PostCacheService extends BaseCache {
