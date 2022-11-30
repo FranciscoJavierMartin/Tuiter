@@ -46,7 +46,7 @@ export class AuthService {
    */
   public async create(
     registerDto: RegisterDto,
-    avatarImage: Express.Multer.File,
+    avatarImage?: Express.Multer.File,
   ): Promise<ResponseRegisterDto> {
     let avatarUploaded: UploadApiResponse;
 

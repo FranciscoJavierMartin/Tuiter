@@ -10,6 +10,7 @@ import {
   Param,
   Ip,
   Patch,
+  MaxFileSizeValidator,
 } from '@nestjs/common';
 import {
   ApiBadGatewayResponse,
@@ -26,7 +27,7 @@ import {
 } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { AuthGuard } from '@nestjs/passport';
-import { FILE_SIZE_LIMIT } from '@/shared/contants';
+import { FILE_SIZE_LIMIT_MB } from '@/shared/contants';
 import { UserDto } from '@/user/dto/responses/user.dto';
 import { AuthService } from '@/auth/services/auth.service';
 import { RegisterDto } from '@/auth/dto/requests/register.dto';
@@ -44,14 +45,10 @@ import { ChangePasswordDto } from '@/auth/dto/requests/change-password.dto';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  // TODO: Upload image to db (There is a existing service)
+  // TODO: Update image in db when upload new profile picture
   @Post('register')
-  @UseInterceptors(
-    FileInterceptor('avatarImage', {
-      limits: {
-        fieldSize: FILE_SIZE_LIMIT,
-      },
-    }),
-  )
+  @UseInterceptors(FileInterceptor('avatarImage'))
   @ApiConsumes('multipart/form-data')
   @ApiCreatedResponse({
     description: 'User created',
@@ -66,7 +63,13 @@ export class AuthController {
   @ApiBody({ type: RegisterDto })
   public async register(
     @Body() registerDto: RegisterDto,
-    @UploadedFile(new ParseFilePipe({})) avatarImage: Express.Multer.File,
+    @UploadedFile(
+      new ParseFilePipe({
+        fileIsRequired: false,
+        validators: [new MaxFileSizeValidator({ maxSize: FILE_SIZE_LIMIT_MB })],
+      }),
+    )
+    avatarImage?: Express.Multer.File,
   ): Promise<ResponseRegisterDto> {
     return this.authService.create(registerDto, avatarImage);
   }
