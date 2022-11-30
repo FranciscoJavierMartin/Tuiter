@@ -4,13 +4,11 @@ import {
   Body,
   UploadedFile,
   UseInterceptors,
-  ParseFilePipe,
   Get,
   UseGuards,
   Param,
   Ip,
   Patch,
-  MaxFileSizeValidator,
 } from '@nestjs/common';
 import {
   ApiBadGatewayResponse,
@@ -27,7 +25,7 @@ import {
 } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { AuthGuard } from '@nestjs/passport';
-import { FILE_SIZE_LIMIT_MB } from '@/shared/contants';
+import { DefaultFilePipe } from '@/shared/contants';
 import { UserDto } from '@/user/dto/responses/user.dto';
 import { AuthService } from '@/auth/services/auth.service';
 import { RegisterDto } from '@/auth/dto/requests/register.dto';
@@ -61,12 +59,7 @@ export class AuthController {
   @ApiBody({ type: RegisterDto })
   public async register(
     @Body() registerDto: RegisterDto,
-    @UploadedFile(
-      new ParseFilePipe({
-        fileIsRequired: false,
-        validators: [new MaxFileSizeValidator({ maxSize: FILE_SIZE_LIMIT_MB })],
-      }),
-    )
+    @UploadedFile(DefaultFilePipe)
     avatarImage?: Express.Multer.File,
   ): Promise<ResponseRegisterDto> {
     return this.authService.create(registerDto, avatarImage);
