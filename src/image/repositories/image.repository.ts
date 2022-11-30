@@ -67,11 +67,21 @@ export class ImageRepository {
     imgId: string,
     imgVersion: string,
   ): Promise<void> {
-    await this.imageModel.create({
-      ownerId,
-      imgId,
-      imgVersion,
-    });
+    await this.imageModel.findOneAndUpdate(
+      {
+        ownerId,
+        imgId,
+        imgVersion,
+      },
+      {
+        $set: {
+          ownerId,
+          imgId,
+          imgVersion,
+        },
+      },
+      { upsert: true },
+    );
   }
 
   /**

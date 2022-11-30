@@ -3,7 +3,6 @@ import {
   Delete,
   Get,
   Param,
-  ParseFilePipe,
   Patch,
   UploadedFile,
   UseGuards,
@@ -22,12 +21,12 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { AuthGuard } from '@nestjs/passport';
 import { ID } from '@/shared/interfaces/types';
-import { FILE_SIZE_LIMIT } from '@/shared/contants';
+import { DefaultFilePipe } from '@/shared/pipes/validate-file.pipe';
+import { ValidateIdPipe } from '@/shared/pipes/validate-id.pipe';
 import { GetUser } from '@/auth/decorators/get-user.decorator';
 import { ImageService } from '@/image/image.service';
-import { ValidateIdPipe } from '@/shared/pipes/validate-id.pipe';
 import { ImageDto } from '@/image/dto/responses/image.dto';
-import { IsOwnerGuard } from './guards/is-owner.guard';
+import { IsOwnerGuard } from '@/image/guards/is-owner.guard';
 
 @ApiTags('Image')
 @Controller('image')
@@ -36,13 +35,7 @@ export class ImageController {
 
   // TODO: Check if should be included in user controller
   @Patch('profile')
-  @UseInterceptors(
-    FileInterceptor('image', {
-      limits: {
-        fieldSize: FILE_SIZE_LIMIT,
-      },
-    }),
-  )
+  @UseInterceptors(FileInterceptor('image'))
   @ApiConsumes('multipart/form-data')
   @ApiUnauthorizedResponse({
     description: 'Unauthorized',
@@ -53,7 +46,7 @@ export class ImageController {
   @ApiBearerAuth()
   @UseGuards(AuthGuard())
   public async uploadProfilePicture(
-    @UploadedFile(new ParseFilePipe({})) image: Express.Multer.File,
+    @UploadedFile(DefaultFilePipe) image: Express.Multer.File,
     @GetUser('userId') userId: ID,
   ): Promise<void> {
     await this.imageService.uploadProfilePicture(image, userId);
@@ -61,13 +54,7 @@ export class ImageController {
 
   // TODO: Check if should be included in user controller
   @Patch('background')
-  @UseInterceptors(
-    FileInterceptor('image', {
-      limits: {
-        fieldSize: FILE_SIZE_LIMIT,
-      },
-    }),
-  )
+  @UseInterceptors(FileInterceptor('image'))
   @ApiConsumes('multipart/form-data')
   @ApiUnauthorizedResponse({
     description: 'Unauthorized',
@@ -78,7 +65,8 @@ export class ImageController {
   @ApiBearerAuth()
   @UseGuards(AuthGuard())
   public async uploadBackgroundImage(
-    @UploadedFile(new ParseFilePipe({})) image: Express.Multer.File,
+    @UploadedFile(DefaultFilePipe)
+    image: Express.Multer.File,
     @GetUser('userId') userId: ID,
   ): Promise<void> {
     await this.imageService.uploadBackgroundImage(image, userId);

@@ -19,6 +19,7 @@ import { ImageModule } from '@/image/image.module';
 import { ChatModule } from '@/chat/chat.module';
 import { HealthModule } from '@/health/health.module';
 
+// TODO: Use decorator composition to reducer the ammount of decorators per route https://docs.nestjs.com/custom-decorators
 // TODO: Add logic to find connected users
 // TODO: Check email notifications according to user preferences
 // TODO: Update type in Swagger response tags

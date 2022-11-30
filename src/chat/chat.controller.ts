@@ -2,9 +2,7 @@ import {
   Body,
   Controller,
   Delete,
-  MaxFileSizeValidator,
   Param,
-  ParseFilePipe,
   Patch,
   Post,
   UploadedFile,
@@ -14,7 +12,7 @@ import {
 import { AuthGuard } from '@nestjs/passport';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
-import { FILE_SIZE_LIMIT_MB } from '@/shared/contants';
+import { DefaultFilePipe } from '@/shared/pipes/validate-file.pipe';
 import { ValidateIdPipe } from '@/shared/pipes/validate-id.pipe';
 import { ID } from '@/shared/interfaces/types';
 import { GetUser } from '@/auth/decorators/get-user.decorator';
@@ -48,12 +46,7 @@ export class ChatController {
     @Param('receiverId', ValidateIdPipe) receiverId: ID,
     @Body() addMessageDto: AddMessageDto,
     @GetUser() currentUser: CurrentUser,
-    @UploadedFile(
-      new ParseFilePipe({
-        fileIsRequired: false,
-        validators: [new MaxFileSizeValidator({ maxSize: FILE_SIZE_LIMIT_MB })],
-      }),
-    )
+    @UploadedFile(DefaultFilePipe)
     image?: Express.Multer.File,
   ): Promise<void> {
     await this.chatService.addMessage(

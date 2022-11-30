@@ -4,7 +4,6 @@ import {
   Body,
   UploadedFile,
   UseInterceptors,
-  ParseFilePipe,
   Get,
   UseGuards,
   Param,
@@ -26,7 +25,7 @@ import {
 } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { AuthGuard } from '@nestjs/passport';
-import { FILE_SIZE_LIMIT } from '@/shared/contants';
+import { DefaultFilePipe } from '@/shared/pipes/validate-file.pipe';
 import { UserDto } from '@/user/dto/responses/user.dto';
 import { AuthService } from '@/auth/services/auth.service';
 import { RegisterDto } from '@/auth/dto/requests/register.dto';
@@ -45,13 +44,7 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('register')
-  @UseInterceptors(
-    FileInterceptor('avatarImage', {
-      limits: {
-        fieldSize: FILE_SIZE_LIMIT,
-      },
-    }),
-  )
+  @UseInterceptors(FileInterceptor('avatarImage'))
   @ApiConsumes('multipart/form-data')
   @ApiCreatedResponse({
     description: 'User created',
@@ -66,7 +59,8 @@ export class AuthController {
   @ApiBody({ type: RegisterDto })
   public async register(
     @Body() registerDto: RegisterDto,
-    @UploadedFile(new ParseFilePipe({})) avatarImage: Express.Multer.File,
+    @UploadedFile(DefaultFilePipe)
+    avatarImage?: Express.Multer.File,
   ): Promise<ResponseRegisterDto> {
     return this.authService.create(registerDto, avatarImage);
   }
