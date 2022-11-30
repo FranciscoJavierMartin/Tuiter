@@ -1,4 +1,3 @@
-import { MaxFileSizeValidator, ParseFilePipe } from '@nestjs/common';
 import { JobOptions } from 'bull';
 
 export const CONSUMER_CONCURRENCY = 5;
@@ -22,8 +21,3 @@ export const REDIS_FOLLOWING_COLLECTION = 'following';
 export const REDIS_FOLLOWERS_COLLECTION = 'followers';
 export const REDIS_CHAT_LIST_COLLECTION = 'chatList';
 export const REDIS_MESSAGES_COLLECTION = 'messages';
-
-export const DefaultFilePipe = new ParseFilePipe({
-  fileIsRequired: false,
-  validators: [new MaxFileSizeValidator({ maxSize: FILE_SIZE_LIMIT_MB })],
-});

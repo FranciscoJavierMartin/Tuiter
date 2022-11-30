@@ -27,7 +27,7 @@ import {
 } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ValidateIdPipe } from '@/shared/pipes/validate-id.pipe';
-import { DefaultFilePipe } from '@/shared/contants';
+import { DefaultFilePipe } from '@/shared/pipes/validate-file.pipe';
 import { ID } from '@/shared/interfaces/types';
 import { CurrentUser } from '@/auth/interfaces/current-user.interface';
 import { GetUser } from '@/auth/decorators/get-user.decorator';

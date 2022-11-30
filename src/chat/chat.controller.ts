@@ -12,7 +12,7 @@ import {
 import { AuthGuard } from '@nestjs/passport';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
-import { DefaultFilePipe } from '@/shared/contants';
+import { DefaultFilePipe } from '@/shared/pipes/validate-file.pipe';
 import { ValidateIdPipe } from '@/shared/pipes/validate-id.pipe';
 import { ID } from '@/shared/interfaces/types';
 import { GetUser } from '@/auth/decorators/get-user.decorator';

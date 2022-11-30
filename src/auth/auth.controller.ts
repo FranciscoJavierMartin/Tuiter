@@ -25,7 +25,7 @@ import {
 } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { AuthGuard } from '@nestjs/passport';
-import { DefaultFilePipe } from '@/shared/contants';
+import { DefaultFilePipe } from '@/shared/pipes/validate-file.pipe';
 import { UserDto } from '@/user/dto/responses/user.dto';
 import { AuthService } from '@/auth/services/auth.service';
 import { RegisterDto } from '@/auth/dto/requests/register.dto';
