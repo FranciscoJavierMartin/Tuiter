@@ -134,3 +134,12 @@ export function removeUndefinedAttributes(obj: object): object {
     .filter((field) => field[1] !== undefined)
     .reduce((acc, [attribute, value]) => ({ ...acc, [attribute]: value }), {});
 }
+
+/**
+ * Check if a file is a video throught its mimetype
+ * @param mimetype File mimetype
+ * @returns True if is a video, false otherwise
+ */
+export function isVideo(mimetype: string): boolean {
+  return mimetype.includes('video');
+}

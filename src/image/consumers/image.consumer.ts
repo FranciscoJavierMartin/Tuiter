@@ -79,6 +79,7 @@ export class ImageConsumer extends BaseConsumer {
         job.data.ownerId,
         job.data.imgId,
         job.data.imgVersion,
+        job.data.isVideo,
       );
       job.progress(100);
       done(null, job.data);

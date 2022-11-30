@@ -3,6 +3,7 @@ import { InjectQueue } from '@nestjs/bull';
 import { ObjectId } from 'mongodb';
 import { UploadApiResponse } from 'cloudinary';
 import { Queue } from 'bull';
+import { isVideo } from '@/helpers/utils';
 import { ID } from '@/shared/interfaces/types';
 import { UploaderService } from '@/shared/services/uploader.service';
 import { ImageJobData } from '@/image/interfaces/image.interface';
@@ -79,6 +80,7 @@ export class ChatService {
           ownerId: currentUser.userId,
           imgId: imageUploaded.public_id,
           imgVersion: imageUploaded.version.toString(),
+          isVideo: isVideo(image.mimetype),
         });
       } catch (error) {
         throw new BadGatewayException('External server error');

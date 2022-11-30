@@ -17,6 +17,7 @@ export interface AddImageJobData {
   ownerId: ID;
   imgId: string;
   imgVersion: string;
+  isVideo?: boolean;
 }
 
 export interface UpdateImageJobData {

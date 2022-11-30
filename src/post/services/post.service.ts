@@ -10,6 +10,7 @@ import mongoose from 'mongoose';
 import { Server } from 'socket.io';
 import { Queue } from 'bull';
 import { UploadApiResponse } from 'cloudinary';
+import { isVideo } from '@/helpers/utils';
 import { UploaderService } from '@/shared/services/uploader.service';
 import { ID } from '@/shared/interfaces/types';
 import { ImageJobData } from '@/image/interfaces/image.interface';
@@ -93,6 +94,7 @@ export class PostService {
           ownerId: user.userId,
           imgId: post.imgId,
           imgVersion: post.imgVersion,
+          isVideo: isVideo(image.mimetype),
         });
       } catch (error) {
         throw new BadGatewayException('External server error');
@@ -212,6 +214,7 @@ export class PostService {
             ownerId: authorId,
             imgId: result.public_id,
             imgVersion: result.version.toString(),
+            isVideo: isVideo(image.mimetype),
           });
         }
       } catch (error) {
