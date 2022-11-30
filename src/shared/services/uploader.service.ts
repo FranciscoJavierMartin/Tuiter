@@ -5,6 +5,7 @@ import {
   UploadApiResponse,
   v2 as cloudinary,
 } from 'cloudinary';
+import { FILE_SIZE_LIMIT_MB } from '../constants';
 
 @Injectable()
 export class UploaderService {
@@ -28,7 +29,8 @@ export class UploaderService {
       cloudinary.uploader.upload(
         `data:${file.mimetype};base64,${file.buffer.toString('base64')}`,
         {
-          chunk_size: 10,
+          resource_type: 'auto',
+          chunk_size: FILE_SIZE_LIMIT_MB,
           public_id,
           overwrite,
           invalidate,
