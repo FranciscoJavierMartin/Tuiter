@@ -30,6 +30,12 @@ export class Image {
 
   @Prop({ type: Date, default: Date.now })
   createdAt: Date = new Date();
+
+  @Prop({
+    type: Boolean,
+    default: false,
+  })
+  isVideo: boolean;
 }
 
 export const ImageSchema = SchemaFactory.createForClass(Image);
