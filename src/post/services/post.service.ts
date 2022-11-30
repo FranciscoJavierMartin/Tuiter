@@ -205,6 +205,7 @@ export class PostService {
           this.imageQueue.add('updateImageInDb', {
             imgId: result.public_id,
             imgVersion: result.version.toString(),
+            isVideo: isVideo(image.mimetype),
           });
         } else {
           // Add new image

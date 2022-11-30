@@ -23,6 +23,7 @@ export interface AddImageJobData {
 export interface UpdateImageJobData {
   imgId: string;
   imgVersion: string;
+  isVideo?: boolean;
 }
 
 export interface RemoveImageJobData {
