@@ -2,7 +2,7 @@ import { Process, Processor } from '@nestjs/bull';
 import { DoneCallback, Job } from 'bull';
 import { ObjectId } from 'mongodb';
 import { BaseConsumer } from '@/shared/consumers/base.consumer';
-import { CONSUMER_CONCURRENCY } from '@/shared/contants';
+import { CONSUMER_CONCURRENCY } from '@/shared/constants';
 import { EmailService } from '@/email/services/email.service';
 import { NotificationType } from '@/notification/interfaces/notification.interface';
 import { PostRepository } from '@/post/repositories/post.repository';

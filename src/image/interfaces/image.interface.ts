@@ -17,11 +17,13 @@ export interface AddImageJobData {
   ownerId: ID;
   imgId: string;
   imgVersion: string;
+  isVideo?: boolean;
 }
 
 export interface UpdateImageJobData {
   imgId: string;
   imgVersion: string;
+  isVideo?: boolean;
 }
 
 export interface RemoveImageJobData {

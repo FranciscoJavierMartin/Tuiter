@@ -66,6 +66,7 @@ export class ImageRepository {
     ownerId: ObjectId,
     imgId: string,
     imgVersion: string,
+    isVideo?: boolean,
   ): Promise<void> {
     await this.imageModel.findOneAndUpdate(
       {
@@ -78,6 +79,7 @@ export class ImageRepository {
           ownerId,
           imgId,
           imgVersion,
+          isVideo,
         },
       },
       { upsert: true },

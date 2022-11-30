@@ -1,7 +1,7 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { parseJson } from '@/helpers/utils';
-import { REDIS_USERS_COLLECTION } from '@/shared/contants';
+import { REDIS_USERS_COLLECTION } from '@/shared/constants';
 import { ID } from '@/shared/interfaces/types';
 import { BaseCache } from '@/shared/redis/base.cache';
 

@@ -1,7 +1,7 @@
 import { Process, Processor } from '@nestjs/bull';
 import { DoneCallback, Job } from 'bull';
 import { BaseConsumer } from '@/shared/consumers/base.consumer';
-import { CONSUMER_CONCURRENCY } from '@/shared/contants';
+import { CONSUMER_CONCURRENCY } from '@/shared/constants';
 import { UploaderService } from '@/shared/services/uploader.service';
 import {
   AddImageJobData,
@@ -79,6 +79,7 @@ export class ImageConsumer extends BaseConsumer {
         job.data.ownerId,
         job.data.imgId,
         job.data.imgVersion,
+        job.data.isVideo,
       );
       job.progress(100);
       done(null, job.data);

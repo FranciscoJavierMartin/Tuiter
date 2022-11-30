@@ -6,7 +6,7 @@ import { BaseCache } from '@/shared/redis/base.cache';
 import {
   REDIS_POSTS_COLLECTION,
   REDIS_REACTIONS_COLLECTION,
-} from '@/shared/contants';
+} from '@/shared/constants';
 import { Feelings } from '@/reaction/interfaces/reaction.interface';
 import {
   AddReactionData,

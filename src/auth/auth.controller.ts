@@ -25,7 +25,7 @@ import {
 } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { AuthGuard } from '@nestjs/passport';
-import { DefaultFilePipe } from '@/shared/pipes/validate-file.pipe';
+import { DefaultImagePipe } from '@/shared/pipes/validate-file.pipe';
 import { UserDto } from '@/user/dto/responses/user.dto';
 import { AuthService } from '@/auth/services/auth.service';
 import { RegisterDto } from '@/auth/dto/requests/register.dto';
@@ -59,7 +59,7 @@ export class AuthController {
   @ApiBody({ type: RegisterDto })
   public async register(
     @Body() registerDto: RegisterDto,
-    @UploadedFile(DefaultFilePipe)
+    @UploadedFile(DefaultImagePipe)
     avatarImage?: Express.Multer.File,
   ): Promise<ResponseRegisterDto> {
     return this.authService.create(registerDto, avatarImage);

@@ -21,7 +21,7 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { AuthGuard } from '@nestjs/passport';
 import { ID } from '@/shared/interfaces/types';
-import { DefaultFilePipe } from '@/shared/pipes/validate-file.pipe';
+import { DefaultImageOrVideoPipe } from '@/shared/pipes/validate-file.pipe';
 import { ValidateIdPipe } from '@/shared/pipes/validate-id.pipe';
 import { GetUser } from '@/auth/decorators/get-user.decorator';
 import { ImageService } from '@/image/image.service';
@@ -46,7 +46,7 @@ export class ImageController {
   @ApiBearerAuth()
   @UseGuards(AuthGuard())
   public async uploadProfilePicture(
-    @UploadedFile(DefaultFilePipe) image: Express.Multer.File,
+    @UploadedFile(DefaultImageOrVideoPipe) image: Express.Multer.File,
     @GetUser('userId') userId: ID,
   ): Promise<void> {
     await this.imageService.uploadProfilePicture(image, userId);
@@ -65,7 +65,7 @@ export class ImageController {
   @ApiBearerAuth()
   @UseGuards(AuthGuard())
   public async uploadBackgroundImage(
-    @UploadedFile(DefaultFilePipe)
+    @UploadedFile(DefaultImageOrVideoPipe)
     image: Express.Multer.File,
     @GetUser('userId') userId: ID,
   ): Promise<void> {

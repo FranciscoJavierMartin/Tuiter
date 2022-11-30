@@ -2,7 +2,7 @@ import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { parseJson, shuffle } from '@/helpers/utils';
 import { BaseCache } from '@/shared/redis/base.cache';
-import { REDIS_USERS_COLLECTION } from '@/shared/contants';
+import { REDIS_USERS_COLLECTION } from '@/shared/constants';
 import { ID } from '@/shared/interfaces/types';
 import { UserDocument } from '@/user/models/user.model';
 import {

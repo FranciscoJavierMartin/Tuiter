@@ -1,6 +1,6 @@
 import { Process, Processor } from '@nestjs/bull';
 import { DoneCallback, Job } from 'bull';
-import { CONSUMER_CONCURRENCY } from '@/shared/contants';
+import { CONSUMER_CONCURRENCY } from '@/shared/constants';
 import { BaseConsumer } from '@/shared/consumers/base.consumer';
 import { BlockUserRepository } from '@/block-user/repositories/block-user.repository';
 import { AddBlockUserJobData } from '@/block-user/interfaces/block-user.interface';
