@@ -15,6 +15,7 @@ export class Image {
   })
   ownerId: mongoose.Types.ObjectId;
 
+  //TODO: Create index between imgId and imgVersion to get unique pairs of values
   @Prop({
     type: String,
     default: '',

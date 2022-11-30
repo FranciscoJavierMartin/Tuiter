@@ -45,8 +45,6 @@ import { ChangePasswordDto } from '@/auth/dto/requests/change-password.dto';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  // TODO: Upload image to db (There is a existing service)
-  // TODO: Update image in db when upload new profile picture
   @Post('register')
   @UseInterceptors(FileInterceptor('avatarImage'))
   @ApiConsumes('multipart/form-data')

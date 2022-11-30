@@ -13,6 +13,7 @@ import { generateRandomIntegers } from '@/helpers/utils';
 import { UploaderService } from '@/shared/services/uploader.service';
 import { ID } from '@/shared/interfaces/types';
 import { EmailService } from '@/email/services/email.service';
+import { ImageJobData } from '@/image/interfaces/image.interface';
 import { UserService } from '@/user/services/user.service';
 import { UserCacheService } from '@/user/services/user.cache.service';
 import { UserDocument } from '@/user/models/user.model';
@@ -36,6 +37,7 @@ export class AuthService {
     private readonly emailService: EmailService,
     @InjectQueue('auth') private readonly authQueue: Queue<AuthDocument>,
     @InjectQueue('user') private readonly userQueue: Queue<UserDocument>,
+    @InjectQueue('image') private readonly imageQueue: Queue<ImageJobData>,
   ) {}
 
   /**
@@ -69,15 +71,23 @@ export class AuthService {
       ...registerDto,
     } as AuthDocument;
 
-    try {
-      avatarUploaded = await this.uploaderService.uploadImage(
-        avatarImage,
-        userObjectId.toString(),
-        true,
-        true,
-      );
-    } catch (error) {
-      throw new BadGatewayException('External server error');
+    if (avatarImage) {
+      try {
+        avatarUploaded = await this.uploaderService.uploadImage(
+          avatarImage,
+          userObjectId.toString(),
+          true,
+          true,
+        );
+
+        this.imageQueue.add('addImageToDb', {
+          ownerId: userObjectId,
+          imgId: avatarUploaded.public_id,
+          imgVersion: avatarUploaded.version.toString(),
+        });
+      } catch (error) {
+        throw new BadGatewayException('External server error');
+      }
     }
 
     const userDataToCache: UserDocument = this.userService.getUserData(
