@@ -19,7 +19,6 @@ import { ImageModule } from '@/image/image.module';
 import { ChatModule } from '@/chat/chat.module';
 import { HealthModule } from '@/health/health.module';
 
-// TODO: Create a custom pipe to reuse file validation
 // TODO: Add logic to find connected users
 // TODO: Check email notifications according to user preferences
 // TODO: Update type in Swagger response tags

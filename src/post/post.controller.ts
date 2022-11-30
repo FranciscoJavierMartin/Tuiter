@@ -3,9 +3,7 @@ import {
   Post,
   Body,
   UploadedFile,
-  ParseFilePipe,
   UseInterceptors,
-  MaxFileSizeValidator,
   UseGuards,
   Get,
   Param,
@@ -29,7 +27,7 @@ import {
 } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ValidateIdPipe } from '@/shared/pipes/validate-id.pipe';
-import { FILE_SIZE_LIMIT_MB } from '@/shared/contants';
+import { DefaultFilePipe } from '@/shared/contants';
 import { ID } from '@/shared/interfaces/types';
 import { CurrentUser } from '@/auth/interfaces/current-user.interface';
 import { GetUser } from '@/auth/decorators/get-user.decorator';
@@ -65,12 +63,7 @@ export class PostController {
   public async create(
     @Body() createPostDto: CreatePostDto,
     @GetUser() user: CurrentUser,
-    @UploadedFile(
-      new ParseFilePipe({
-        fileIsRequired: false,
-        validators: [new MaxFileSizeValidator({ maxSize: FILE_SIZE_LIMIT_MB })],
-      }),
-    )
+    @UploadedFile(DefaultFilePipe)
     image?: Express.Multer.File,
   ): Promise<void> {
     return this.postService.create(createPostDto, user, image);
@@ -147,12 +140,7 @@ export class PostController {
     @Param('postId', ValidateIdPipe) postId: string,
     @Body() updatePostDto: UpdatePostDto,
     @GetUser('userId') authorId: ID,
-    @UploadedFile(
-      new ParseFilePipe({
-        fileIsRequired: false,
-        validators: [new MaxFileSizeValidator({ maxSize: FILE_SIZE_LIMIT_MB })],
-      }),
-    )
+    @UploadedFile(DefaultFilePipe)
     image?: Express.Multer.File,
   ): Promise<void> {
     return this.postService.update(postId, updatePostDto, authorId, image);
