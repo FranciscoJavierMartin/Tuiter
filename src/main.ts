@@ -3,6 +3,7 @@ import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import helmet from 'helmet';
 import * as compression from 'compression';
+import * as swaggerStats from 'swagger-stats';
 import { AppModule } from './app.module';
 
 async function bootstrap(): Promise<void> {
@@ -27,6 +28,12 @@ async function bootstrap(): Promise<void> {
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
+  app.use(
+    swaggerStats.getMiddleware({
+      swaggerSpec: document,
+      uriPath: '/api-monitoring',
+    }),
+  );
   SwaggerModule.setup('docs', app, document);
 
   await app.listen(process.env.PORT);
