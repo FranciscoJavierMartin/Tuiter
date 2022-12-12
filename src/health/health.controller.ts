@@ -1,7 +1,9 @@
 import { Controller, Get, Param, ParseIntPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { ApiTags } from '@nestjs/swagger';
 import { performance } from 'perf_hooks';
 
+@ApiTags('Health')
 @Controller('health')
 export class HealthController {
   constructor(private readonly configService: ConfigService) {}
