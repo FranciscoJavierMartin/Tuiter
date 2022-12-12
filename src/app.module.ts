@@ -57,7 +57,7 @@ import { HealthModule } from '@/health/health.module';
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
-      autoSchemaFile: join(process.cwd(), '@/schema.gql'),
+      autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       sortSchema: true,
     }),
     MongooseModule.forRoot(process.env.DATABASE_URL),
