@@ -19,6 +19,11 @@ import { ImageModule } from '@/image/image.module';
 import { ChatModule } from '@/chat/chat.module';
 import { HealthModule } from '@/health/health.module';
 
+// TODO: Add API KEY to each request. For avoid third party request
+// TODO: Add JSDoc return type properly
+// TODO: Idea. Add "tip" button to give a tip to user (Real money)
+// TODO: Refresh token
+// TODO: Idea. Add fixed post to the start of list
 // TODO: Use decorator composition to reducer the ammount of decorators per route https://docs.nestjs.com/custom-decorators
 // TODO: Add logic to find connected users
 // TODO: Check email notifications according to user preferences
@@ -36,6 +41,7 @@ import { HealthModule } from '@/health/health.module';
 // TODO: Move to fastify instead of express
 // TODO: Move cache services to repositories folder
 // TODO: Use interfaces to access to repository services (just for DB services)
+// TODO: Setup Docker for development, testing and production environment
 // TODO: Setup tests
 // TODO: Setup Github Actions for CI/CD
 // TODO: Setup SMTP server in docker-compose
