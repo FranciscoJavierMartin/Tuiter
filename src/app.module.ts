@@ -1,8 +1,11 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { GraphQLModule } from '@nestjs/graphql';
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { MongooseModule } from '@nestjs/mongoose';
 import { BullModule } from '@nestjs/bull';
 import { MailerModule } from '@nestjs-modules/mailer';
+import { join } from 'path';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { SharedModule } from '@/shared/shared.module';
 import { LoggerMiddleware } from '@/shared/middlewares/logger.middleware';
@@ -51,6 +54,11 @@ import { HealthModule } from '@/health/health.module';
     ConfigModule.forRoot({
       envFilePath: '.env',
       isGlobal: true,
+    }),
+    GraphQLModule.forRoot<ApolloDriverConfig>({
+      driver: ApolloDriver,
+      autoSchemaFile: join(process.cwd(), '@/schema.gql'),
+      sortSchema: true,
     }),
     MongooseModule.forRoot(process.env.DATABASE_URL),
     MailerModule.forRootAsync({
