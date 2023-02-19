@@ -2,6 +2,38 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
 type Query {
-  login: String!
+  login(password: String!, username: String!): ResponseRegisterDto!
+}
+
+type ResponseRegisterDto {
+  message: String!
+  token: String!
+  user: UserDto!
+}
+
+type UserDto {
+  _id: ID!
+  avatarColor: String
+  bgImageId: String!
+  bgImageVersion: String!
+  blocked: [ID!]!
+  blockedBy: [ID!]!
+  createdAt: DateTime!
+  email: String
+  followersCount: Int!
+  followingCount: Int!
+  location: String!
+  postsCount: Int!
+  profilePicture: String!
+  quote: String!
+  school: String!
+  uId: String
+  username: String
+  work: String!
 }

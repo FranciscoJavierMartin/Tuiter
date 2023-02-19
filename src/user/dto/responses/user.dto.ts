@@ -1,3 +1,4 @@
+import { Field, ID, Int, ObjectType } from '@nestjs/graphql';
 import { ApiProperty } from '@nestjs/swagger';
 import {
   NotificationSettings,
@@ -5,76 +6,91 @@ import {
 } from '@/user/interfaces/user.interface';
 import { UserDocument } from '@/user/models/user.model';
 
+@ObjectType()
 export class UserDto {
   @ApiProperty({
     description: 'User id from "Users" collection',
     type: String,
   })
+  @Field(() => ID)
   _id: string;
 
   @ApiProperty({
     description: 'User name',
   })
+  @Field(() => String, { nullable: true })
   username?: string;
 
   @ApiProperty({
     description: 'User email',
   })
+  @Field(() => String, { nullable: true })
   email?: string;
 
   @ApiProperty({
     description: 'Avatar color',
   })
+  @Field(() => String, { nullable: true })
   avatarColor?: string;
 
   @ApiProperty({
     description: 'User id',
   })
+  @Field(() => String, { nullable: true })
   uId?: string;
 
   @ApiProperty({
     description: 'Number of posts created by user',
   })
+  @Field(() => Int)
   postsCount: number;
 
   @ApiProperty({
     description: 'User job',
   })
+  @Field(() => String)
   work: string;
 
   @ApiProperty({
     description: 'User school',
   })
+  @Field(() => String)
   school: string;
 
   @ApiProperty({
     description: 'User quote',
   })
+  @Field(() => String)
   quote: string;
 
   @ApiProperty({
     description: 'User location',
   })
+  @Field(() => String)
   location: string;
 
   @ApiProperty({
     description: 'Users blocked by me',
   })
+  @Field(() => [ID])
   blocked: string[];
 
   @ApiProperty({
     description: 'Users that have blocked me',
   })
+  @Field(() => [ID])
   blockedBy: string[];
 
   @ApiProperty({
     description: 'Users that follow me',
   })
+  @Field(() => Int)
   followersCount: number;
 
   @ApiProperty({
     description: 'Users that I follow',
   })
+  @Field(() => Int)
   followingCount: number;
 
   @ApiProperty({
@@ -90,21 +106,25 @@ export class UserDto {
   @ApiProperty({
     description: 'Background image version (for cloudinary)',
   })
+  @Field(() => String)
   bgImageVersion: string;
 
   @ApiProperty({
     description: 'Background image id (for cloudinary)',
   })
+  @Field(() => String)
   bgImageId: string;
 
   @ApiProperty({
     description: 'Profile picture url',
   })
+  @Field(() => String)
   profilePicture: string;
 
   @ApiProperty({
     description: 'User created date',
   })
+  @Field(() => Date)
   createdAt?: Date;
 
   constructor(user: UserDocument) {
