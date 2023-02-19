@@ -12,7 +12,9 @@ export class AuthResolver {
     name: 'login',
     description: 'Login created user',
   })
-  public async login(@Args() loginDto: LoginDto): Promise<ResponseRegisterDto> {
+  public async login(
+    @Args('loginInput') loginDto: LoginDto,
+  ): Promise<ResponseRegisterDto> {
     return this.authService.login(loginDto);
   }
 

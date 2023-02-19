@@ -7,6 +7,14 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+input LoginDto {
+  """User password. Minimum length 4 and maximun lenght 8."""
+  password: String!
+
+  """User name. It is unique. Minimum length 4 and maximun lenght 8."""
+  username: String!
+}
+
 type Mutation {
   """Register new user"""
   register(registerInput: RegisterDto!): String!
@@ -14,13 +22,7 @@ type Mutation {
 
 type Query {
   """Login created user"""
-  login(
-    """User password. Minimum length 4 and maximun lenght 8."""
-    password: String!
-
-    """User name. It is unique. Minimum length 4 and maximun lenght 8."""
-    username: String!
-  ): ResponseRegisterDto!
+  login(loginInput: LoginDto!): ResponseRegisterDto!
 }
 
 input RegisterDto {
