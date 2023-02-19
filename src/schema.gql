@@ -9,19 +9,7 @@ scalar DateTime
 
 type Mutation {
   """Register new user"""
-  register(
-    """User avatar color."""
-    avatarColor: String!
-
-    """User email"""
-    email: String!
-
-    """User password. Minimum length 4 and maximun lenght 8."""
-    password: String!
-
-    """User name. It is unique. Minimum length 4 and maximun lenght 8."""
-    username: String!
-  ): String!
+  register(registerInput: RegisterDto!): String!
 }
 
 type Query {
@@ -33,6 +21,20 @@ type Query {
     """User name. It is unique. Minimum length 4 and maximun lenght 8."""
     username: String!
   ): ResponseRegisterDto!
+}
+
+input RegisterDto {
+  """User avatar color."""
+  avatarColor: String!
+
+  """User email"""
+  email: String!
+
+  """User password. Minimum length 4 and maximun lenght 8."""
+  password: String!
+
+  """User name. It is unique. Minimum length 4 and maximun lenght 8."""
+  username: String!
 }
 
 type ResponseRegisterDto {

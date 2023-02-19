@@ -20,7 +20,9 @@ export class AuthResolver {
     name: 'register',
     description: 'Register new user',
   })
-  public async register(@Args() registerDto: RegisterDto): Promise<string> {
+  public async register(
+    @Args('registerInput') registerDto: RegisterDto,
+  ): Promise<string> {
     console.log(registerDto);
     return 'Registered';
   }
