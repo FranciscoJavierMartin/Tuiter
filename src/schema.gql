@@ -3,5 +3,28 @@
 # ------------------------------------------------------
 
 type Query {
-  login: String!
+  login(password: String!, username: String!): ResponseRegisterDto!
+}
+
+type ResponseRegisterDto {
+  message: String!
+  token: String!
+  user: UserDto!
+}
+
+type UserDto {
+  _id: ID!
+  avatarColor: String
+  blocked: [ID!]!
+  blockedBy: [ID!]!
+  email: String
+  followersCount: Int!
+  followingCount: Int!
+  location: String!
+  postsCount: Int!
+  quote: String!
+  school: String!
+  uId: String
+  username: String
+  work: String!
 }
