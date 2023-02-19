@@ -9,37 +9,95 @@ scalar DateTime
 
 type Mutation {
   """Register new user"""
-  register(avatarColor: String!, email: String!, password: String!, username: String!): String!
+  register(
+    """User avatar color."""
+    avatarColor: String!
+
+    """User email"""
+    email: String!
+
+    """User password. Minimum length 4 and maximun lenght 8."""
+    password: String!
+
+    """User name. It is unique. Minimum length 4 and maximun lenght 8."""
+    username: String!
+  ): String!
 }
 
 type Query {
   """Login created user"""
-  login(password: String!, username: String!): ResponseRegisterDto!
+  login(
+    """User password. Minimum length 4 and maximun lenght 8."""
+    password: String!
+
+    """User name. It is unique. Minimum length 4 and maximun lenght 8."""
+    username: String!
+  ): ResponseRegisterDto!
 }
 
 type ResponseRegisterDto {
+  """Info message"""
   message: String!
+
+  """JSON Web Token. For authentication"""
   token: String!
+
+  """User info"""
   user: UserDto!
 }
 
 type UserDto {
+  """User id from "Users" collection"""
   _id: ID!
+
+  """Avatar color"""
   avatarColor: String
+
+  """Background image id (for cloudinary)"""
   bgImageId: String!
+
+  """Background image version (for cloudinary)"""
   bgImageVersion: String!
+
+  """Users blocked by me"""
   blocked: [ID!]!
+
+  """Users that have blocked me"""
   blockedBy: [ID!]!
+
+  """User created date"""
   createdAt: DateTime!
+
+  """User email"""
   email: String
+
+  """Users amount that follow me"""
   followersCount: Int!
+
+  """Users amount that I follow"""
   followingCount: Int!
+
+  """Where user live"""
   location: String!
+
+  """Number of user posts"""
   postsCount: Int!
+
+  """Profile picture url"""
   profilePicture: String!
+
+  """User quote"""
   quote: String!
+
+  """Where user study"""
   school: String!
+
+  """User id"""
   uId: String
+
+  """User name"""
   username: String
+
+  """User job"""
   work: String!
 }

@@ -12,85 +12,85 @@ export class UserDto {
     description: 'User id from "Users" collection',
     type: String,
   })
-  @Field(() => ID)
+  @Field(() => ID, { description: 'User id from "Users" collection' })
   _id: string;
 
   @ApiProperty({
     description: 'User name',
   })
-  @Field(() => String, { nullable: true })
+  @Field(() => String, { nullable: true, description: 'User name' })
   username?: string;
 
   @ApiProperty({
     description: 'User email',
   })
-  @Field(() => String, { nullable: true })
+  @Field(() => String, { nullable: true, description: 'User email' })
   email?: string;
 
   @ApiProperty({
     description: 'Avatar color',
   })
-  @Field(() => String, { nullable: true })
+  @Field(() => String, { nullable: true, description: 'Avatar color' })
   avatarColor?: string;
 
   @ApiProperty({
     description: 'User id',
   })
-  @Field(() => String, { nullable: true })
+  @Field(() => String, { nullable: true, description: 'User id' })
   uId?: string;
 
   @ApiProperty({
     description: 'Number of posts created by user',
   })
-  @Field(() => Int)
+  @Field(() => Int, { description: 'Number of user posts' })
   postsCount: number;
 
   @ApiProperty({
     description: 'User job',
   })
-  @Field(() => String)
+  @Field(() => String, { description: 'User job' })
   work: string;
 
   @ApiProperty({
     description: 'User school',
   })
-  @Field(() => String)
+  @Field(() => String, { description: 'Where user study' })
   school: string;
 
   @ApiProperty({
     description: 'User quote',
   })
-  @Field(() => String)
+  @Field(() => String, { description: 'User quote' })
   quote: string;
 
   @ApiProperty({
-    description: 'User location',
+    description: 'Where user live',
   })
-  @Field(() => String)
+  @Field(() => String, { description: 'Where user live' })
   location: string;
 
   @ApiProperty({
     description: 'Users blocked by me',
   })
-  @Field(() => [ID])
+  @Field(() => [ID], { description: 'Users blocked by me' })
   blocked: string[];
 
   @ApiProperty({
     description: 'Users that have blocked me',
   })
-  @Field(() => [ID])
+  @Field(() => [ID], { description: 'Users that have blocked me' })
   blockedBy: string[];
 
   @ApiProperty({
-    description: 'Users that follow me',
+    description: 'Users amount that follow me',
   })
-  @Field(() => Int)
+  @Field(() => Int, { description: 'Users amount that follow me' })
   followersCount: number;
 
   @ApiProperty({
-    description: 'Users that I follow',
+    description: 'Users amount that I follow',
   })
-  @Field(() => Int)
+  @Field(() => Int, { description: 'Users amount that I follow' })
   followingCount: number;
 
   @ApiProperty({
@@ -106,25 +106,27 @@ export class UserDto {
   @ApiProperty({
     description: 'Background image version (for cloudinary)',
   })
-  @Field(() => String)
+  @Field(() => String, {
+    description: 'Background image version (for cloudinary)',
+  })
   bgImageVersion: string;
 
   @ApiProperty({
     description: 'Background image id (for cloudinary)',
   })
-  @Field(() => String)
+  @Field(() => String, { description: 'Background image id (for cloudinary)' })
   bgImageId: string;
 
   @ApiProperty({
     description: 'Profile picture url',
   })
-  @Field(() => String)
+  @Field(() => String, { description: 'Profile picture url' })
   profilePicture: string;
 
   @ApiProperty({
     description: 'User created date',
   })
-  @Field(() => Date)
+  @Field(() => Date, { description: 'User created date' })
   createdAt?: Date;
 
   constructor(user: UserDocument) {

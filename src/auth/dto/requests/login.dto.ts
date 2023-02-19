@@ -12,7 +12,10 @@ export class LoginDto {
     nullable: false,
     uniqueItems: true,
   })
-  @Field(() => String)
+  @Field(() => String, {
+    description:
+      'User name. It is unique. Minimum length 4 and maximun lenght 8.',
+  })
   @IsString()
   @MinLength(4)
   @MaxLength(8)
@@ -26,7 +29,9 @@ export class LoginDto {
     nullable: false,
     uniqueItems: true,
   })
-  @Field(() => String)
+  @Field(() => String, {
+    description: 'User password. Minimum length 4 and maximun lenght 8.',
+  })
   @IsString()
   @MinLength(4)
   @MaxLength(8)

@@ -12,7 +12,10 @@ export class RegisterDto {
     nullable: false,
     uniqueItems: true,
   })
-  @Field(() => String)
+  @Field(() => String, {
+    description:
+      'User name. It is unique. Minimum length 4 and maximun lenght 8.',
+  })
   @IsString()
   @MinLength(4)
   @MaxLength(8)
@@ -25,7 +28,9 @@ export class RegisterDto {
     maxLength: 8,
     nullable: false,
   })
-  @Field(() => String)
+  @Field(() => String, {
+    description: 'User password. Minimum length 4 and maximun lenght 8.',
+  })
   @IsString()
   @MinLength(4)
   @MaxLength(8)
@@ -37,7 +42,9 @@ export class RegisterDto {
     nullable: false,
     uniqueItems: true,
   })
-  @Field(() => String)
+  @Field(() => String, {
+    description: 'User email',
+  })
   @IsString()
   @IsEmail()
   email: string;
@@ -47,7 +54,9 @@ export class RegisterDto {
     example: 'blue',
     nullable: false,
   })
-  @Field(() => String)
+  @Field(() => String, {
+    description: 'User avatar color.',
+  })
   @IsString()
   avatarColor: string;
 }
