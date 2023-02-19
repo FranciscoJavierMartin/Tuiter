@@ -106,21 +106,25 @@ export class UserDto {
   @ApiProperty({
     description: 'Background image version (for cloudinary)',
   })
+  @Field(() => String)
   bgImageVersion: string;
 
   @ApiProperty({
     description: 'Background image id (for cloudinary)',
   })
+  @Field(() => String)
   bgImageId: string;
 
   @ApiProperty({
     description: 'Profile picture url',
   })
+  @Field(() => String)
   profilePicture: string;
 
   @ApiProperty({
     description: 'User created date',
   })
+  @Field(() => Date)
   createdAt?: Date;
 
   constructor(user: UserDocument) {
