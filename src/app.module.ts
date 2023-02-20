@@ -22,6 +22,7 @@ import { ImageModule } from '@/image/image.module';
 import { ChatModule } from '@/chat/chat.module';
 import { HealthModule } from '@/health/health.module';
 
+// TODO: Continue with GraphQL support
 // TODO: If the result list from Redis is empty, then search in DB
 // TODO: For "workers" request use HTTP Accepted 202
 // TODO: Add API KEY to each request. For avoid third party request
