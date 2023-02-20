@@ -11,6 +11,7 @@ import { UserModule } from '@/user/user.module';
 import { AuthService } from '@/auth/services/auth.service';
 import { SearchService } from '@/auth/services/search.service';
 import { AuthController } from '@/auth/auth.controller';
+import { AuthResolver } from '@/auth/auth.resolver';
 import { AuthUser, AuthSchema } from '@/auth/models/auth.model';
 import { JwtStrategy } from '@/auth/strategies/jwt.strategy';
 import { AuthConsumer } from '@/auth/consumers/auth.consumer';
@@ -42,6 +43,7 @@ import { AuthRepository } from '@/auth/repositories/auth.repository';
     AuthConsumer,
     AuthRepository,
     SearchService,
+    AuthResolver,
   ],
   exports: [SearchService],
 })

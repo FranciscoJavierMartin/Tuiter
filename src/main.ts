@@ -10,7 +10,15 @@ async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule);
   const logger = new Logger('bootstrap');
 
-  app.use(helmet());
+  // Disable protection for development environment (for graphql playground)
+  app.use(
+    helmet({
+      contentSecurityPolicy:
+        process.env.NODE_ENV === 'production' ? undefined : false,
+      crossOriginEmbedderPolicy:
+        process.env.NODE_ENV === 'production' ? undefined : false,
+    }),
+  );
   app.use(compression());
   app.setGlobalPrefix('api');
   app.useGlobalPipes(

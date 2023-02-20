@@ -1,8 +1,11 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { GraphQLModule } from '@nestjs/graphql';
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { MongooseModule } from '@nestjs/mongoose';
 import { BullModule } from '@nestjs/bull';
 import { MailerModule } from '@nestjs-modules/mailer';
+import { join } from 'path';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { SharedModule } from '@/shared/shared.module';
 import { LoggerMiddleware } from '@/shared/middlewares/logger.middleware';
@@ -19,6 +22,8 @@ import { ImageModule } from '@/image/image.module';
 import { ChatModule } from '@/chat/chat.module';
 import { HealthModule } from '@/health/health.module';
 
+// TODO: If the result list from Redis is empty, then search in DB
+// TODO: For "workers" request use HTTP Accepted 202
 // TODO: Add API KEY to each request. For avoid third party request
 // TODO: Add JSDoc return type properly
 // TODO: Idea. Add "tip" button to give a tip to user (Real money)
@@ -51,6 +56,11 @@ import { HealthModule } from '@/health/health.module';
     ConfigModule.forRoot({
       envFilePath: '.env',
       isGlobal: true,
+    }),
+    GraphQLModule.forRoot<ApolloDriverConfig>({
+      driver: ApolloDriver,
+      autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
+      sortSchema: true,
     }),
     MongooseModule.forRoot(process.env.DATABASE_URL),
     MailerModule.forRootAsync({

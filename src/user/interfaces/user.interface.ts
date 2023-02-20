@@ -30,6 +30,7 @@ export interface UpdateNotificationSettingsJobData {
   notificationSettings: NotificationSettings;
 }
 
+// TODO: Refactor to use in GraphQL
 export type NotificationSettings = Record<NotificationType, boolean>;
 export type SocialLinks = Record<SocialLinksType, string>;
 

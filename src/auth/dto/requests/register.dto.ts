@@ -1,6 +1,8 @@
+import { Field, InputType } from '@nestjs/graphql';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail, IsString, MaxLength, MinLength } from 'class-validator';
 
+@InputType()
 export class RegisterDto {
   @ApiProperty({
     description: 'User name',
@@ -9,6 +11,10 @@ export class RegisterDto {
     maxLength: 8,
     nullable: false,
     uniqueItems: true,
+  })
+  @Field(() => String, {
+    description:
+      'User name. It is unique. Minimum length 4 and maximun lenght 8.',
   })
   @IsString()
   @MinLength(4)
@@ -22,6 +28,9 @@ export class RegisterDto {
     maxLength: 8,
     nullable: false,
   })
+  @Field(() => String, {
+    description: 'User password. Minimum length 4 and maximun lenght 8.',
+  })
   @IsString()
   @MinLength(4)
   @MaxLength(8)
@@ -33,6 +42,9 @@ export class RegisterDto {
     nullable: false,
     uniqueItems: true,
   })
+  @Field(() => String, {
+    description: 'User email',
+  })
   @IsString()
   @IsEmail()
   email: string;
@@ -41,6 +53,9 @@ export class RegisterDto {
     description: 'Avatar color',
     example: 'blue',
     nullable: false,
+  })
+  @Field(() => String, {
+    description: 'User avatar color.',
   })
   @IsString()
   avatarColor: string;
