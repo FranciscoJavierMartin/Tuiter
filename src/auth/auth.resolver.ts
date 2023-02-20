@@ -18,14 +18,13 @@ export class AuthResolver {
     return this.authService.login(loginDto);
   }
 
-  @Mutation(() => String, {
+  @Mutation(() => ResponseRegisterDto, {
     name: 'register',
     description: 'Register new user',
   })
   public async register(
     @Args('registerInput') registerDto: RegisterDto,
-  ): Promise<string> {
-    console.log(registerDto);
-    return 'Registered';
+  ): Promise<ResponseRegisterDto> {
+    return this.authService.create(registerDto);
   }
 }
