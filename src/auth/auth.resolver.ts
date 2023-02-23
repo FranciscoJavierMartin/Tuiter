@@ -39,7 +39,6 @@ export class AuthResolver {
     @GetUserGql() user: CurrentUser,
   ): Promise<UserDto> {
     const userFromServer = await this.authService.getUser(user.userId);
-    console.log(userFromServer);
     return new UserDto(userFromServer);
   }
 }
