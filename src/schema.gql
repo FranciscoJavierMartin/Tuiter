@@ -22,7 +22,10 @@ input LoginDto {
 
 type Mutation {
   """Send reset password email"""
-  forgotPassword: InfoMessageDto!
+  forgotPassword(
+    """User email"""
+    email: String!
+  ): InfoMessageDto!
 
   """Register new user"""
   register(registerInput: RegisterDto!): ResponseRegisterDto!

@@ -4,6 +4,7 @@ import { UserDto } from '@/user/dto/responses/user.dto';
 import { AuthService } from '@/auth/services/auth.service';
 import { LoginDto } from '@/auth/dto/requests/login.dto';
 import { RegisterDto } from '@/auth/dto/requests/register.dto';
+import { ForgotPasswordDto } from '@/auth/dto/requests/forgot-password.dto';
 import { ResponseRegisterDto } from '@/auth/dto/responses/register.dto';
 import { InfoMessageDto } from '@/auth/dto/responses/info-message.dto';
 import { CurrentUser } from '@/auth/interfaces/current-user.interface';
@@ -50,7 +51,10 @@ export class AuthResolver {
     name: 'forgotPassword',
     description: 'Send reset password email',
   })
-  public async forgotPassword(): Promise<InfoMessageDto> {
+  public async forgotPassword(
+    @Args() forgotPasswordDto: ForgotPasswordDto,
+  ): Promise<InfoMessageDto> {
+    console.log(forgotPasswordDto);
     return {
       message: 'Password reset email sent',
     };
