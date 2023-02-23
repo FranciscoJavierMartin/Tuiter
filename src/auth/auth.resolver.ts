@@ -5,6 +5,7 @@ import { AuthService } from '@/auth/services/auth.service';
 import { LoginDto } from '@/auth/dto/requests/login.dto';
 import { RegisterDto } from '@/auth/dto/requests/register.dto';
 import { ResponseRegisterDto } from '@/auth/dto/responses/register.dto';
+import { InfoMessageDto } from '@/auth/dto/responses/info-message.dto';
 import { CurrentUser } from '@/auth/interfaces/current-user.interface';
 import { GetUserGql } from '@/auth/decorators/get-user-gql.decorator';
 import { GqlAuthGuard } from '@/auth/guards/gql-auth.guard';
@@ -45,11 +46,13 @@ export class AuthResolver {
     return new UserDto(userFromServer);
   }
 
-  @Mutation(() => String, {
+  @Mutation(() => InfoMessageDto, {
     name: 'forgotPassword',
     description: 'Send reset password email',
   })
-  public async forgotPassword(): Promise<string> {
-    return 'Hello';
+  public async forgotPassword(): Promise<InfoMessageDto> {
+    return {
+      message: 'Password reset email sent',
+    };
   }
 }
