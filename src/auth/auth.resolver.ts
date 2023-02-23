@@ -1,8 +1,13 @@
+import { UseGuards } from '@nestjs/common';
 import { Resolver, Query, Args, Mutation } from '@nestjs/graphql';
+import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from '@/auth/services/auth.service';
 import { LoginDto } from '@/auth/dto/requests/login.dto';
 import { RegisterDto } from '@/auth/dto/requests/register.dto';
 import { ResponseRegisterDto } from '@/auth/dto/responses/register.dto';
+import { CurrentUser } from '@/auth/interfaces/current-user.interface';
+import { GetUserGql } from '@/auth/decorators/get-user-gql.decorator';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
 @Resolver()
 export class AuthResolver {
@@ -29,7 +34,11 @@ export class AuthResolver {
   }
 
   @Query(() => String, { name: 'currentUser', description: 'User info' })
-  public async getCurrentUser(): Promise<string> {
+  @UseGuards(JwtAuthGuard)
+  public async getCurrentUser(
+    @GetUserGql() user: CurrentUser,
+  ): Promise<string> {
+    console.log('Resolver', user);
     return 'Get current user';
   }
 }
