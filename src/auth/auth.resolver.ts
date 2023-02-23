@@ -7,6 +7,7 @@ import { ResponseRegisterDto } from '@/auth/dto/responses/register.dto';
 import { CurrentUser } from '@/auth/interfaces/current-user.interface';
 import { GetUserGql } from '@/auth/decorators/get-user-gql.decorator';
 import { GqlAuthGuard } from '@/auth/guards/gql-auth.guard';
+import { UserDto } from '@/user/dto/responses/user.dto';
 
 @Resolver()
 export class AuthResolver {
@@ -32,12 +33,13 @@ export class AuthResolver {
     return this.authService.create(registerDto);
   }
 
-  @Query(() => String, { name: 'currentUser', description: 'User info' })
+  @Query(() => UserDto, { name: 'currentUser', description: 'User info' })
   @UseGuards(GqlAuthGuard)
   public async getCurrentUser(
     @GetUserGql() user: CurrentUser,
-  ): Promise<string> {
-    console.log('Resolver', user);
-    return 'Get current user';
+  ): Promise<UserDto> {
+    const userFromServer = await this.authService.getUser(user.userId);
+    console.log(userFromServer);
+    return new UserDto(userFromServer);
   }
 }
