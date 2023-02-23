@@ -1,5 +1,9 @@
+import { InternalServerErrorException } from '@nestjs/common';
 import { BullModuleOptions } from '@nestjs/bull';
+import { ObjectId } from 'mongodb';
 import { DEFAULT_JOB_OPTIONS } from '@/shared/constants';
+import { ID } from '@/shared/interfaces/types';
+import { CurrentUser } from '@/auth/interfaces/current-user.interface';
 
 const queues: BullModuleOptions[] = [
   {
@@ -142,4 +146,32 @@ export function removeUndefinedAttributes(obj: object): object {
  */
 export function isVideo(mimetype: string): boolean {
   return mimetype.includes('video');
+}
+
+/**
+ * Get current user from request
+ * @param user User from request
+ * @param field (Optional) Field name to select
+ * @returns User data from request
+ */
+export function getCurrentUserFromRequest(
+  user?: CurrentUser,
+  field?: string,
+): string | ID | CurrentUser {
+  console.log(user);
+  let res: string | ID | CurrentUser;
+
+  if (!user) {
+    throw new InternalServerErrorException('User not found (request)');
+  }
+
+  if (field === 'userId') {
+    res = new ObjectId(user[field]);
+  } else if (field) {
+    res = user[field];
+  } else {
+    res = user;
+  }
+
+  return res;
 }
