@@ -16,12 +16,15 @@ input LoginDto {
 }
 
 type Mutation {
+  """Send reset password email"""
+  forgotPassword: String!
+
   """Register new user"""
   register(registerInput: RegisterDto!): ResponseRegisterDto!
 }
 
 type Query {
-  """User info"""
+  """Get current user info"""
   currentUser: UserDto!
 
   """Login created user"""
