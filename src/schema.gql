@@ -17,10 +17,13 @@ input LoginDto {
 
 type Mutation {
   """Register new user"""
-  register(registerInput: RegisterDto!): String!
+  register(registerInput: RegisterDto!): ResponseRegisterDto!
 }
 
 type Query {
+  """User info"""
+  currentUser: UserDto!
+
   """Login created user"""
   login(loginInput: LoginDto!): ResponseRegisterDto!
 }

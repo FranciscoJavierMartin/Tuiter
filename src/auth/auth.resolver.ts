@@ -1,8 +1,13 @@
+import { UseGuards } from '@nestjs/common';
 import { Resolver, Query, Args, Mutation } from '@nestjs/graphql';
 import { AuthService } from '@/auth/services/auth.service';
 import { LoginDto } from '@/auth/dto/requests/login.dto';
 import { RegisterDto } from '@/auth/dto/requests/register.dto';
 import { ResponseRegisterDto } from '@/auth/dto/responses/register.dto';
+import { CurrentUser } from '@/auth/interfaces/current-user.interface';
+import { GetUserGql } from '@/auth/decorators/get-user-gql.decorator';
+import { GqlAuthGuard } from '@/auth/guards/gql-auth.guard';
+import { UserDto } from '@/user/dto/responses/user.dto';
 
 @Resolver()
 export class AuthResolver {
@@ -26,5 +31,14 @@ export class AuthResolver {
     @Args('registerInput') registerDto: RegisterDto,
   ): Promise<ResponseRegisterDto> {
     return this.authService.create(registerDto);
+  }
+
+  @Query(() => UserDto, { name: 'currentUser', description: 'User info' })
+  @UseGuards(GqlAuthGuard)
+  public async getCurrentUser(
+    @GetUserGql() user: CurrentUser,
+  ): Promise<UserDto> {
+    const userFromServer = await this.authService.getUser(user.userId);
+    return new UserDto(userFromServer);
   }
 }
