@@ -59,4 +59,14 @@ export class AuthResolver {
       message: 'Password reset email sent',
     };
   }
+
+  @Mutation(() => InfoMessageDto, {
+    name: 'resetPassword',
+    description: 'Change user password and send an email to user',
+  })
+  public async resetPassword(): Promise<InfoMessageDto> {
+    return {
+      message: 'Password reset email sent',
+    };
+  }
 }

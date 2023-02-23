@@ -31,6 +31,9 @@ type Mutation {
 
   """Register new user"""
   register(registerInput: RegisterDto!): ResponseRegisterDto!
+
+  """Change user password and send an email to user"""
+  resetPassword: InfoMessageDto!
 }
 
 type Query {
