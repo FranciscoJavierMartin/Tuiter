@@ -6,7 +6,7 @@ import { RegisterDto } from '@/auth/dto/requests/register.dto';
 import { ResponseRegisterDto } from '@/auth/dto/responses/register.dto';
 import { CurrentUser } from '@/auth/interfaces/current-user.interface';
 import { GetUserGql } from '@/auth/decorators/get-user-gql.decorator';
-import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { GqlAuthGuard } from '@/auth/guards/gql-auth.guard';
 
 @Resolver()
 export class AuthResolver {
@@ -33,7 +33,7 @@ export class AuthResolver {
   }
 
   @Query(() => String, { name: 'currentUser', description: 'User info' })
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(GqlAuthGuard)
   public async getCurrentUser(
     @GetUserGql() user: CurrentUser,
   ): Promise<string> {

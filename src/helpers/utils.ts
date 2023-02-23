@@ -158,7 +158,6 @@ export function getCurrentUserFromRequest(
   user?: CurrentUser,
   field?: string,
 ): string | ID | CurrentUser {
-  console.log(user);
   let res: string | ID | CurrentUser;
 
   if (!user) {
