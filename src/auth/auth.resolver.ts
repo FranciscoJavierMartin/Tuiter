@@ -27,4 +27,9 @@ export class AuthResolver {
   ): Promise<ResponseRegisterDto> {
     return this.authService.create(registerDto);
   }
+
+  @Query(() => String, { name: 'currentUser', description: 'User info' })
+  public async getCurrentUser(): Promise<string> {
+    return 'Get current user';
+  }
 }
