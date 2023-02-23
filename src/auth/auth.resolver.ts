@@ -52,9 +52,9 @@ export class AuthResolver {
     description: 'Send reset password email',
   })
   public async forgotPassword(
-    @Args() forgotPasswordDto: ForgotPasswordDto,
+    @Args('forgotPasswordDto') forgotPasswordDto: ForgotPasswordDto,
   ): Promise<InfoMessageDto> {
-    console.log(forgotPasswordDto);
+    await this.authService.sendForgotPasswordEmail(forgotPasswordDto.email);
     return {
       message: 'Password reset email sent',
     };

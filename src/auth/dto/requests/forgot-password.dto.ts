@@ -1,8 +1,8 @@
-import { ArgsType, Field } from '@nestjs/graphql';
+import { InputType, Field } from '@nestjs/graphql';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail, IsString } from 'class-validator';
 
-@ArgsType()
+@InputType()
 export class ForgotPasswordDto {
   @ApiProperty({
     description: 'User email',

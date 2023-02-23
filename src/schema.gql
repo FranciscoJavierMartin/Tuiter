@@ -7,6 +7,11 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+input ForgotPasswordDto {
+  """User email"""
+  email: String!
+}
+
 type InfoMessageDto {
   """Message with info"""
   message: String!
@@ -22,10 +27,7 @@ input LoginDto {
 
 type Mutation {
   """Send reset password email"""
-  forgotPassword(
-    """User email"""
-    email: String!
-  ): InfoMessageDto!
+  forgotPassword(forgotPasswordDto: ForgotPasswordDto!): InfoMessageDto!
 
   """Register new user"""
   register(registerInput: RegisterDto!): ResponseRegisterDto!
