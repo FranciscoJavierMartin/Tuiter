@@ -31,6 +31,9 @@ input LoginDto {
 }
 
 type Mutation {
+  """Block user"""
+  blockUser: InfoMessageDto!
+
   """Update password"""
   changePassword(changePasswordDto: ChangePasswordDto!): InfoMessageDto!
 

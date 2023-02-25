@@ -12,6 +12,7 @@ import { BlockUserController } from '@/block-user/block-user.controller';
 import { BlockUserCacheService } from '@/block-user/services/block-user.cache.service';
 import { BlockUserConsumer } from '@/block-user/consumers/block-user.consumer';
 import { BlockUserRepository } from '@/block-user/repositories/block-user.repository';
+import { BlockUserResolver } from './block-user.resolver';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { BlockUserRepository } from '@/block-user/repositories/block-user.reposi
     BlockUserCacheService,
     BlockUserConsumer,
     BlockUserRepository,
+    BlockUserResolver,
   ],
   exports: [BlockUserCacheService],
 })
