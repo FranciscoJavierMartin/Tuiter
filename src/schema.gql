@@ -33,7 +33,7 @@ type Mutation {
   register(registerInput: RegisterDto!): ResponseRegisterDto!
 
   """Change user password and send an email to user"""
-  resetPassword: InfoMessageDto!
+  resetPassword(token: String!): InfoMessageDto!
 }
 
 type Query {

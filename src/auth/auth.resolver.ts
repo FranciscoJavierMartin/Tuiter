@@ -1,5 +1,6 @@
 import { UseGuards } from '@nestjs/common';
 import { Resolver, Query, Args, Mutation } from '@nestjs/graphql';
+import { Ip } from '@/shared/decorators/graphql/ip.decorator';
 import { UserDto } from '@/user/dto/responses/user.dto';
 import { AuthService } from '@/auth/services/auth.service';
 import { LoginDto } from '@/auth/dto/requests/login.dto';
@@ -10,7 +11,6 @@ import { InfoMessageDto } from '@/auth/dto/responses/info-message.dto';
 import { CurrentUser } from '@/auth/interfaces/current-user.interface';
 import { GetUserGql } from '@/auth/decorators/get-user-gql.decorator';
 import { GqlAuthGuard } from '@/auth/guards/gql-auth.guard';
-import { Ip } from '@/shared/decorators/graphql/ip.decorator';
 
 @Resolver()
 export class AuthResolver {
@@ -65,8 +65,11 @@ export class AuthResolver {
     name: 'resetPassword',
     description: 'Change user password and send an email to user',
   })
-  public async resetPassword(@Ip() ip: string): Promise<InfoMessageDto> {
-    console.log(ip);
+  public async resetPassword(
+    @Args('token') token: string,
+    @Ip() ip: string,
+  ): Promise<InfoMessageDto> {
+    console.log(token);
     return {
       message: 'Password reset email sent',
     };
