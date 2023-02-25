@@ -71,7 +71,11 @@ export class AuthResolver {
     @Args('resetPasswordDto') resetPasswordDto: ResetPasswordDto,
     @Ip() ip: string,
   ): Promise<InfoMessageDto> {
-    console.log(token, resetPasswordDto);
+    await this.authService.sendResetPasswordEmail(
+      resetPasswordDto.password,
+      token,
+      ip,
+    );
     return {
       message: 'Password reset email sent',
     };
