@@ -21,7 +21,7 @@ export class BlockUserResolver {
     @Args('followerId', { type: () => ID }, ValidateIdPipe) followerId: Id,
     @GetUserGql('userId') userId: Id,
   ): Promise<InfoMessageDto> {
-    console.log(followerId, userId);
+    await this.blockUserService.block(userId, followerId);
     return {
       message: 'User blocked',
     };
