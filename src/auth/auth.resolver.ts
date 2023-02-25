@@ -85,7 +85,12 @@ export class AuthResolver {
     name: 'changePassword',
     description: 'Password updated',
   })
-  public async changePassword(): Promise<InfoMessageDto> {
+  @UseGuards(GqlAuthGuard)
+  public async changePassword(
+    @GetUserGql('username') username: string,
+    @Ip() ip: string,
+  ): Promise<InfoMessageDto> {
+    console.log(username);
     return {
       message: 'Password changed',
     };
