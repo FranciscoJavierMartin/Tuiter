@@ -1,5 +1,5 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
-import { getCurrentUserFromRequest } from '@/helpers/requests-utils';
+import { getCurrentUserFromRequest } from '@/helpers/request-utils';
 
 // Get user (or user field) from JWT
 // TODO: Move to shared/decorators

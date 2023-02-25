@@ -1,4 +1,5 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import { GqlExecutionContext } from '@nestjs/graphql';
 import { checkUserIsNotFollowerOrFollowee } from '@/helpers/request-utils';
 
 @Injectable()
@@ -9,10 +10,12 @@ export class NotMySelfGuard implements CanActivate {
    * @returns True if current user is not the follower or the followee user, false otherwise
    */
   public canActivate(context: ExecutionContext): boolean {
-    const request = context.switchToHttp().getRequest();
-    const followeeId = request.params.followeeId;
-    const followerId = request.params.followerId;
-    const userId = request.user.userId;
+    const ctx: GqlExecutionContext = GqlExecutionContext.create(context);
+    const userId = ctx.getContext().req?.user?.userId;
+    const { followeeId, followerId } = ctx.getArgs<{
+      followerId?: string;
+      followeeId: string;
+    }>();
 
     return checkUserIsNotFollowerOrFollowee(userId, followerId, followeeId);
   }

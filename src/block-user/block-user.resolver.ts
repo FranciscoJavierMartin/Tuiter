@@ -5,6 +5,7 @@ import { ID as Id } from '@/shared/interfaces/types';
 import { ValidateIdPipe } from '@/shared/pipes/validate-id.pipe';
 import { GqlAuthGuard } from '@/auth/guards/gql-auth.guard';
 import { GetUserGql } from '@/auth/decorators/get-user-gql.decorator';
+import { NotMySelfGuard } from '@/follower/guards/graphql/not-my-self.guard';
 import { BlockUserService } from '@/block-user/services/block-user.service';
 
 @Resolver()
@@ -15,7 +16,7 @@ export class BlockUserResolver {
     name: 'blockUser',
     description: 'Block user',
   })
-  @UseGuards(GqlAuthGuard)
+  @UseGuards(GqlAuthGuard, NotMySelfGuard)
   public async block(
     @Args('followerId', { type: () => ID }, ValidateIdPipe) followerId: Id,
     @GetUserGql('userId') userId: Id,

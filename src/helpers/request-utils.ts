@@ -29,3 +29,21 @@ export function getCurrentUserFromRequest(
 
   return res;
 }
+
+/**
+ * Check if user is a follower or a followee
+ * @param {string} userId User id from request
+ * @param {string} followerId Follower id from request
+ * @param {string} followeeId Followee id from request
+ * @returns {boolean} True if user is not a follower or a followee. False otherwise.
+ */
+export function checkUserIsNotFollowerOrFollowee(
+  userId: string,
+  followerId: string,
+  followeeId: string,
+): boolean {
+  return !(
+    (followeeId && followeeId === userId) ||
+    (followerId && followerId === userId)
+  );
+}
