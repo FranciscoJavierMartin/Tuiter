@@ -32,7 +32,7 @@ input LoginDto {
 
 type Mutation {
   """Block user"""
-  blockUser: InfoMessageDto!
+  blockUser(followerId: String!): InfoMessageDto!
 
   """Update password"""
   changePassword(changePasswordDto: ChangePasswordDto!): InfoMessageDto!
