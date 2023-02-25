@@ -3,6 +3,7 @@ import { GqlExecutionContext } from '@nestjs/graphql';
 import { getCurrentUserFromRequest } from '@/helpers/utils';
 
 // Get user (or user field) from JWT
+// TODO: Move to shared/decorators/graphql
 export const GetUserGql = createParamDecorator(
   (field, context: ExecutionContext) =>
     getCurrentUserFromRequest(
