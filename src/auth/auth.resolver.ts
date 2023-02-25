@@ -1,10 +1,12 @@
 import { UseGuards } from '@nestjs/common';
 import { Resolver, Query, Args, Mutation } from '@nestjs/graphql';
+import { Ip } from '@/shared/decorators/graphql/ip.decorator';
 import { UserDto } from '@/user/dto/responses/user.dto';
 import { AuthService } from '@/auth/services/auth.service';
 import { LoginDto } from '@/auth/dto/requests/login.dto';
 import { RegisterDto } from '@/auth/dto/requests/register.dto';
 import { ForgotPasswordDto } from '@/auth/dto/requests/forgot-password.dto';
+import { ResetPasswordDto } from '@/auth/dto/requests/reset-password.dto';
 import { ResponseRegisterDto } from '@/auth/dto/responses/register.dto';
 import { InfoMessageDto } from '@/auth/dto/responses/info-message.dto';
 import { CurrentUser } from '@/auth/interfaces/current-user.interface';
@@ -55,6 +57,25 @@ export class AuthResolver {
     @Args('forgotPasswordDto') forgotPasswordDto: ForgotPasswordDto,
   ): Promise<InfoMessageDto> {
     await this.authService.sendForgotPasswordEmail(forgotPasswordDto.email);
+    return {
+      message: 'Password reset email sent',
+    };
+  }
+
+  @Mutation(() => InfoMessageDto, {
+    name: 'resetPassword',
+    description: 'Change user password and send an email to user',
+  })
+  public async resetPassword(
+    @Args('token') token: string,
+    @Args('resetPasswordDto') resetPasswordDto: ResetPasswordDto,
+    @Ip() ip: string,
+  ): Promise<InfoMessageDto> {
+    await this.authService.sendResetPasswordEmail(
+      resetPasswordDto.password,
+      token,
+      ip,
+    );
     return {
       message: 'Password reset email sent',
     };
