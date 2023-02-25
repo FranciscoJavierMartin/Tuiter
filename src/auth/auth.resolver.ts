@@ -80,4 +80,14 @@ export class AuthResolver {
       message: 'Password reset email sent',
     };
   }
+
+  @Mutation(() => InfoMessageDto, {
+    name: 'changePassword',
+    description: 'Password updated',
+  })
+  public async changePassword(): Promise<InfoMessageDto> {
+    return {
+      message: 'Password changed',
+    };
+  }
 }
