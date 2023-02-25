@@ -33,7 +33,7 @@ type Mutation {
   register(registerInput: RegisterDto!): ResponseRegisterDto!
 
   """Change user password and send an email to user"""
-  resetPassword(token: String!): InfoMessageDto!
+  resetPassword(resetPasswordDto: ResetPasswordDto!, token: String!): InfoMessageDto!
 }
 
 type Query {
@@ -56,6 +56,14 @@ input RegisterDto {
 
   """User name. It is unique. Minimum length 4 and maximun lenght 8."""
   username: String!
+}
+
+input ResetPasswordDto {
+  """Confirm user password"""
+  confirmPassword: String!
+
+  """User password"""
+  password: String!
 }
 
 type ResponseRegisterDto {

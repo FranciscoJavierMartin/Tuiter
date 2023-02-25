@@ -6,6 +6,7 @@ import { AuthService } from '@/auth/services/auth.service';
 import { LoginDto } from '@/auth/dto/requests/login.dto';
 import { RegisterDto } from '@/auth/dto/requests/register.dto';
 import { ForgotPasswordDto } from '@/auth/dto/requests/forgot-password.dto';
+import { ResetPasswordDto } from '@/auth/dto/requests/reset-password.dto';
 import { ResponseRegisterDto } from '@/auth/dto/responses/register.dto';
 import { InfoMessageDto } from '@/auth/dto/responses/info-message.dto';
 import { CurrentUser } from '@/auth/interfaces/current-user.interface';
@@ -67,9 +68,10 @@ export class AuthResolver {
   })
   public async resetPassword(
     @Args('token') token: string,
+    @Args('resetPasswordDto') resetPasswordDto: ResetPasswordDto,
     @Ip() ip: string,
   ): Promise<InfoMessageDto> {
-    console.log(token);
+    console.log(token, resetPasswordDto);
     return {
       message: 'Password reset email sent',
     };

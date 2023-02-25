@@ -1,7 +1,9 @@
+import { Field, InputType } from '@nestjs/graphql';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, MaxLength, MinLength } from 'class-validator';
 import { IsEqualTo } from '@/shared/decorators/match.decorator';
 
+@InputType()
 export class ResetPasswordDto {
   @ApiProperty({
     description: 'User password',
@@ -10,6 +12,7 @@ export class ResetPasswordDto {
     maxLength: 8,
     nullable: false,
   })
+  @Field(() => String, { description: 'User password' })
   @IsString()
   @MinLength(4)
   @MaxLength(8)
@@ -22,6 +25,7 @@ export class ResetPasswordDto {
     maxLength: 8,
     nullable: false,
   })
+  @Field(() => String, { description: 'Confirm user password' })
   @IsString()
   @MinLength(4)
   @MaxLength(8)
