@@ -1,6 +1,6 @@
 import { Mutation, Resolver } from '@nestjs/graphql';
+import { InfoMessageDto } from '@/shared/dto/responses/info-message.dto';
 import { BlockUserService } from '@/block-user/services/block-user.service';
-import { InfoMessageDto } from '@/auth/dto/responses/info-message.dto';
 
 @Resolver()
 export class BlockUserResolver {
