@@ -1,5 +1,7 @@
-import { Args, Mutation, Resolver } from '@nestjs/graphql';
+import { Args, ID, Mutation, Resolver } from '@nestjs/graphql';
 import { InfoMessageDto } from '@/shared/dto/responses/info-message.dto';
+import { ID as Id } from '@/shared/interfaces/types';
+import { ValidateIdPipe } from '@/shared/pipes/validate-id.pipe';
 import { BlockUserService } from '@/block-user/services/block-user.service';
 
 @Resolver()
@@ -11,7 +13,7 @@ export class BlockUserResolver {
     description: 'Block user',
   })
   public async block(
-    @Args('followerId') followerId: string,
+    @Args('followerId', { type: () => ID }, ValidateIdPipe) followerId: Id,
   ): Promise<InfoMessageDto> {
     console.log(followerId);
     return {
