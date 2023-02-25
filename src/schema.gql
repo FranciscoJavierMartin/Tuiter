@@ -31,7 +31,7 @@ input LoginDto {
 }
 
 type Mutation {
-  """Password updated"""
+  """Update password"""
   changePassword(changePasswordDto: ChangePasswordDto!): InfoMessageDto!
 
   """Send reset password email"""

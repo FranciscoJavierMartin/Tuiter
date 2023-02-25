@@ -84,7 +84,7 @@ export class AuthResolver {
 
   @Mutation(() => InfoMessageDto, {
     name: 'changePassword',
-    description: 'Password updated',
+    description: 'Update password',
   })
   @UseGuards(GqlAuthGuard)
   public async changePassword(
