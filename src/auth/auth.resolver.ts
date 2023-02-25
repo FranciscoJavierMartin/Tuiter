@@ -92,7 +92,11 @@ export class AuthResolver {
     @GetUserGql('username') username: string,
     @Ip() ip: string,
   ): Promise<InfoMessageDto> {
-    console.log(username, changePasswordDto);
+    await this.authService.changePassword(
+      username,
+      changePasswordDto.newPassword,
+      ip,
+    );
     return {
       message: 'Password changed',
     };
