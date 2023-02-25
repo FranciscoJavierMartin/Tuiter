@@ -10,6 +10,7 @@ import { InfoMessageDto } from '@/auth/dto/responses/info-message.dto';
 import { CurrentUser } from '@/auth/interfaces/current-user.interface';
 import { GetUserGql } from '@/auth/decorators/get-user-gql.decorator';
 import { GqlAuthGuard } from '@/auth/guards/gql-auth.guard';
+import { Ip } from '@/shared/decorators/graphql/ip.decorator';
 
 @Resolver()
 export class AuthResolver {
@@ -64,7 +65,8 @@ export class AuthResolver {
     name: 'resetPassword',
     description: 'Change user password and send an email to user',
   })
-  public async resetPassword(): Promise<InfoMessageDto> {
+  public async resetPassword(@Ip() ip: string): Promise<InfoMessageDto> {
+    console.log(ip);
     return {
       message: 'Password reset email sent',
     };
