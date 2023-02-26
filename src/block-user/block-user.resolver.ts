@@ -26,4 +26,19 @@ export class BlockUserResolver {
       message: 'User blocked',
     };
   }
+
+  @Mutation(() => InfoMessageDto, {
+    name: 'unblockUser',
+    description: 'Unblock user',
+  })
+  @UseGuards(GqlAuthGuard, NotMySelfGuard)
+  public async unblock(
+    @Args('followerId', { type: () => ID }, ValidateIdPipe) followerId: Id,
+    @GetUserGql('userId') userId: Id,
+  ): Promise<InfoMessageDto> {
+    await this.blockUserService.unblock(userId, followerId);
+    return {
+      message: 'User unblocked',
+    };
+  }
 }
