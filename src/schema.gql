@@ -45,6 +45,9 @@ type Mutation {
 
   """Change user password and send an email to user"""
   resetPassword(resetPasswordDto: ResetPasswordDto!, token: String!): InfoMessageDto!
+
+  """Unblock user"""
+  unblockUser(followerId: ID!): InfoMessageDto!
 }
 
 type Query {
