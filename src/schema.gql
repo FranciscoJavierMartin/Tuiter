@@ -2,10 +2,25 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+input ChangePasswordDto {
+  """New password"""
+  newPassword: String!
+}
+
 """
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
 scalar DateTime
+
+input ForgotPasswordDto {
+  """User email"""
+  email: String!
+}
+
+type InfoMessageDto {
+  """Message with info"""
+  message: String!
+}
 
 input LoginDto {
   """User password. Minimum length 4 and maximun lenght 8."""
@@ -16,11 +31,26 @@ input LoginDto {
 }
 
 type Mutation {
+  """Block user"""
+  blockUser(followerId: ID!): InfoMessageDto!
+
+  """Update password"""
+  changePassword(changePasswordDto: ChangePasswordDto!): InfoMessageDto!
+
+  """Send reset password email"""
+  forgotPassword(forgotPasswordDto: ForgotPasswordDto!): InfoMessageDto!
+
   """Register new user"""
-  register(registerInput: RegisterDto!): String!
+  register(registerInput: RegisterDto!): ResponseRegisterDto!
+
+  """Change user password and send an email to user"""
+  resetPassword(resetPasswordDto: ResetPasswordDto!, token: String!): InfoMessageDto!
 }
 
 type Query {
+  """Get current user info"""
+  currentUser: UserDto!
+
   """Login created user"""
   login(loginInput: LoginDto!): ResponseRegisterDto!
 }
@@ -37,6 +67,14 @@ input RegisterDto {
 
   """User name. It is unique. Minimum length 4 and maximun lenght 8."""
   username: String!
+}
+
+input ResetPasswordDto {
+  """Confirm user password"""
+  confirmPassword: String!
+
+  """User password"""
+  password: String!
 }
 
 type ResponseRegisterDto {

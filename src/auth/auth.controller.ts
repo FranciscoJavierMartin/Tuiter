@@ -26,6 +26,7 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { AuthGuard } from '@nestjs/passport';
 import { DefaultImagePipe } from '@/shared/pipes/validate-file.pipe';
+import { InfoMessageDto } from '@/shared/dto/responses/info-message.dto';
 import { UserDto } from '@/user/dto/responses/user.dto';
 import { AuthService } from '@/auth/services/auth.service';
 import { RegisterDto } from '@/auth/dto/requests/register.dto';
@@ -33,7 +34,6 @@ import { ResponseRegisterDto } from '@/auth/dto/responses/register.dto';
 import { LoginDto } from '@/auth/dto/requests/login.dto';
 import { GetUser } from '@/auth/decorators/get-user.decorator';
 import { ForgotPasswordDto } from '@/auth/dto/requests/forgot-password.dto';
-import { InfoMessageDto } from '@/auth/dto/responses/info-message.dto';
 import { ResetPasswordDto } from '@/auth/dto/requests/reset-password.dto';
 import { CurrentUser } from '@/auth/interfaces/current-user.interface';
 import { ChangePasswordDto } from '@/auth/dto/requests/change-password.dto';
