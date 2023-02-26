@@ -12,6 +12,7 @@ import { Chat, ChatSchema } from '@/chat/models/chat.model';
 import { Message, MessageSchema } from '@/chat/models/message.model';
 import { ChatRepository } from '@/chat/repositories/chat.repository';
 import { ChatConsumer } from '@/chat/consumers/chat.consumer';
+import { ChatResolver } from './chat.resolver';
 
 @Module({
   imports: [
@@ -25,6 +26,6 @@ import { ChatConsumer } from '@/chat/consumers/chat.consumer';
     UserModule,
   ],
   controllers: [ChatController],
-  providers: [ChatService, ChatCacheService, ChatRepository, ChatConsumer],
+  providers: [ChatService, ChatCacheService, ChatRepository, ChatConsumer, ChatResolver],
 })
 export class ChatModule {}
