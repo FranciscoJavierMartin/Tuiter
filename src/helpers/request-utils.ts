@@ -39,8 +39,8 @@ export function getCurrentUserFromRequest(
  */
 export function checkUserIsNotFollowerOrFollowee(
   userId: string,
-  followerId: string,
-  followeeId: string,
+  followerId?: string,
+  followeeId?: string,
 ): boolean {
   return !(
     (followeeId && followeeId === userId) ||

@@ -14,7 +14,7 @@ export class NotMySelfGuard implements CanActivate {
     const userId = ctx.getContext().req?.user?.userId;
     const { followeeId, followerId } = ctx.getArgs<{
       followerId?: string;
-      followeeId: string;
+      followeeId?: string;
     }>();
 
     return checkUserIsNotFollowerOrFollowee(userId, followerId, followeeId);
