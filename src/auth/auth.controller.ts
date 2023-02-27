@@ -65,7 +65,7 @@ export class AuthController {
     return this.authService.create(registerDto, avatarImage);
   }
 
-  @Get('login')
+  @Post('login')
   @ApiOkResponse({
     description: 'User logged',
     type: ResponseRegisterDto,
